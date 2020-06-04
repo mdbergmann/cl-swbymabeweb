@@ -7,4 +7,5 @@
 (in-package :cl-swbymabeweb.controller.index)
 
 (defun index ()
+  (log:debug "Index controller.")
   (view.index:render))

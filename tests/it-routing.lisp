@@ -20,7 +20,7 @@
 (test handle-index-route
   "Test routing of index."
   (with-fixture with-server ()
-    (is (str:contains? "<title>Manfred Bergmann | Software Development</title>"
+    (is (str:containsp "<title>Manfred Bergmann | Software Development | Index</title>"
                        (dex:get "http://localhost:5000/")))))
 
 (test handle-undefined-route

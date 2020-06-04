@@ -18,9 +18,9 @@
   :components ((:module "src"
                 :components
                 ((:file "main" :depends-on ("config"))
-                 (:file "controller/index-controller")
+                 (:file "views/index")
+                 (:file "controllers/index")
                  (:file "web")
-                 (:file "view" :depends-on ("config"))
                  (:file "config"))))
   :description ""
   :in-order-to ((test-op (test-op "cl-swbymabeweb-test"))))

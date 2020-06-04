@@ -1,9 +1,10 @@
 (defpackage cl-swbymabeweb.web
   (:use :cl
         :caveman2
-        :cl-swbymabeweb.config
-        :cl-swbymabeweb.view)
-  (:export :*web*))
+        :cl-swbymabeweb.config)
+  (:export :*web*)
+  (:import-from #:controller.index
+                #:index))
 (in-package :cl-swbymabeweb.web)
 
 ;; for @route annotation
@@ -20,7 +21,8 @@
 ;; Routing rules
 
 (defroute "/" ()
-  (render))
+  (log:debug "Index route called.")
+  (controller.index:index))
 
 ;;
 ;; Error pages
