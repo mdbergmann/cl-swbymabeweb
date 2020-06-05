@@ -9,6 +9,7 @@
                "cl-ppcre"
                "uiop"
                "log4cl"
+               "cl-locale"
 
                ;; for @route annotation
                "cl-syntax-annot"

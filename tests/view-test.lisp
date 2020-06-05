@@ -19,6 +19,7 @@
   (let* ((spinneret:*html-style* :tree)
          (page-source (view.index:render)))
     (format t "~a~%" page-source)
-    (is (str:containsp *expected-index-page-title* (view.index:render)))))
+    (is (str:containsp *expected-index-page-title* (view.index:render)))
+    (is (str:containsp "<div id=navigation" (view.index:render)))))
 
 (run! 'index-view)

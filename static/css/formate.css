@@ -9,26 +9,26 @@ body {
 
 hr {
 	border: thin solid;
-	width:800px;
+	width:1024px;
 	color:#cccccc;
 	height:1pt;
 }
 
 hr.blog {
-	width:650px;
+	width:700px;
 	margin-left:0;
 }
 
 hr.blogtitle {
 	border:1px dashed #cccccc;
-	width:650px;
+	width:800px;
 	height:1px;
 	margin-left:0;
 }
 
 hr.title {
 	border:1px dashed #cccccc;
-	width:800px;
+	width:1024px;
 	height:1px;
 }
 
@@ -38,7 +38,7 @@ table.listtable {
 	margin-bottom:0;
 	margin-left:auto;
 	margin-right:auto;
-	width:800px;
+	width:1024px;
 }
 
 hr.recentsblognav {
@@ -63,19 +63,19 @@ tr,td {
 }
 
 .centerDiv {
-	width:800px;
+	width:1024px;
 	margin-right:auto;
 	margin-left:auto;
 }
 
 .blogNavPanel {
-	width:150px;
+	width:180px;
 	text-align:right;
 	vertical-align:top;
 }
 
 .blogLeftPanel {
-	width:650px;
+	width:844px;
 	vertical-align:top;
 }
 

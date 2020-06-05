@@ -9,6 +9,12 @@
            :stop))
 (in-package :cl-swbymabeweb)
 
+(cl-locale:enable-locale-syntax)
+(cl-locale:define-dictionary default
+  (:en_EN #p"i18n/en_EN/default.lisp"))
+(setf (cl-locale:current-dictionary) :default)
+(setf cl-locale:*locale* :en_EN)
+
 (defvar *appfile-path*
   (asdf:system-relative-pathname :cl-swbymabeweb #P"app.lisp"))
 
