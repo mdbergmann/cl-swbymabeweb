@@ -2,9 +2,7 @@
   (:use :cl
         :caveman2
         :cl-swbymabeweb.config)
-  (:export :*web*)
-  (:import-from #:controller.index
-                #:index))
+  (:export :*web*))
 (in-package :cl-swbymabeweb.web)
 
 ;; for @route annotation
@@ -23,6 +21,10 @@
 (defroute "/" ()
   (log:debug "Index route called.")
   (controller.index:index))
+
+(defroute "/imprint" ()
+  (log:debug "Imprint route called.")
+  (controller.imprint:index))
 
 ;;
 ;; Error pages

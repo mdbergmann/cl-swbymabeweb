@@ -10,6 +10,7 @@
                "uiop"
                "log4cl"
                "cl-locale"
+               "local-time"
 
                ;; for @route annotation
                "cl-syntax-annot"

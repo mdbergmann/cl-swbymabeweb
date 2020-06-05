@@ -26,6 +26,12 @@
     (is (str:containsp "<title>Manfred Bergmann | Software Development | Index</title>"
                        (dex:get "http://localhost:5000/")))))
 
+(test handle-imprint-route
+  "Test routing of imprint."
+  (with-fixture with-server ()
+    (is (str:containsp "<title>Manfred Bergmann | Software Development | Imprint</title>"
+                       (dex:get "http://localhost:5000/imprint")))))
+
 (test handle-undefined-route
   "Test route that doesn't exist."
   (with-fixture with-server ()
@@ -37,4 +43,5 @@
         (is (= (dex:response-status e) 404))))))
 
 (run! 'handle-index-route)
+(run! 'handle-imprint-route)
 (run! 'handle-undefined-route)
