@@ -7,7 +7,10 @@
                 #:stop))
 (in-package :cl-swbymabeweb-test)
 
-(def-suite it-routing)
+(def-suite it-routing
+  :description "Routing integration tests."
+  :in cl-swbymabeweb.tests:test-suite)
+
 (in-suite it-routing)
 
 (def-fixture with-server ()

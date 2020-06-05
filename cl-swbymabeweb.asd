@@ -18,14 +18,32 @@
   :components ((:module "src"
                 :components
                 ((:file "main" :depends-on ("config"))
+                 (:file "views/common")
                  (:file "views/index")
                  (:file "controllers/index")
                  (:file "web")
                  (:file "config"))))
   :description ""
-  :in-order-to ((test-op (test-op "cl-swbymabeweb-test"))))
+  :in-order-to ((test-op (test-op "cl-swbymabeweb/tests"))))
+
+
+(defsystem "cl-swbymabeweb/tests"
+  :author "Manfred Bergmann"
+  :license ""
+  :depends-on ("cl-swbymabeweb"
+               "fiveam"
+               "cl-mock"
+               "dexador"
+               "str")
+  :components ((:module "tests"
+                :components
+                ((:file "all-tests")
+                 (:file "it-routing")
+                 (:file "controller-test"))))
+  :description "Test system for cl-swbymabeweb"
+  :perform (test-op (op c) (symbol-call :fiveam :run! 'cl-swbymabeweb.tests)))
 
 
 ;; (push #P"~/Development/MySources/cl-swbymabeweb/" asdf:*central-registry*)
 ;; (asdf:load-system "cl-swbymabeweb")
-;; (asdf:load-system "cl-swbymabeweb-test")
+;; (asdf:test-system "cl-swbymabeweb/tests")

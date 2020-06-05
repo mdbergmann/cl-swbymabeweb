@@ -1,4 +1,3 @@
-(in-package :cl-user)
 (defpackage :cl-swbymabeweb.controller-test
   (:use :cl :fiveam :cl-mock :cl-swbymabeweb.controller.index)
   (:export #:run!
@@ -7,22 +6,21 @@
   (:import-from #:cl-swbymabeweb.view.index
                 #:render)
   (:import-from #:cl-swbymabeweb.view.common
-                #:with-page))
+                #:page))
 (in-package :cl-swbymabeweb.controller-test)
 
 (def-suite controller-tests
   :description "Tests for page controllers"
-  ;;:in cl-swbymabeweb.tests:test-suite
-  )
+  :in cl-swbymabeweb.tests:test-suite)
 
 (in-suite controller-tests)
 
 ;; your test code here
 
-(defparameter *index-page-title* "Manfred Bergmann | Software Development | Index")
+(defparameter *expected-page-title* "Manfred Bergmann | Software Development | Index")
 
 (defun fake-index-page ()
-  (view.common:with-page (:title *index-page-title*)))
+  (view.common:page *expected-page-title* nil nil))
 
 (test index-controller
   "Test index controller"

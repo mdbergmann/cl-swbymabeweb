@@ -7,8 +7,7 @@
 
 (def-suite view-tests
   :description "View tests"
-  ;;:in cl-swbymabeweb.tests:test-suite
-  )
+  :in cl-swbymabeweb.tests:test-suite)
 
 (in-suite view-tests)
 
