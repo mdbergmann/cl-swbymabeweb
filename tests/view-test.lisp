@@ -15,6 +15,8 @@
   "Manfred Bergmann | Software Development | Index")
 (defparameter *expected-imprint-page-title*
   "Manfred Bergmann | Software Development | Imprint")
+(defparameter *expected-about-page-title*
+  "Manfred Bergmann | Software Development | About")
 
 (test index-view
   "Index view renders empty page with only navigation but no content."
@@ -33,5 +35,15 @@
     (is (str:containsp "<div id=navigation" (view.imprint:render)))
     (is (str:containsp "<div id=content" (view.imprint:render)))))
 
+(test about-view
+  "About view renders empty page."
+  (let* ((spinneret:*html-style* :tree)
+         (page-source (view.about:render)))
+    (format t "~a~%" page-source)
+    (is (str:containsp *expected-about-page-title* (view.about:render)))
+    (is (str:containsp "<div id=navigation" (view.about:render)))
+    (is (str:containsp "<div id=content" (view.about:render)))))
+
 (run! 'index-view)
 (run! 'imprint-view)
+(run! 'about-view)

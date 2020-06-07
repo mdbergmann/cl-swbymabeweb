@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.controller-test
-  (:use :cl :fiveam :cl-mock :cl-swbymabeweb.controller.index)
+  (:use :cl :fiveam :cl-mock)
   (:export #:run!
            #:all-tests
            #:nil))
@@ -15,12 +15,16 @@
 
 (defparameter *expected-page-title-index* "Manfred Bergmann | Software Development | Index")
 (defparameter *expected-page-title-imprint* "Manfred Bergmann | Software Development | Index")
+(defparameter *expected-page-title-about* "Manfred Bergmann | Software Development | About")
 
 (defun fake-index-page ()
   *expected-page-title-index*)
 
 (defun fake-imprint-page ()
   *expected-page-title-imprint*)
+
+(defun fake-about-page ()
+  *expected-page-title-about*)
 
 (test index-controller
   "Test index controller"
@@ -41,5 +45,15 @@
     (is (string= (controller.imprint:index) (fake-imprint-page)))
     (is (= (length (invocations 'view.imprint:render)) 1))))
 
+(test about-controller
+  "Test about controller"
+
+  (with-mocks ()
+    (answer (view.about:render) (fake-about-page))
+
+    (is (string= (controller.about:index) (fake-about-page)))
+    (is (= (length (invocations 'view.about:render)) 1))))
+
 (run! 'index-controller)
 (run! 'imprint-controller)
+(run! 'about-controller)

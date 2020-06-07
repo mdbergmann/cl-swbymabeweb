@@ -26,6 +26,10 @@
   (log:debug "Imprint route called.")
   (controller.imprint:index))
 
+(defroute "/about" ()
+  (log:debug "About route called.")
+  (controller.about:index))
+
 ;;
 ;; Error pages
 

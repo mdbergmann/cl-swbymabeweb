@@ -19,12 +19,14 @@
                "spinneret")
   :components ((:module "src"
                 :components
-                ((:file "main" :depends-on ("config"))
+                ((:file "config")
+                 (:file "main")
                  (:file "views/common")
                  (:file "views/index")
+                 (:file "views/imprint")
                  (:file "controllers/index")
-                 (:file "web")
-                 (:file "config"))))
+                 (:file "controllers/imprint")
+                 (:file "web"))))
   :description ""
   :in-order-to ((test-op (test-op "cl-swbymabeweb/tests"))))
 
@@ -41,9 +43,13 @@
                 :components
                 ((:file "all-tests")
                  (:file "it-routing")
-                 (:file "controller-test"))))
+                 (:file "controller-test")
+                 (:file "view-test")
+                 )))
   :description "Test system for cl-swbymabeweb"
-  :perform (test-op (op c) (symbol-call :fiveam :run! 'cl-swbymabeweb.tests)))
+  :perform (test-op (op c) (symbol-call :fiveam :run!
+                                        (uiop:find-symbol* '#:test-suite
+                                                           '#:cl-swbymabeweb.tests))))
 
 
 ;; (push #P"~/Development/MySources/cl-swbymabeweb/" asdf:*central-registry*)

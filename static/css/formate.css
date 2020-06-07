@@ -110,6 +110,7 @@ tr,td {
 	text-align: left;
 	color: #999999;
 	font-weight: bold;
+    margin-top: 10px;
 }
 
 .subline {
@@ -118,6 +119,7 @@ tr,td {
 	text-align: left;
 	color: #ffffff;
 	font-weight: normal;
+    margin-top: 10px;
 }
 
 .subm_active {

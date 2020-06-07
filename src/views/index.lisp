@@ -9,4 +9,4 @@
 
 (defun render ()
   (log:debug "Rendering index view.")
-  (page *page-title* (navigation) nil))
+  (with-page *page-title*))
