@@ -13,18 +13,16 @@
            (with-content-table
              (content-headline (i18n "imprint_headline"))
              (content-subline (i18n "imprint_subline"))
-             (:tr
-              (:td :colspan 2
-                   (:div :class "content"
-                         (:p
-                          "Manfred Bergmann" (:br)
-                          "Burgbergweg 8" (:br)
-                          "90559 Burgthann" (:br)
-                          "Germany" (:br)
-                          (:br)
-                          "E-Mail: webmaster (at) software-by-mabe.com" (:br))
-                         (:br)
-                         (:raw (i18n "imprint_text")))))))))
+             (with-content-line
+               (:p
+                "Manfred Bergmann" (:br)
+                "Burgbergweg 8" (:br)
+                "90559 Burgthann" (:br)
+                "Germany" (:br)
+                (:br)
+                "E-Mail: webmaster (at) software-by-mabe.com" (:br))
+               (:br)
+               (:raw (i18n "imprint_text")))))))
 
 (defun render ()
   (log:debug "Rendering imprint view.")

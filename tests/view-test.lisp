@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.view-test
-  (:use :cl :fiveam)
+  (:use :cl :fiveam :str :blog :view.blog)
   (:export #:run!
            #:all-tests
            #:nil))
@@ -17,33 +17,52 @@
   "Manfred Bergmann | Software Development | Imprint")
 (defparameter *expected-about-page-title*
   "Manfred Bergmann | Software Development | About")
+(defparameter *expected-blog-page-title*
+  "Manfred Bergmann | Software Development | Blog")
+
 
 (test index-view
   "Index view renders empty page with only navigation but no content."
-  (let* ((spinneret:*html-style* :tree)
-         (page-source (view.index:render)))
+  (let ((page-source (view.index:render)))
     (format t "~a~%" page-source)
-    (is (str:containsp *expected-index-page-title* (view.index:render)))
-    (is (str:containsp "<div id=navigation" (view.index:render)))))
+    (is (str:containsp *expected-index-page-title* page-source))
+    (is (str:containsp "<div id=navigation" page-source))))
 
 (test imprint-view
-  "Imprint view renders empty page."
-  (let* ((spinneret:*html-style* :tree)
-         (page-source (view.imprint:render)))
+  "Imprint view"
+  (let ((page-source (view.imprint:render)))
     (format t "~a~%" page-source)
-    (is (str:containsp *expected-imprint-page-title* (view.imprint:render)))
-    (is (str:containsp "<div id=navigation" (view.imprint:render)))
-    (is (str:containsp "<div id=content" (view.imprint:render)))))
+    (is (str:containsp *expected-imprint-page-title* page-source))
+    (is (str:containsp "<div id=navigation" page-source))
+    (is (str:containsp "<div id=content" page-source))))
 
 (test about-view
-  "About view renders empty page."
-  (let* ((spinneret:*html-style* :tree)
-         (page-source (view.about:render)))
+  "About view"
+  (let ((page-source (view.about:render)))
     (format t "~a~%" page-source)
-    (is (str:containsp *expected-about-page-title* (view.about:render)))
-    (is (str:containsp "<div id=navigation" (view.about:render)))
-    (is (str:containsp "<div id=content" (view.about:render)))))
+    (is (str:containsp *expected-about-page-title* page-source))
+    (is (str:containsp "<div id=navigation" page-source))
+    (is (str:containsp "<div id=content" page-source))))
+
+(defparameter *blog-view-model*
+  (make-instance 'blog-view-model
+                 :blog-post (make-instance 'blog-post
+                                           :name "Foo"
+                                           :date "22.9.1973"
+                                           :text "Foobar")))
+
+(test blog-view
+  "Blog view renders latest blog entry, if exists."
+  (let* ((page-source (view.blog:render *blog-view-model*)))
+    (format t "~a~%" page-source)
+    (is (str:containsp *expected-blog-page-title* page-source))
+    (is (str:containsp "<div id=navigation" page-source))
+    (is (str:containsp "<div id=content" page-source))
+    (is (str:containsp "Foo" page-source))
+    (is (str:containsp "Foobar" page-source))
+    (is (str:containsp "22.9.1973" page-source))))
 
 (run! 'index-view)
 (run! 'imprint-view)
 (run! 'about-view)
+(run! 'blog-view)

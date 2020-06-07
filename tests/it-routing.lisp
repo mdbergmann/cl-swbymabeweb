@@ -38,6 +38,12 @@
     (is (str:containsp "<title>Manfred Bergmann | Software Development | About</title>"
                        (dex:get "http://localhost:5000/about")))))
 
+(test handle-blog-index-route
+  "Test routing of blog - index."
+  (with-fixture with-server ()
+    (is (str:containsp "<title>Manfred Bergmann | Software Development | Blog</title>"
+                       (dex:get "http://localhost:5000/blog")))))
+
 (test handle-undefined-route
   "Test route that doesn't exist."
   (with-fixture with-server ()
@@ -51,4 +57,5 @@
 (run! 'handle-index-route)
 (run! 'handle-imprint-route)
 (run! 'handle-about-route)
+(run! 'handle-blog-index-route)
 (run! 'handle-undefined-route)

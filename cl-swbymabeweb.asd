@@ -21,11 +21,16 @@
                 :components
                 ((:file "config")
                  (:file "main")
+                 (:file "blog")
                  (:file "views/common")
                  (:file "views/index")
                  (:file "views/imprint")
+                 (:file "views/about")
+                 (:file "views/blog")
                  (:file "controllers/index")
                  (:file "controllers/imprint")
+                 (:file "controllers/about")
+                 (:file "controllers/blog")
                  (:file "web"))))
   :description ""
   :in-order-to ((test-op (test-op "cl-swbymabeweb/tests"))))

@@ -30,6 +30,10 @@
   (log:debug "About route called.")
   (controller.about:index))
 
+(defroute "/blog" ()
+  (log:debug "Blog route called.")
+  (controller.blog:index))
+
 ;;
 ;; Error pages
 
