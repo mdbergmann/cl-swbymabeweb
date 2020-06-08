@@ -58,7 +58,7 @@
     (handler-case
         (progn
           (dex:get "http://localhost:5000/blog/name+not+found")
-          (is nil))
+          (is-true nil))
       (dex:http-request-not-found (e)
         (is (= (dex:response-status e) 404))))))
 
@@ -68,7 +68,7 @@
     (handler-case
         (progn
           (dex:get "http://localhost:5000/doesnotexist")
-          (is nil))
+          (is-true nil))
       (dex:http-request-not-found (e)
         (is (= (dex:response-status e) 404))))))
 
