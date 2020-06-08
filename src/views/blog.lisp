@@ -22,7 +22,8 @@
 
 (defclass blog-view-model ()
   ((blog-post :initform nil
-              :initarg :blog-post)))
+              :initarg :blog-post
+              :reader get-blog-post)))
 
 (defmacro blog-post-content (name date text)
   `(with-html
@@ -33,15 +34,25 @@
            (:div (:raw "&nbsp;"))
            (:div :class "content" ,text))))
 
-(defmacro content (post)
+(defmacro content (blog-post)
   `(with-html
      (:div :id "content"
            (with-content-table
              (with-content-line
-               ,post)))))
+               ,blog-post)))))
 
 (defun render (view-model)
   (log:debug "Rendering blog view.")
-  (with-slots (name date text) (slot-value view-model 'blog-post)
+  (let ((blog-post (get-blog-post view-model)))
+    (if blog-post
+        (render-blog-post blog-post)
+        (render-blog-post-empty))))
+
+(defun render-blog-post-empty ()
+  (with-page *page-title*
+    (content nil)))
+
+(defun render-blog-post (blog-post)
+  (with-slots (name date text) blog-post 
     (with-page *page-title*
       (content (blog-post-content name date text)))))

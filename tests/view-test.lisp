@@ -50,6 +50,9 @@
                                            :name "Foo"
                                            :date "22.9.1973"
                                            :text "Foobar")))
+(defparameter *blog-view-empty-model*
+  (make-instance 'blog-view-model
+                 :blog-post nil))
 
 (test blog-view
   "Blog view renders latest blog entry, if exists."
@@ -62,7 +65,16 @@
     (is (str:containsp "Foobar" page-source))
     (is (str:containsp "22.9.1973" page-source))))
 
+(test blog-view-nil-model-post
+  "Test blog view to show empty div when there is no blog post to show."
+  (let* ((page-source (view.blog:render *blog-view-empty-model*)))
+    (format t "~a~%" page-source)
+    (is (str:containsp *expected-blog-page-title* page-source))
+    (is (str:containsp "<div id=navigation" page-source))
+    (is (str:containsp "<tr><td class=content colspan=2><tr>" page-source))))
+
 (run! 'index-view)
 (run! 'imprint-view)
 (run! 'about-view)
 (run! 'blog-view)
+(run! 'blog-view-nil-model-post)

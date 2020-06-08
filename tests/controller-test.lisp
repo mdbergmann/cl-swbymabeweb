@@ -2,7 +2,9 @@
   (:use :cl :fiveam :cl-mock :local-time :view.blog :blog)
   (:export #:run!
            #:all-tests
-           #:nil))
+           #:nil)
+  (:import-from #:controller.blog
+                #:blog-entry-to-blog-post))
 (in-package :cl-swbymabeweb.controller-test)
 
 (def-suite controller-tests
@@ -13,10 +15,14 @@
 
 ;; your test code here
 
-(defparameter *expected-page-title-index* "Manfred Bergmann | Software Development | Index")
-(defparameter *expected-page-title-imprint* "Manfred Bergmann | Software Development | Imprint")
-(defparameter *expected-page-title-about* "Manfred Bergmann | Software Development | About")
-(defparameter *expected-page-title-blog* "Manfred Bergmann | Software Development | Blog")
+(defparameter *expected-page-title-index*
+  "Manfred Bergmann | Software Development | Index")
+(defparameter *expected-page-title-imprint*
+  "Manfred Bergmann | Software Development | Imprint")
+(defparameter *expected-page-title-about*
+  "Manfred Bergmann | Software Development | About")
+(defparameter *expected-page-title-blog*
+  "Manfred Bergmann | Software Development | Blog")
 
 (defun fake-index-page ()
   *expected-page-title-index*)
@@ -79,7 +85,19 @@
     (is (= (length (invocations 'view.blog:render)) 1))
     (is (= (length (invocations 'blog:get-latest)) 1))))
 
+(test blog-controller-index-no-blog-entry
+  "Test blog controller when there is no blog entry available."
+
+  (with-mocks ()
+    (answer (blog:get-latest) nil)
+    (answer (view.blog:render *blog-model*) (fake-blog-page))
+
+    (is (string= (controller.blog:index) (fake-blog-page)))
+    (is (= (length (invocations 'view.blog:render)) 1))
+    (is (= (length (invocations 'blog:get-latest)) 1))))
+
 (run! 'index-controller)
 (run! 'imprint-controller)
 (run! 'about-controller)
 (run! 'blog-controller-index)
+(run! 'blog-controller-index-no-blog-entry)

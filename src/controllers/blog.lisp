@@ -13,9 +13,10 @@
     (view.blog:render view-model)))
 
 (defun blog-entry-to-blog-post (blog-entry)
-  (make-instance 'blog-post
-                 :name (get-entry-name blog-entry)
-                 :date (format-timestring nil
-                                          (get-entry-date blog-entry)
-                                          :format +asctime-format+)
-                 :text (get-entry-text blog-entry)))
+  (when blog-entry
+    (make-instance 'blog-post
+                   :name (get-entry-name blog-entry)
+                   :date (format-timestring nil
+                                            (get-entry-date blog-entry)
+                                            :format +asctime-format+)
+                   :text (get-entry-text blog-entry))))

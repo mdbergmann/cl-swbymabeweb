@@ -16,7 +16,9 @@
 (def-fixture with-server ()
   (start)
   (sleep 0.5)
-  (&body)
+  (unwind-protect 
+       (&body)
+    (stop))
   (stop)
   (sleep 0.5))
 
