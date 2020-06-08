@@ -60,3 +60,11 @@
 ;; (push #P"~/Development/MySources/cl-swbymabeweb/" asdf:*central-registry*)
 ;; (asdf:load-system "cl-swbymabeweb")
 ;; (asdf:test-system "cl-swbymabeweb/tests")
+
+
+#|
+TODOs:
+
+- blog-agent must be able to deal with blog-names with space characters
+
+|#

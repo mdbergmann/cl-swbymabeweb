@@ -1,6 +1,6 @@
 (in-package :cl-user)
 (defpackage :cl-swbymabeweb-test
-  (:use :cl :fiveam :str)
+  (:use :cl :fiveam :cl-mock :str)
   (:local-nicknames (:dex :dexador))
   (:import-from #:cl-swbymabeweb
                 #:start
@@ -44,7 +44,23 @@
   "Test routing of blog - index."
   (with-fixture with-server ()
     (is (str:containsp "<title>Manfred Bergmann | Software Development | Blog</title>"
-                       (dex:get "http://localhost:5000/blog")))))
+                         (dex:get "http://localhost:5000/blog")))))
+
+(test handle-blog-route-with-blog-name
+  "Test routing of blog with name of blog."
+  (with-fixture with-server ()
+    (is (str:containsp "<title>Manfred Bergmann | Software Development | Blog</title>"
+                       (dex:get "http://localhost:5000/blog/my+first+blog")))))
+
+(test handle-blog-route-with-blog-name-not-found
+  "Test routing of blog with name of blog."
+  (with-fixture with-server ()
+    (handler-case
+        (progn
+          (dex:get "http://localhost:5000/blog/name+not+found")
+          (is nil))
+      (dex:http-request-not-found (e)
+        (is (= (dex:response-status e) 404))))))
 
 (test handle-undefined-route
   "Test route that doesn't exist."
@@ -59,5 +75,8 @@
 (run! 'handle-index-route)
 (run! 'handle-imprint-route)
 (run! 'handle-about-route)
+
 (run! 'handle-blog-index-route)
+(run! 'handle-blog-route-with-blog-name)
+(run! 'handle-blog-route-with-blog-name-not-found)
 (run! 'handle-undefined-route)

@@ -2,7 +2,9 @@
   (:use :cl
         :caveman2
         :cl-swbymabeweb.config)
-  (:export :*web*))
+  (:export :*web*)
+  (:import-from #:lack.response
+                #:response-status))
 (in-package :cl-swbymabeweb.web)
 
 ;; for @route annotation
@@ -32,7 +34,18 @@
 
 (defroute "/blog" ()
   (log:debug "Blog route called.")
-  (controller.blog:index))
+  (let ((result (controller.blog:index)))
+    (case (car result)
+      (:ok (cdr result))
+      (t (setf (response-status *response*) 400)))))
+
+(defroute "/blog/:name" (&key name)
+  (log:debug "Blog route called with name: " name)
+  (let ((result (controller.blog:for-blog-name name)))
+    (case (car result)
+      (:ok (cdr result))
+      (:not-found-error (setf (response-status *response*) 404))
+      (t (setf (response-status *response*) 400)))))
 
 ;;
 ;; Error pages

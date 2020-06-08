@@ -6,7 +6,8 @@
            #:get-entry-name
            #:get-entry-date
            #:get-entry-text
-           #:get-latest))
+           #:get-latest
+           #:get-blog-entry))
 
 (in-package :cl-swbymabeweb.blog)
 
@@ -29,4 +30,6 @@
 
 (defun get-latest ()
   "Retrieves the latest entry of the blog."
-  (make-blog-entry "Foo" (now) "Some blog test"))
+  (cons :ok nil))
+
+(defun get-blog-entry (name) (cons :ok nil))
