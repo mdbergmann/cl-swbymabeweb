@@ -6,7 +6,7 @@
            #:blog-entry-name
            #:blog-entry-date
            #:blog-entry-text
-           ;; convenience method for repo access
+           ;; facade for repo access
            #:repo-get-latest
            #:repo-get-blog-entry
            ;; blog-repo class
