@@ -22,15 +22,15 @@
 
 (defroute "/" ()
   (log:debug "Index route called.")
-  (controller.index:index))
+  (cdr (controller.index:index)))
 
 (defroute "/imprint" ()
   (log:debug "Imprint route called.")
-  (controller.imprint:index))
+  (cdr (controller.imprint:index)))
 
 (defroute "/about" ()
   (log:debug "About route called.")
-  (controller.about:index))
+  (cdr (controller.about:index)))
 
 (defroute "/blog" ()
   (log:debug "Blog route called.")

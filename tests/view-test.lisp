@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.view-test
-  (:use :cl :fiveam :str :blog :view.blog)
+  (:use :cl :fiveam :str :blog-repo :view.blog)
   (:export #:run!
            #:all-tests
            #:nil))

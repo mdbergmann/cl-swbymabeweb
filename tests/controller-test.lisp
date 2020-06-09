@@ -43,7 +43,7 @@
     ;; we want to call 'render' on an index page view
     (answer (view.index:render) (fake-index-page))
 
-    (is (string= (controller.index:index) (fake-index-page)))
+    (is (string= (cdr (controller.index:index)) (fake-index-page)))
     (is (= 1 (length (invocations 'view.index:render))))))
 
 (test imprint-controller
@@ -52,7 +52,7 @@
   (with-mocks ()
     (answer (view.imprint:render) (fake-imprint-page))
 
-    (is (string= (controller.imprint:index) (fake-imprint-page)))
+    (is (string= (cdr (controller.imprint:index)) (fake-imprint-page)))
     (is (= 1 (length (invocations 'view.imprint:render))))))
 
 (test about-controller
@@ -61,7 +61,7 @@
   (with-mocks ()
     (answer (view.about:render) (fake-about-page))
 
-    (is (string= (controller.about:index) (fake-about-page)))
+    (is (string= (cdr (controller.about:index)) (fake-about-page)))
     (is (= 1 (length (invocations 'view.about:render))))))
 
 (defparameter *blog-entry* nil)
@@ -71,19 +71,19 @@
   "Test blog controller for index which shows the latest blog entry"
 
   (setf *blog-entry*
-        (blog:make-blog-entry "Foobar"
+        (blog-repo:make-blog-entry "Foobar"
                               (now)
                               "<b>hello world</b>"))
   (setf *blog-model*
         (make-instance 'blog-view-model
                        :blog-post (blog-entry-to-blog-post *blog-entry*)))
   (with-mocks ()
-    (answer (blog:get-latest) (cons :ok *blog-entry*))
+    (answer (blog-repo:repo-get-latest) (cons :ok *blog-entry*))
     (answer (view.blog:render *blog-model*) (fake-blog-page))
 
     (is (string= (cdr (controller.blog:index)) (fake-blog-page)))
     (is (= 1 (length (invocations 'view.blog:render))))
-    (is (= 1 (length (invocations 'blog:get-latest))))))
+    (is (= 1 (length (invocations 'blog-repo:repo-get-latest))))))
 
 (test blog-controller-index-no-blog-entry
   "Test blog controller when there is no blog entry available"
@@ -92,45 +92,45 @@
         (make-instance 'blog-view-model
                        :blog-post nil))
   (with-mocks ()
-    (answer (blog:get-latest) (cons :ok nil))
+    (answer (blog-repo:repo-get-latest) (cons :ok nil))
     (answer (view.blog:render *blog-model*) (fake-blog-page))
 
     (is (string= (cdr (controller.blog:index)) (fake-blog-page)))
     (is (= 1 (length (invocations 'view.blog:render))))
-    (is (= 1 (length (invocations 'blog:get-latest))))))
+    (is (= 1 (length (invocations 'blog-repo:repo-get-latest))))))
 
 (test blog-controller-for-blog-name
   "Test blog controller to render names blog entry"
 
   (setf *blog-entry*
-        (blog:make-blog-entry "my_blog_name"
+        (blog-repo:make-blog-entry "my_blog_name"
                               (now)
                               "<b>hello world</b>"))
   (setf *blog-model*
         (make-instance 'blog-view-model
                        :blog-post (blog-entry-to-blog-post *blog-entry*)))
   (with-mocks ()
-    (answer (blog:get-blog-entry name) (if (string= name "my blog name")
+    (answer (blog-repo:repo-get-blog-entry name) (if (string= name "my blog name")
                                            (cons :ok *blog-entry*)
                                            (error "wrong provided blog name!")))
     (answer (view.blog:render *blog-model*) (fake-blog-page))
 
     (is (string= (cdr (controller.blog:for-blog-name "my blog name")) (fake-blog-page)))
     (is (= 1 (length (invocations 'view.blog:render))))
-    (is (= 1 (length (invocations 'blog:get-blog-entry))))))
+    (is (= 1 (length (invocations 'blog-repo:repo-get-blog-entry))))))
 
 (test blog-controller-for-blog-name-not-found
   "Test blog controller with blog name that doesn't exist."
 
   (with-mocks ()
-    (answer (blog:get-blog-entry _)
+    (answer (blog-repo:repo-get-blog-entry _)
       (cons :not-found-error "Post 'my blog post' doesn't exist!"))
 
     (let ((controller-result (controller.blog:for-blog-name "my blog name")))
       (is (equalp (cons :not-found-error "Post 'my blog post' doesn't exist!")
                   controller-result)))
     (is (= 0 (length (invocations 'view.blog:render))))
-    (is (= 1 (length (invocations 'blog:get-blog-entry))))))
+    (is (= 1 (length (invocations 'blog-repo:repo-get-blog-entry))))))
 
 (run! 'index-controller)
 (run! 'imprint-controller)

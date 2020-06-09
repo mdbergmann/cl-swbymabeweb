@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.view.blog
-  (:use :cl :blog :spinneret :cl-locale :view.common)
+  (:use :cl :blog-repo :spinneret :cl-locale :view.common)
   (:nicknames :view.blog)
   (:export #:render
            #:blog-post
@@ -23,7 +23,7 @@
 (defclass blog-view-model ()
   ((blog-post :initform nil
               :initarg :blog-post
-              :reader get-blog-post)))
+              :reader repo-get-blog-post)))
 
 (defmacro blog-post-content (name date text)
   `(with-html
@@ -43,7 +43,7 @@
 
 (defun render (view-model)
   (log:debug "Rendering blog view.")
-  (let ((blog-post (get-blog-post view-model)))
+  (let ((blog-post (repo-get-blog-post view-model)))
     (if blog-post
         (render-blog-post blog-post)
         (render-blog-post-empty))))

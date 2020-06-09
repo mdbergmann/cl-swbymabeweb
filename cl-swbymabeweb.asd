@@ -11,6 +11,7 @@
                "log4cl"
                "cl-locale"
                "local-time"
+               "serapeum"
 
                ;; for @route annotation
                "cl-syntax-annot"
@@ -21,7 +22,7 @@
                 :components
                 ((:file "config")
                  (:file "main")
-                 (:file "blog")
+                 (:file "blog-repo")
                  (:file "views/common")
                  (:file "views/index")
                  (:file "views/imprint")
