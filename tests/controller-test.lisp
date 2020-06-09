@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.controller-test
-  (:use :cl :fiveam :cl-mock :local-time :view.blog :blog)
+  (:use :cl :fiveam :cl-mock :local-time :view.blog :blog-repo)
   (:export #:run!
            #:all-tests
            #:nil)

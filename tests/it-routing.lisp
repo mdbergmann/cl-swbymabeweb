@@ -16,24 +16,24 @@
 (defclass blog-repo-fake (blog-repo:blog-repo-base) ())
 (defclass blog-repo-fake-not-found-for-name (blog-repo-fake) ())
 
-(defmethod blog-repo:get-latest ((self blog-repo-fake))
+(defmethod blog-repo::get-latest ((self blog-repo-fake))
   (cons :ok nil))
-(defmethod blog-repo:get-for-name ((self blog-repo-fake) name)
+(defmethod blog-repo::get-for-name ((self blog-repo-fake) name)
   (declare (ignore name))
   (cons :ok nil))
-(defmethod blog-repo:get-for-name ((self blog-repo-fake-not-found-for-name) name)
+(defmethod blog-repo::get-for-name ((self blog-repo-fake-not-found-for-name) name)
   (declare (ignore name))
   (cons :not-found-error "Entry not found!"))
 
 (def-fixture with-server ()
-  (blog-repo:repo-init-with (make-instance 'blog-repo-fake))
+  (blog-repo:blog-repo-fac-init (make-instance 'blog-repo-fake))
   (start)
   (sleep 0.5)
   (unwind-protect 
        (&body)
     (stop)
     (sleep 0.5)
-    (blog-repo:repo-clean)))
+    (blog-repo:blog-repo-fac-clean)))
 
 (test handle-index-route
   "Test routing of index."
@@ -69,7 +69,7 @@
   "Test routing of blog with name of blog."
   (with-fixture with-server ()
 
-    (blog-repo:repo-init-with (make-instance 'blog-repo-fake-not-found-for-name))
+    (blog-repo:blog-repo-fac-init (make-instance 'blog-repo-fake-not-found-for-name))
     
     (handler-case
         (progn

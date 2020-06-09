@@ -11,13 +11,11 @@
            #:repo-get-blog-entry
            ;; blog-repo class
            #:blog-repo-base
-           #:get-latest
-           #:get-for-name
            ;; factory
            #:blog-repo-fac
-           #:repo-init-with
-           #:repo-get-instance
-           #:repo-clean))
+           #:blog-repo-fac-init
+           #:blog-repo-fac-get
+           #:blog-repo-fac-clean))
 
 (in-package :cl-swbymabeweb.blog-repo)
 
@@ -53,16 +51,15 @@
 
 (defun repo-get-latest ()
   "Retrieves the latest entry of the blog."
-  (get-latest (repo-get-instance)))
+  (get-latest (blog-repo-fac-get)))
 
 (defun repo-get-blog-entry (name)
   "Retrieves a blog entry for the given name."
-  (get-for-name (repo-get-instance) name))
+  (get-for-name (blog-repo-fac-get) name))
 
 ;; ---------------------------------------
 ;; blog repo factory ---------------------
 ;; ---------------------------------------
-(defvar *blog-repo-fac* (make-instance 'blog-repo-fac))
 (defclass blog-repo-fac ()
   ((instance
     :initform nil
@@ -70,11 +67,13 @@
     :allocation :class))
   (:documentation "The blog repo factory."))
 
-(defun repo-init-with (repo-instance)
+(defun blog-repo-fac-init (repo-instance)
   (setf (instance *blog-repo-fac*) repo-instance))
-(defun repo-get-instance ()
+(defun blog-repo-fac-get ()
   (if (null (instance *blog-repo-fac*))
       (error "Set an instance first!")
       (instance *blog-repo-fac*)))
-(defun repo-clean ()
+(defun blog-repo-fac-clean ()
   (setf (instance *blog-repo-fac*) nil))
+
+(defvar *blog-repo-fac* (make-instance 'blog-repo-fac))

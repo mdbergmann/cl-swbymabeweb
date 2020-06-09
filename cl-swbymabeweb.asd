@@ -48,9 +48,9 @@
   :components ((:module "tests"
                 :components
                 ((:file "all-tests")
-                 (:file "it-routing")
                  (:file "controller-test")
                  (:file "view-test")
+                 (:file "it-routing")
                  )))
   :description "Test system for cl-swbymabeweb"
   :perform (test-op (op c) (symbol-call :fiveam :run!
