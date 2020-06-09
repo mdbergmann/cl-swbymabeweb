@@ -37,15 +37,21 @@
   (let ((result (controller.blog:index)))
     (case (car result)
       (:ok (cdr result))
-      (t (setf (response-status *response*) 400)))))
+      (t (progn
+           (setf (response-status *response*) 400)
+           "Undefined error!")))))
 
 (defroute "/blog/:name" (&key name)
   (log:debug "Blog route called with name: " name)
   (let ((result (controller.blog:for-blog-name name)))
     (case (car result)
       (:ok (cdr result))
-      (:not-found-error (setf (response-status *response*) 404))
-      (t (setf (response-status *response*) 400)))))
+      (:not-found-error (progn
+                          (setf (response-status *response*) 404)
+                          (cdr result)))
+      (t (progn
+           (setf (response-status *response*) 400)
+           "Undefined error!")))))
 
 ;;
 ;; Error pages
