@@ -8,6 +8,7 @@
            #:blog-entry-text
            ;; facade for repo access
            #:repo-get-latest
+           #:repo-get-all
            #:repo-get-blog-entry
            ;; blog-repo class
            #:blog-repo-base
@@ -15,7 +16,9 @@
            #:blog-repo-fac
            #:blog-repo-fac-init
            #:blog-repo-fac-get
-           #:blog-repo-fac-clean))
+           #:blog-repo-fac-clean)
+  (:import-from #:serapeum
+                #:->))
 
 (in-package :cl-swbymabeweb.blog-repo)
 
@@ -36,22 +39,31 @@
          :initarg :text
          :reader blog-entry-text)))
 
+(defun make-blog-entry (name date text)
+  (make-instance 'blog-entry :name name :date date :text text))
+
+(defun blog-entry-p (entry)
+  (typep entry 'blog-entry))
+
 ;; ---------------------------------------
 ;; blog repo -----------------------------
 ;; ---------------------------------------
+
 (defclass blog-repo-base ()
   ()
   (:documentation "The base class for the repo."))
 
 (defgeneric get-latest (blog-repo-base))
+(defgeneric get-all (blog-repo-base))
 (defgeneric get-for-name (blog-repo-base blog-name))
-
-(defun make-blog-entry (name date text)
-  (make-instance 'blog-entry :name name :date date :text text))
 
 (defun repo-get-latest ()
   "Retrieves the latest entry of the blog."
   (get-latest (blog-repo-fac-get)))
+
+(defun repo-get-all ()
+  "Retrieves all available blog posts."
+  (get-all (blog-repo-fac-get)))
 
 (defun repo-get-blog-entry (name)
   "Retrieves a blog entry for the given name."

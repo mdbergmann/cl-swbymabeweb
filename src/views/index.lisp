@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.view.index
-  (:use :cl :spinneret :view.common)
+  (:use :cl :cl-who :view.common)
   (:nicknames :view.index)
   (:export #:render))
 

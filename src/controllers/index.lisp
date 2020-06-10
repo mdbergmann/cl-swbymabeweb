@@ -7,7 +7,7 @@
 
 (deftype controller-result ()
   "The controller output type"
-  '(cons symbol simple-base-string))
+  '(cons symbol string))
 
 
 (defpackage :cl-swbymabeweb.controller.index

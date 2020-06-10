@@ -64,6 +64,11 @@
     (is (string= (cdr (controller.about:index)) (fake-about-page)))
     (is (= 1 (length (invocations 'view.about:render))))))
 
+
+;; -----------------------------------
+;; blog controller -------------------
+;; -----------------------------------
+
 (defparameter *blog-entry* nil)
 (defparameter *blog-model* nil)
 
@@ -72,17 +77,20 @@
 
   (setf *blog-entry*
         (blog-repo:make-blog-entry "Foobar"
-                              (now)
-                              "<b>hello world</b>"))
+                                   (now)
+                                   "<b>hello world</b>"))
   (setf *blog-model*
         (make-instance 'blog-view-model
-                       :blog-post (blog-entry-to-blog-post *blog-entry*)))
+                       :blog-post (blog-entry-to-blog-post *blog-entry*)
+                       :all-blog-posts (mapcar #'blog-entry-to-blog-post (list *blog-entry*))))
   (with-mocks ()
     (answer (blog-repo:repo-get-latest) (cons :ok *blog-entry*))
+    (answer (blog-repo:repo-get-all) (cons :ok (list *blog-entry*)))
     (answer (view.blog:render *blog-model*) (fake-blog-page))
 
     (is (string= (cdr (controller.blog:index)) (fake-blog-page)))
     (is (= 1 (length (invocations 'view.blog:render))))
+    (is (= 1 (length (invocations 'blog-repo:repo-get-all))))
     (is (= 1 (length (invocations 'blog-repo:repo-get-latest))))))
 
 (test blog-controller-index-no-blog-entry
@@ -93,10 +101,12 @@
                        :blog-post nil))
   (with-mocks ()
     (answer (blog-repo:repo-get-latest) (cons :ok nil))
+    (answer (blog-repo:repo-get-all) (cons :ok (list *blog-entry*)))
     (answer (view.blog:render *blog-model*) (fake-blog-page))
 
     (is (string= (cdr (controller.blog:index)) (fake-blog-page)))
     (is (= 1 (length (invocations 'view.blog:render))))
+    (is (= 1 (length (invocations 'blog-repo:repo-get-all))))
     (is (= 1 (length (invocations 'blog-repo:repo-get-latest))))))
 
 (test blog-controller-for-blog-name
@@ -104,25 +114,29 @@
 
   (setf *blog-entry*
         (blog-repo:make-blog-entry "my_blog_name"
-                              (now)
-                              "<b>hello world</b>"))
+                                   (now)
+                                   "<b>hello world</b>"))
   (setf *blog-model*
         (make-instance 'blog-view-model
                        :blog-post (blog-entry-to-blog-post *blog-entry*)))
   (with-mocks ()
-    (answer (blog-repo:repo-get-blog-entry name) (if (string= name "my blog name")
-                                           (cons :ok *blog-entry*)
-                                           (error "wrong provided blog name!")))
+    (answer (blog-repo:repo-get-blog-entry name)
+      (if (string= name "my blog name")
+          (cons :ok *blog-entry*)
+          (error "wrong provided blog name!")))
+    (answer (blog-repo:repo-get-all) (cons :ok (list *blog-entry*)))
     (answer (view.blog:render *blog-model*) (fake-blog-page))
 
     (is (string= (cdr (controller.blog:for-blog-name "my blog name")) (fake-blog-page)))
     (is (= 1 (length (invocations 'view.blog:render))))
+    (is (= 1 (length (invocations 'blog-repo:repo-get-all))))
     (is (= 1 (length (invocations 'blog-repo:repo-get-blog-entry))))))
 
 (test blog-controller-for-blog-name-not-found
   "Test blog controller with blog name that doesn't exist."
 
   (with-mocks ()
+    (answer (blog-repo:repo-get-all) (cons :ok (list *blog-entry*)))
     (answer (blog-repo:repo-get-blog-entry _)
       (cons :not-found-error "Post 'my blog post' doesn't exist!"))
 
@@ -130,12 +144,15 @@
       (is (equalp (cons :not-found-error "Post 'my blog post' doesn't exist!")
                   controller-result)))
     (is (= 0 (length (invocations 'view.blog:render))))
+    (is (= 0 (length (invocations 'blog-repo:repo-get-all))))
     (is (= 1 (length (invocations 'blog-repo:repo-get-blog-entry))))))
 
-(run! 'index-controller)
-(run! 'imprint-controller)
-(run! 'about-controller)
-(run! 'blog-controller-index)
-(run! 'blog-controller-index-no-blog-entry)
-(run! 'blog-controller-for-blog-name)
-(run! 'blog-controller-for-blog-name-not-found)
+
+;; (run! 'index-controller)
+;; (run! 'imprint-controller)
+;; (run! 'about-controller)
+
+;; (run! 'blog-controller-index)
+;; (run! 'blog-controller-index-no-blog-entry)
+;; (run! 'blog-controller-for-blog-name)
+;; (run! 'blog-controller-for-blog-name-not-found)

@@ -7,6 +7,10 @@
  ("all_copyright" . "all copyright by Manfred Bergmann")
  ("imprint_headline" . "Imprint")
  ("imprint_subline" . "Imprint and Disclaimer")
+ ("about_headline" . "About")
+ ("about_subline" . "Mission")
+ ("background_subline" . "Background")
+ ("blog_headline" . "Blog")
  ("imprint_text" .
 "<p>This disclaimer applies to the software available and downloadable from this web page.</p>
 <p>
@@ -17,12 +21,9 @@ Should software by MABE's applications prove defective, you and not software by 
 software by MABE is not responsible for any indirect, special, incidental, or consequential damages of any character including, 
 but not limited to, damages for loss of goodwill, work stoppage, computer failure or malfunction, 
 or any and all other commercial damages or losses.</p>")
- ("about_headline" . "About")
- ("about_subline" . "Mission")
  ("mabe_mission_text" .
 "<p>Objective of Software by MaBe is to produce high-quality, well designed, crafted (Clean-Code) and tested (TDD) software that meets the customers needs though agile processes and short feedback loops.</p>
 <p>Reliable software development patterns (GoF) and principles (SOLID) are used throughout to achieve the best possible result.</p>")
- ("background_subline" . "Background")
  ("background_text" .
 "<p>
 Computers and technical things in general were my interest since I am a small boy. This finally resulted in the studies of computer science at the \"Georg-Simon Ohm\" Univerity of Applied Science in Nuremberg (Bavaria, Germany) where I finished with a degree of \"Diplom Informatiker (FH)\".

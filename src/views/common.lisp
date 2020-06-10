@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.view.common
-  (:use :cl :spinneret :cl-locale :local-time)
+  (:use :cl :cl-who :cl-locale :local-time)
   (:nicknames :view.common)
   (:export #:with-page
            #:with-content-table
@@ -9,61 +9,54 @@
 
 (in-package :cl-swbymabeweb.view.common)
 
+;; this is our mode
+(setf (html-mode) :sgml)
+
 (defmacro with-content-table (&body body)
-  `(with-html
-     (:table :class "listtable"
-             (:tbody
-              ,@body))))
+  `(htm
+    (:table :class "listtable"
+            (:tbody
+             ,@body))))
 
 (defmacro content-headline (title)
-  `(with-html
-     (:tr
-      (:td :colspan 2 :class "headline" ,title))
-     (:tr
-      (:td :colspan 2 :class "subline" (:raw "&nbsp;")))))
+  `(htm
+    (:tr
+     (:td :colspan 2 :class "headline" (str ,title)))
+    (:tr
+     (:td :colspan 2 :class "subline" "&nbsp;"))))
 
 (defmacro content-subline (title)
-  `(with-html
-     (:tr :bgcolor "#646464"
-      (:td :colspan 2 :class "subline" ,title))))
+  `(htm
+    (:tr :bgcolor "#646464"
+         (:td :colspan 2 :class "subline" (str ,title)))))
 
 (defmacro with-content-line (&body body)
-  `(with-html
-     (:tr
-      (:td :colspan 2 :class "content" ,@body))
-     (:tr
-      (:td :colspan 2 (:raw "&nbsp;")))))
+  `(htm
+    (:tr
+     (:td :colspan 2 :class "content" ,@body))
+    (:tr
+     (:td :colspan 2 "&nbsp;"))))
 
 (defmacro nav-entry-separator ()
-  `(with-html
-     (:td :width "25" "|")))
+  `(htm
+    (:td :width "25" "|")))
 
-(defmacro nav-entry-blog ()
-  `(with-html
-     (:td :width "70"
-          (:a :href "/blog" (i18n "blog")))))
-
-(defmacro nav-entry-about ()
-  `(with-html
-     (:td :width "70"
-          (:a :href "/about" (i18n "about")))))
-
-(defmacro nav-entry-imprint ()
-  `(with-html
-     (:td :width "80"
-          (:a :href "/imprint" (i18n "imprint")))))
+(defmacro nav-entry (width link text)
+  `(htm
+    (:td :width ,width
+         (:a :href ,link (str ,text)))))
 
 (defmacro navigation ()
-  `(with-html
-     (:div :id "navigation"
-           (:table :class "mainnav"
-                   (:tbody
-                    (:tr :class "navi_boldwhite"
-                         (nav-entry-blog)
-                         (nav-entry-separator)
-                         (nav-entry-about)
-                         (nav-entry-separator)
-                         (nav-entry-imprint)))))))
+  `(htm
+    (:div :id "navigation"
+          (:table :class "mainnav"
+                  (:tbody
+                   (:tr :class "navi_boldwhite"
+                        (nav-entry "70" "/blog" (i18n "blog"))
+                        (nav-entry-separator)
+                        (nav-entry "70" "/about" (i18n "about"))
+                        (nav-entry-separator)
+                        (nav-entry "80" "/imprint" (i18n "imprint"))))))))
 
 (defmacro page-header (navigation)
   (let* ((max-width 1024)
@@ -73,53 +66,52 @@
          (top-height 55)
          (logo-height 30)
          (bottom-height 70))
-    `(with-html
-       (:table :class "listtable"
-               (:tbody
-                (:tr
-                 (:td :height ,top-height :width ,logo-col-width (:raw "&nbsp;"))
-                 (:td :width ,nav-col-width (:raw "&nbsp;")))
-                (:tr
-                 (:td
-                  (:a :href "/"
-                      (:img :src "gfx/logo.gif"
-                            :alt "back to home"
-                            :border "0"
-                            :height ,logo-height :width ,logo-width)))
-                 (:td :valign "bottom"
-                      ,navigation))
-                (:tr
-                 (:td :height ,bottom-height (:raw "&nbsp;"))
-                 (:td (:raw "&nbsp;"))))))))
+    `(htm
+      (:table :class "listtable"
+              (:tbody
+               (:tr
+                (:td :height ,top-height :width ,logo-col-width "&nbsp;")
+                (:td :width ,nav-col-width "&nbsp;"))
+               (:tr
+                (:td
+                 (:a :href "/"
+                     (:img :src "gfx/logo.gif"
+                           :alt "back to home"
+                           :border "0"
+                           :height ,logo-height :width ,logo-width)))
+                (:td :valign "bottom"
+                     ,navigation))
+               (:tr
+                (:td :height ,bottom-height "&nbsp;")
+                (:td "&nbsp;")))))))
 
 (defmacro page-footer ()
-  `(with-html
-     (with-content-table
-         (:tr
-          (:td :colspan 2 (:raw "&nbsp;")))
-       (:tr
-        (:td :colspan 2 (:hr)))
-       (:tr
-        (:td :class "content_light"
-             (i18n "all_copyright"))
-        (:td :class "content_light"
-             (:div :align "right"
-                   (format-timestring nil (now)
-                                      :format +asctime-format+))))
-       (:tr
-        (:td :colspan 2 (:raw "&nbsp;"))))))
+  `(htm
+    (with-content-table
+      (:tr
+       (:td :colspan 2 "&nbsp;"))
+      (:tr
+       (:td :colspan 2 (:hr)))
+      (:tr
+       (:td :class "content_light"
+            (i18n "all_copyright"))
+       (:td :class "content_light"
+            (:div :align "right"
+                  (str (format-timestring nil (now)
+                                          :format +asctime-format+)))))
+      (:tr
+       (:td :colspan 2 "&nbsp;")))))
 
 (defmacro with-page (title &rest body)
-  `(with-html-string
-     (:doctype)
+  `(with-html-output-to-string
+       (*standard-output* nil :prologue t :indent t)
      (:html
       (:head
-       (:title ,title)
+       (:title (str ,title))
        (:link :rel "stylesheet" :href "css/formate.css")
        (:meta :http-equiv "Content-Type"
               :content "text/html; charset=utf-8"))
       (:body
        (page-header (navigation))
        ,@body
-       (page-footer)
-       ))))
+       (page-footer)))))

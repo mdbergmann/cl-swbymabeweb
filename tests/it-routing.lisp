@@ -1,6 +1,5 @@
-(in-package :cl-user)
 (defpackage :cl-swbymabeweb-test
-  (:use :cl :fiveam :cl-mock :str)
+  (:use :cl :fiveam :local-time :str)
   (:local-nicknames (:dex :dexador))
   (:import-from #:cl-swbymabeweb
                 #:start
@@ -18,6 +17,8 @@
 
 (defmethod blog-repo::get-latest ((self blog-repo-fake))
   (cons :ok nil))
+(defmethod blog-repo::get-all ((self blog-repo-fake))
+  (cons :ok (list (blog-repo:make-blog-entry "Foo" (now) "Some text"))))
 (defmethod blog-repo::get-for-name ((self blog-repo-fake) name)
   (declare (ignore name))
   (cons :ok nil))
@@ -38,31 +39,31 @@
 (test handle-index-route
   "Test routing of index."
   (with-fixture with-server ()
-    (is (str:containsp "<title>Manfred Bergmann | Software Development | Index</title>"
+    (is (str:containsp "<title>Manfred Bergmann | Software Development | Index"
                        (dex:get "http://localhost:5000/")))))
 
 (test handle-imprint-route
   "Test routing of imprint."
   (with-fixture with-server ()
-    (is (str:containsp "<title>Manfred Bergmann | Software Development | Imprint</title>"
+    (is (str:containsp "<title>Manfred Bergmann | Software Development | Imprint"
                        (dex:get "http://localhost:5000/imprint")))))
 
 (test handle-about-route
   "Test routing of about."
   (with-fixture with-server ()
-    (is (str:containsp "<title>Manfred Bergmann | Software Development | About</title>"
+    (is (str:containsp "<title>Manfred Bergmann | Software Development | About"
                        (dex:get "http://localhost:5000/about")))))
 
 (test handle-blog-index-route
   "Test routing of blog - index."
   (with-fixture with-server ()
-    (is (str:containsp "<title>Manfred Bergmann | Software Development | Blog</title>"
+    (is (str:containsp "<title>Manfred Bergmann | Software Development | Blog"
                          (dex:get "http://localhost:5000/blog")))))
 
 (test handle-blog-route-with-blog-name
   "Test routing of blog with name of blog."
   (with-fixture with-server ()
-    (is (str:containsp "<title>Manfred Bergmann | Software Development | Blog</title>"
+    (is (str:containsp "<title>Manfred Bergmann | Software Development | Blog"
                        (dex:get "http://localhost:5000/blog/my+first+blog")))))
 
 (test handle-blog-route-with-blog-name-not-found
@@ -88,11 +89,11 @@
       (dex:http-request-not-found (e)
         (is (= (dex:response-status e) 404))))))
 
-(run! 'handle-index-route)
-(run! 'handle-imprint-route)
-(run! 'handle-about-route)
+;; (run! 'handle-index-route)
+;; (run! 'handle-imprint-route)
+;; (run! 'handle-about-route)
 
-(run! 'handle-blog-index-route)
-(run! 'handle-blog-route-with-blog-name)
-(run! 'handle-blog-route-with-blog-name-not-found)
-(run! 'handle-undefined-route)
+;;(run! 'handle-blog-index-route)
+;; (run! 'handle-blog-route-with-blog-name)
+;; (run! 'handle-blog-route-with-blog-name-not-found)
+;; (run! 'handle-undefined-route)

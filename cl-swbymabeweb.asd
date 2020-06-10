@@ -17,7 +17,7 @@
                "cl-syntax-annot"
 
                ;; html templating
-               "spinneret")
+               "cl-who")
   :components ((:module "src"
                 :components
                 ((:file "config")

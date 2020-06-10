@@ -26,41 +26,50 @@
   (let ((page-source (view.index:render)))
     (format t "~a~%" page-source)
     (is (str:containsp *expected-index-page-title* page-source))
-    (is (str:containsp "<div id=navigation" page-source))))
+    (is (str:containsp "<div id='navigation'" page-source))))
 
 (test imprint-view
   "Imprint view"
   (let ((page-source (view.imprint:render)))
     (format t "~a~%" page-source)
     (is (str:containsp *expected-imprint-page-title* page-source))
-    (is (str:containsp "<div id=navigation" page-source))
-    (is (str:containsp "<div id=content" page-source))))
+    (is (str:containsp "<div id='navigation'" page-source))
+    (is (str:containsp "<div id='content'" page-source))
+    (is (str:containsp "<p>This disclaimer applies to the software available and downloadable from this web page.</p>" page-source))))
 
 (test about-view
   "About view"
   (let ((page-source (view.about:render)))
     (format t "~a~%" page-source)
     (is (str:containsp *expected-about-page-title* page-source))
-    (is (str:containsp "<div id=navigation" page-source))
-    (is (str:containsp "<div id=content" page-source))))
+    (is (str:containsp "<div id='navigation'" page-source))
+    (is (str:containsp "<div id='content'" page-source))
+    (is (str:containsp "<p>Objective of Software by MaBe is to produce high-quality," page-source))
+    (is (str:containsp "<p><b>My experiences includes:</b><br />" page-source))))
 
+(defparameter *blog-post* (make-instance 'blog-post-model
+                                         :name "Foo"
+                                         :date "22.9.1973"
+                                         :text "Foobar"))
 (defparameter *blog-view-model*
   (make-instance 'blog-view-model
-                 :blog-post (make-instance 'blog-post
-                                           :name "Foo"
-                                           :date "22.9.1973"
-                                           :text "Foobar")))
+                 :blog-post *blog-post*
+                 :all-blog-posts (list *blog-post*)))
 (defparameter *blog-view-empty-model*
   (make-instance 'blog-view-model
-                 :blog-post nil))
+                 :blog-post nil
+                 :all-blog-posts (list *blog-post*)))
 
 (test blog-view
   "Blog view renders latest blog entry, if exists."
   (let* ((page-source (view.blog:render *blog-view-model*)))
     (format t "~a~%" page-source)
     (is (str:containsp *expected-blog-page-title* page-source))
-    (is (str:containsp "<div id=navigation" page-source))
-    (is (str:containsp "<div id=content" page-source))
+    (is (str:containsp "<div id='navigation'" page-source))
+    (is (str:containsp "<div id='content'" page-source))
+    (is (str:containsp "<div class='blogLeftPanel'" page-source))
+    (is (str:containsp "<div class='content blogNavPanel'" page-source))
+
     (is (str:containsp "Foo" page-source))
     (is (str:containsp "Foobar" page-source))
     (is (str:containsp "22.9.1973" page-source))))
@@ -70,11 +79,13 @@
   (let* ((page-source (view.blog:render *blog-view-empty-model*)))
     (format t "~a~%" page-source)
     (is (str:containsp *expected-blog-page-title* page-source))
-    (is (str:containsp "<div id=navigation" page-source))
-    (is (str:containsp "<tr><td class=content colspan=2><tr>" page-source))))
+    (is (str:containsp "<div id='navigation'" page-source))
+    ;;(is (str:containsp "<tr><td class=content colspan=2><tr>" page-source))
+    ))
 
-(run! 'index-view)
-(run! 'imprint-view)
-(run! 'about-view)
-(run! 'blog-view)
-(run! 'blog-view-nil-model-post)
+;; (run! 'index-view)
+;; (run! 'imprint-view)
+;; (run! 'about-view)
+
+;; (run! 'blog-view)
+;; (run! 'blog-view-nil-model-post)
