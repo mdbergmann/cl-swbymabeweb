@@ -2,6 +2,7 @@
   (:use :cl :local-time)
   (:nicknames :blog-repo)
   (:export #:blog-entry
+           #:blog-entry-p
            #:make-blog-entry
            #:blog-entry-name
            #:blog-entry-date
@@ -12,19 +13,25 @@
            #:repo-get-blog-entry
            ;; blog-repo class
            #:blog-repo-base
+           #:blog-repo-default
            ;; factory
            #:blog-repo-fac
            #:blog-repo-fac-init
            #:blog-repo-fac-get
            #:blog-repo-fac-clean)
   (:import-from #:serapeum
-                #:->))
+                #:->
+                #:~>
+                #:~>>)
+  (:import-from #:cl-date-time-parser
+                #:parse-date-time))
 
 (in-package :cl-swbymabeweb.blog-repo)
 
 ;; ---------------------------------------
 ;; blog repo model -----------------------
 ;; ---------------------------------------
+
 (defclass blog-entry ()
   ((name :initform ""
          :type string
@@ -44,6 +51,29 @@
 
 (defun blog-entry-p (entry)
   (typep entry 'blog-entry))
+
+;; ---------------------------------------
+;; blog repo factory ---------------------
+;; ---------------------------------------
+
+(defclass blog-repo-fac ()
+  ((instance
+    :initform nil
+    :accessor instance
+    :allocation :class))
+  (:documentation "The blog repo factory."))
+
+(defun blog-repo-fac-init (repo-instance)
+  (setf (instance *blog-repo-fac*) repo-instance))
+(defun blog-repo-fac-get ()
+  (if (null (instance *blog-repo-fac*))
+      (error "Set an instance first!")
+      (instance *blog-repo-fac*)))
+(defun blog-repo-fac-clean ()
+  (setf (instance *blog-repo-fac*) nil))
+
+(defvar *blog-repo-fac* (make-instance 'blog-repo-fac))
+
 
 ;; ---------------------------------------
 ;; blog repo -----------------------------
@@ -69,23 +99,47 @@
   "Retrieves a blog entry for the given name."
   (get-for-name (blog-repo-fac-get) name))
 
-;; ---------------------------------------
-;; blog repo factory ---------------------
-;; ---------------------------------------
-(defclass blog-repo-fac ()
-  ((instance
-    :initform nil
-    :accessor instance
-    :allocation :class))
-  (:documentation "The blog repo factory."))
+;; blog repo default impl -----------------------
 
-(defun blog-repo-fac-init (repo-instance)
-  (setf (instance *blog-repo-fac*) repo-instance))
-(defun blog-repo-fac-get ()
-  (if (null (instance *blog-repo-fac*))
-      (error "Set an instance first!")
-      (instance *blog-repo-fac*)))
-(defun blog-repo-fac-clean ()
-  (setf (instance *blog-repo-fac*) nil))
+(defclass blog-repo-default (blog-repo-base)
+  ((blog-folder :initarg :blog-folder
+                :initform nil
+                :documentation "The folder where the blog posts are expected.")))
 
-(defvar *blog-repo-fac* (make-instance 'blog-repo-fac))
+(defmethod get-all ((self blog-repo-default))
+  (with-slots (blog-folder) self
+    (log:debug "Get all in: " blog-folder)
+    (mapcar #'file-to-blog-entry
+            (remove-if-not #'allowed-file-ext-p
+                           (uiop:directory-files blog-folder)))))
+
+(defun allowed-file-ext-p (file)
+  (or (str:ends-with-p ".html" (namestring file))
+      (str:ends-with-p ".md" (namestring file))))
+
+(defun file-to-blog-entry (file)
+  "Reads file and takes data from it to create a `blog-entry'"
+  (~> file
+      (file-namestring)
+      (blog-entry-name-and-datestring)
+      ((lambda (name-and-datestring)
+         (destructuring-bind (blog-name datestring) name-and-datestring
+           (log:debug "Have blog-name: ~a and datestring: ~a~%" blog-name datestring)
+           (make-blog-entry blog-name
+                            (datestring-to-timestamp datestring)
+                            (read-file-content-as-string file)))))))
+      
+(defun blog-entry-name-and-datestring (filename)
+  "takes the filename and replaces any '_' with space, plus reomves the file extension."
+  (~>> filename
+       (str:replace-all "_" " ")
+       (str:substring 0
+                      (- (length filename)
+                         (1+ (length (pathname-type filename)))))
+       (str:split "-")))
+
+(defun datestring-to-timestamp (datestring)
+  (universal-to-timestamp (parse-date-time datestring)))
+
+(defun read-file-content-as-string (file)
+  (uiop:read-file-string file))

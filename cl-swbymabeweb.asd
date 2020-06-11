@@ -11,7 +11,9 @@
                "log4cl"
                "cl-locale"
                "local-time"
+               "cl-date-time-parser"
                "serapeum"
+               "uiop"
 
                ;; for @route annotation
                "cl-syntax-annot"
@@ -48,9 +50,9 @@
   :components ((:module "tests"
                 :components
                 ((:file "all-tests")
-                 (:file "controller-test")
-                 (:file "view-test")
-                 (:file "it-routing")
+                 (:file "controller-test" :depends-on ("all-tests"))
+                 (:file "view-test" :depends-on ("all-tests"))
+                 (:file "it-routing" :depends-on ("all-tests"))
                  )))
   :description "Test system for cl-swbymabeweb"
   :perform (test-op (op c) (symbol-call :fiveam :run!

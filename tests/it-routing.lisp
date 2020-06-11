@@ -93,7 +93,7 @@
 ;; (run! 'handle-imprint-route)
 ;; (run! 'handle-about-route)
 
-;;(run! 'handle-blog-index-route)
+;; (run! 'handle-blog-index-route)
 ;; (run! 'handle-blog-route-with-blog-name)
 ;; (run! 'handle-blog-route-with-blog-name-not-found)
 ;; (run! 'handle-undefined-route)
