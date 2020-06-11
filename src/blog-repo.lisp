@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.blog-repo
-  (:use :cl :local-time)
+  (:use :cl)
   (:nicknames :blog-repo)
   (:export #:blog-entry
            #:blog-entry-p
@@ -36,15 +36,18 @@
   ((name :initform ""
          :type string
          :initarg :name
-         :reader blog-entry-name)
+         :reader blog-entry-name
+         :documentation "the blog name, the filename minus the date.")
    (date :initform nil
-         :type local-time:timestamp
+         :type fixnum
          :initarg :date
-         :reader blog-entry-date)
+         :reader blog-entry-date
+         :documentation "universal timestamp")
    (text :initform ""
          :type string
          :initarg :text
-         :reader blog-entry-text)))
+         :reader blog-entry-text
+         :documentation "The content of the file")))
 
 (defun make-blog-entry (name date text)
   (make-instance 'blog-entry :name name :date date :text text))
@@ -126,7 +129,7 @@
          (destructuring-bind (blog-name datestring) name-and-datestring
            (log:debug "Have blog-name: ~a and datestring: ~a~%" blog-name datestring)
            (make-blog-entry blog-name
-                            (datestring-to-timestamp datestring)
+                            (datestring-to-universal-time datestring)
                             (read-file-content-as-string file)))))))
       
 (defun blog-entry-name-and-datestring (filename)
@@ -138,8 +141,8 @@
                          (1+ (length (pathname-type filename)))))
        (str:split "-")))
 
-(defun datestring-to-timestamp (datestring)
-  (universal-to-timestamp (parse-date-time datestring)))
+(defun datestring-to-universal-time (datestring)
+  (parse-date-time datestring))
 
 (defun read-file-content-as-string (file)
   (uiop:read-file-string file))

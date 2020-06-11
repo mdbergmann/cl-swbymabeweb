@@ -56,6 +56,6 @@ This function makes a mapping from the repositotry blog entry to the view model 
     (make-instance 'blog-post-model
                    :name (blog-entry-name blog-entry)
                    :date (format-timestring nil
-                                            (blog-entry-date blog-entry)
+                                            (universal-to-timestamp (blog-entry-date blog-entry))
                                             :format +asctime-format+)
                    :text (blog-entry-text blog-entry))))

@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.controller-test
-  (:use :cl :fiveam :cl-mock :local-time :view.blog :blog-repo)
+  (:use :cl :fiveam :cl-mock :view.blog :blog-repo)
   (:export #:run!
            #:all-tests
            #:nil)
@@ -77,7 +77,7 @@
 
   (setf *blog-entry*
         (blog-repo:make-blog-entry "Foobar"
-                                   (now)
+                                   (get-universal-time)
                                    "<b>hello world</b>"))
   (setf *blog-model*
         (make-instance 'blog-view-model
@@ -114,7 +114,7 @@
 
   (setf *blog-entry*
         (blog-repo:make-blog-entry "my_blog_name"
-                                   (now)
+                                   (get-universal-time)
                                    "<b>hello world</b>"))
   (setf *blog-model*
         (make-instance 'blog-view-model

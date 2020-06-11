@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.blog-repo-test
-  (:use :cl :fiveam :local-time :cl-swbymabeweb.blog-repo)
+  (:use :cl :fiveam :cl-swbymabeweb.blog-repo)
   (:export #:run!
            #:all-tests
            #:nil)
@@ -33,14 +33,12 @@
       ;; file one
       (let ((first (first all-blogs)))
         (is (string= "test 1" (blog-entry-name first)))
-        (is (timestamp= (universal-to-timestamp (parse-date-time "20190412"))
-                        (blog-entry-date first)))
+        (is (= (parse-date-time "20190412") (blog-entry-date first)))
         (is (string= (format nil "## Heading 1~%~%`foo`~%")
                      (blog-entry-text first))))
       ;; file two
       (let ((second (second all-blogs)))
         (is (string= "test 2" (blog-entry-name second)))
-        (is (timestamp= (universal-to-timestamp (parse-date-time "20200611"))
-                        (blog-entry-date second)))
+        (is (= (parse-date-time "20200611") (blog-entry-date second)))
         (is (string= (format nil "<div>~%  <h2>Heading 2</h2>~%  <span>Foo</span>~%</div>~%")
                      (blog-entry-text second)))))))

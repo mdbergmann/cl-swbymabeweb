@@ -18,7 +18,7 @@
 (defmethod blog-repo::get-latest ((self blog-repo-fake))
   (cons :ok nil))
 (defmethod blog-repo::get-all ((self blog-repo-fake))
-  (cons :ok (list (blog-repo:make-blog-entry "Foo" (now) "Some text"))))
+  (cons :ok (list (blog-repo:make-blog-entry "Foo" (get-universal-time) "Some text"))))
 (defmethod blog-repo::get-for-name ((self blog-repo-fake) name)
   (declare (ignore name))
   (cons :ok nil))
