@@ -120,7 +120,7 @@
         (make-instance 'blog-view-model
                        :blog-post (blog-entry-to-blog-post *blog-entry*)))
   (with-mocks ()
-    (answer (blog-repo:repo-get-blog-entry name)
+    (answer (blog-repo:repo-get-for-name name)
       (if (string= name "my blog name")
           (cons :ok *blog-entry*)
           (error "wrong provided blog name!")))
@@ -130,14 +130,14 @@
     (is (string= (cdr (controller.blog:for-blog-name "my blog name")) (fake-blog-page)))
     (is (= 1 (length (invocations 'view.blog:render))))
     (is (= 1 (length (invocations 'blog-repo:repo-get-all))))
-    (is (= 1 (length (invocations 'blog-repo:repo-get-blog-entry))))))
+    (is (= 1 (length (invocations 'blog-repo:repo-get-for-name))))))
 
 (test blog-controller-for-blog-name-not-found
   "Test blog controller with blog name that doesn't exist."
 
   (with-mocks ()
     (answer (blog-repo:repo-get-all) (cons :ok (list *blog-entry*)))
-    (answer (blog-repo:repo-get-blog-entry _)
+    (answer (blog-repo:repo-get-for-name _)
       (cons :not-found-error "Post 'my blog post' doesn't exist!"))
 
     (let ((controller-result (controller.blog:for-blog-name "my blog name")))
@@ -145,7 +145,7 @@
                   controller-result)))
     (is (= 0 (length (invocations 'view.blog:render))))
     (is (= 0 (length (invocations 'blog-repo:repo-get-all))))
-    (is (= 1 (length (invocations 'blog-repo:repo-get-blog-entry))))))
+    (is (= 1 (length (invocations 'blog-repo:repo-get-for-name))))))
 
 
 ;; (run! 'index-controller)

@@ -10,7 +10,7 @@
            ;; facade for repo access
            #:repo-get-latest
            #:repo-get-all
-           #:repo-get-blog-entry
+           #:repo-get-for-name
            ;; blog-repo class
            #:blog-repo-base
            #:blog-repo-default
@@ -96,7 +96,7 @@
   "Retrieves all available blog posts."
   (get-all (blog-repo-fac-get)))
 
-(defun repo-get-blog-entry (name)
+(defun repo-get-for-name (name)
   "Retrieves a blog entry for the given name."
   (get-for-name (blog-repo-fac-get) name))
 

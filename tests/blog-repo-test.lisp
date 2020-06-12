@@ -56,7 +56,7 @@
 (test get-for-name
   "Get blog entry for name."
   (with-fixture fixture ()
-    (let ((blog (repo-get-blog-entry "test 1")))
+    (let ((blog (repo-get-for-name "test 1")))
       (is (string= "test 1" (blog-entry-name blog))))))
 
 

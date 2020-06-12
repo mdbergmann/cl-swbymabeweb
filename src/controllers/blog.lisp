@@ -26,7 +26,7 @@ and delivers it to the view for rendering.
 If the blog entry with that name doesn't exist the controller will report 
 an error to the caller which the caller is responsible to handle."  
   (log:debug "blog name: " name)
-  (let ((lookup-result (blog-repo:repo-get-blog-entry name)))
+  (let ((lookup-result (blog-repo:repo-get-for-name name)))
     (if (eq :ok (car lookup-result))
         (make-controller-result
          :ok
