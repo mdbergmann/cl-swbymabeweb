@@ -22,6 +22,7 @@
   (:local-nicknames (:dtp :cl-date-time-parser))
   (:local-nicknames (:md :markdown))
   (:import-from #:serapeum
+                #:->
                 #:~>
                 #:~>>))
 
@@ -65,6 +66,8 @@
     :allocation :class))
   (:documentation "The blog repo factory."))
 
+(defvar *blog-repo-fac* (make-instance 'blog-repo-fac))
+
 (defun blog-repo-fac-init (repo-instance)
   (setf (instance *blog-repo-fac*) repo-instance))
 (defun blog-repo-fac-get ()
@@ -74,11 +77,29 @@
 (defun blog-repo-fac-clean ()
   (setf (instance *blog-repo-fac*) nil))
 
-(defvar *blog-repo-fac* (make-instance 'blog-repo-fac))
-
 
 ;; ---------------------------------------
-;; blog repo -----------------------------
+;; blog repo facade ----------------------
+;; ---------------------------------------
+
+(defun repo-get-latest ()
+  "Retrieves the latest entry of the blog."
+  (cons :ok (get-latest (blog-repo-fac-get))))
+
+(defun repo-get-all ()
+  "Retrieves all available blog posts."
+  (cons :ok (get-all (blog-repo-fac-get))))
+
+(defun repo-get-for-name (name)
+  "Retrieves a blog entry for the given name."
+  (let ((result (get-for-name (blog-repo-fac-get) name)))
+    (if result
+        (cons :ok result)
+        (cons :not-found-error
+              (format nil "Blog post with name: ~a does not exist!" name)))))
+
+;; ---------------------------------------
+;; blog repo class -----------------------
 ;; ---------------------------------------
 
 (defclass blog-repo-base ()
@@ -88,18 +109,6 @@
 (defgeneric get-latest (blog-repo-base))
 (defgeneric get-all (blog-repo-base))
 (defgeneric get-for-name (blog-repo-base blog-name))
-
-(defun repo-get-latest ()
-  "Retrieves the latest entry of the blog."
-  (get-latest (blog-repo-fac-get)))
-
-(defun repo-get-all ()
-  "Retrieves all available blog posts."
-  (get-all (blog-repo-fac-get)))
-
-(defun repo-get-for-name (name)
-  "Retrieves a blog entry for the given name."
-  (get-for-name (blog-repo-fac-get) name))
 
 ;; blog repo default impl -----------------------
 
@@ -156,8 +165,7 @@
   (dtp:parse-date-time datestring))
 
 (defun read-file-content-as-string (file)
-  (~> file
-      (html-or-md (pathname-type file))))
+  (html-or-md file (pathname-type file)))
 
 (defun html-or-md (file extension)
   (if (string= "html" extension)

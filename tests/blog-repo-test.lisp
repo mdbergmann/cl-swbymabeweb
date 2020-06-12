@@ -30,7 +30,7 @@
 (test get-all
   "Tests get all blog entries."
   (with-fixture fixture ()
-    (let ((all-blogs (repo-get-all)))
+    (let ((all-blogs (cdr (repo-get-all))))
       (format t "blogs: ~a~%" all-blogs)
       (is (= 2 (length all-blogs)))
       (is (every #'blog-entry-p all-blogs))
@@ -50,18 +50,27 @@
 (test get-latest
   "Tests getting the latest file."
   (with-fixture fixture ()
-    (let ((latest (repo-get-latest)))
+    (let ((latest (cdr (repo-get-latest))))
       (is (string= "test 2" (blog-entry-name latest))))))
 
-(test get-for-name
+(test get-for-name--ok
   "Get blog entry for name."
   (with-fixture fixture ()
-    (let ((blog (repo-get-for-name "test 1")))
+    (let ((blog (cdr (repo-get-for-name "test 1"))))
       (is (string= "test 1" (blog-entry-name blog))))))
 
+(test get-for-name--nok
+  "Get blog entry for name."
+  (with-fixture fixture ()
+    (let ((blog (repo-get-for-name "not-exists")))
+      (is (eq :not-found-error (car blog))))))
 
 (defun test-all ()
   (run! 'create-blog-repo)
   (run! 'get-all)
   (run! 'get-latest)
-  (run! 'get-for-all))
+  (run! 'get-for-name--ok)
+  (run! 'get-for-name--nok))
+
+
+;; TODO: add output interface to as (cons x y)

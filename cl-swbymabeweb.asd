@@ -25,8 +25,8 @@
   :components ((:module "src"
                 :components
                 ((:file "config")
-                 (:file "main")
                  (:file "blog-repo")
+                 (:file "main")
                  (:file "views/common")
                  (:file "views/index")
                  (:file "views/imprint")
