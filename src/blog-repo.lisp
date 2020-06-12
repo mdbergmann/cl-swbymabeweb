@@ -110,9 +110,21 @@
 (defmethod get-all ((self blog-repo-default))
   (with-slots (blog-folder) self
     (log:debug "Get all in: " blog-folder)
-    (mapcar #'file-to-blog-entry
-            (remove-if-not #'allowed-file-ext-p
-                           (uiop:directory-files blog-folder)))))
+    (~> blog-folder
+        (filter-files)
+        (to-blog-entries)
+        (sort-for-date))))
+
+(defun filter-files (folder)
+  (~> folder
+      (uiop:directory-files)
+      (remove-if-not #'allowed-file-ext-p _)))
+
+(defun to-blog-entries (files)
+  (mapcar #'file-to-blog-entry files))
+
+(defun sort-for-date (blog-entries)
+  (sort blog-entries #'> :key #'blog-entry-date))
 
 (defun allowed-file-ext-p (file)
   (or (str:ends-with-p ".html" (namestring file))

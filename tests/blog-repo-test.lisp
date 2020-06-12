@@ -34,15 +34,25 @@
       (format t "blogs: ~a~%" all-blogs)
       (is (= 2 (length all-blogs)))
       (is (every #'blog-entry-p all-blogs))
-      ;; file one
-      (let ((first (first all-blogs)))
-        (is (string= "test 1" (blog-entry-name first)))
-        (is (= (parse-date-time "20190412") (blog-entry-date first)))
-        (is (string= (format nil "## Heading 1~%~%`foo`~%")
-                     (blog-entry-text first))))
-      ;; file two
-      (let ((second (second all-blogs)))
-        (is (string= "test 2" (blog-entry-name second)))
-        (is (= (parse-date-time "20200611") (blog-entry-date second)))
+      ;; file one - sorted by date
+      (let ((blog (first all-blogs)))
+        (is (string= "test 2" (blog-entry-name blog)))
+        (is (= (parse-date-time "20200611") (blog-entry-date blog)))
         (is (string= (format nil "<div>~%  <h2>Heading 2</h2>~%  <span>Foo</span>~%</div>~%")
-                     (blog-entry-text second)))))))
+                     (blog-entry-text blog))))
+      ;; file two
+      (let ((blog (second all-blogs)))
+        (is (string= "test 1" (blog-entry-name blog)))
+        (is (= (parse-date-time "20190412") (blog-entry-date blog)))
+        (is (string= (format nil "## Heading 1~%~%`foo`~%")
+                     (blog-entry-text blog)))))))
+
+(test get-latest
+  "Tests getting the latest file."
+  )
+
+
+(defun test-all ()
+  (run! 'create-blog-repo)
+  (run! 'get-all)
+  (run! 'get-latest))
