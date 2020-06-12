@@ -44,7 +44,7 @@
       (let ((blog (second all-blogs)))
         (is (string= "test 1" (blog-entry-name blog)))
         (is (= (parse-date-time "20190412") (blog-entry-date blog)))
-        (is (string= (format nil "## Heading 1~%~%`foo`~%")
+        (is (string= "<h2>Heading 1</h2><p><a href='/foo' class='link'>MyLink</a>  </p><p><code>foo</code> </p>"
                      (blog-entry-text blog)))))))
 
 (test get-latest

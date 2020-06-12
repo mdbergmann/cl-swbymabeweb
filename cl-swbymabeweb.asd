@@ -15,6 +15,7 @@
                "serapeum"
                "uiop"
                "str"
+               "cl-markdown"
 
                ;; for @route annotation
                "cl-syntax-annot"

@@ -20,6 +20,7 @@
            #:blog-repo-fac-get
            #:blog-repo-fac-clean)
   (:local-nicknames (:dtp :cl-date-time-parser))
+  (:local-nicknames (:md :markdown))
   (:import-from #:serapeum
                 #:~>
                 #:~>>))
@@ -155,7 +156,18 @@
   (dtp:parse-date-time datestring))
 
 (defun read-file-content-as-string (file)
-  (uiop:read-file-string file))
+  (~> file
+      (html-or-md (pathname-type file))))
+
+(defun html-or-md (file extension)
+  (if (string= "html" extension)
+      (uiop:read-file-string file)
+      (convert-md-to-html file)))
+
+(defun convert-md-to-html (file)
+  (let ((stream (make-string-output-stream)))
+    (md:markdown file :stream stream)
+    (get-output-stream-string stream)))
 
 (defmethod get-latest ((self blog-repo-default))
   (first (get-all self)))
