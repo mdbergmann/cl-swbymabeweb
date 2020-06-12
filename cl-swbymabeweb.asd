@@ -14,6 +14,7 @@
                "cl-date-time-parser"
                "serapeum"
                "uiop"
+               "str"
 
                ;; for @route annotation
                "cl-syntax-annot"

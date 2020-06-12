@@ -19,12 +19,10 @@
            #:blog-repo-fac-init
            #:blog-repo-fac-get
            #:blog-repo-fac-clean)
+  (:local-nicknames (:dtp :cl-date-time-parser))
   (:import-from #:serapeum
-                #:->
                 #:~>
-                #:~>>)
-  (:import-from #:cl-date-time-parser
-                #:parse-date-time))
+                #:~>>))
 
 (in-package :cl-swbymabeweb.blog-repo)
 
@@ -133,7 +131,7 @@
                             (read-file-content-as-string file)))))))
       
 (defun blog-entry-name-and-datestring (filename)
-  "takes the filename and replaces any '_' with space, plus reomves the file extension."
+  "Takes the filename and replaces any '_' with space, plus reomves the file extension."
   (~>> filename
        (str:replace-all "_" " ")
        (str:substring 0
@@ -142,7 +140,7 @@
        (str:split "-")))
 
 (defun datestring-to-universal-time (datestring)
-  (parse-date-time datestring))
+  (dtp:parse-date-time datestring))
 
 (defun read-file-content-as-string (file)
   (uiop:read-file-string file))

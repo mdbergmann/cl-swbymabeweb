@@ -14,8 +14,12 @@
 (in-suite blog-repo-tests)
 
 (def-fixture fixture ()
-  (let ((cut (make-instance 'blog-repo-default
-                            :blog-folder #P"../test-blogs/")))
+  (let* ((folder (merge-pathnames "test-blogs/"
+                                  (asdf/system:system-source-directory
+                                   (asdf:find-system "cl-swbymabeweb"))))
+         (cut (make-instance 'blog-repo-default
+                             :blog-folder folder)))
+    (format t "using blogs folder: ~a~%" (uiop:native-namestring folder))
     (blog-repo-fac-init cut)
     (&body)))
 
