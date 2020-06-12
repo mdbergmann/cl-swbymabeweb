@@ -156,3 +156,9 @@
 
 (defun read-file-content-as-string (file)
   (uiop:read-file-string file))
+
+(defmethod get-latest ((self blog-repo-default))
+  (first (get-all self)))
+
+(defmethod get-for-name ((self blog-repo-default) name)
+  (find name (get-all self) :key #'blog-entry-name :test #'string=))

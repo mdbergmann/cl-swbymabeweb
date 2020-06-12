@@ -49,10 +49,19 @@
 
 (test get-latest
   "Tests getting the latest file."
-  )
+  (with-fixture fixture ()
+    (let ((latest (repo-get-latest)))
+      (is (string= "test 2" (blog-entry-name latest))))))
+
+(test get-for-name
+  "Get blog entry for name."
+  (with-fixture fixture ()
+    (let ((blog (repo-get-blog-entry "test 1")))
+      (is (string= "test 1" (blog-entry-name blog))))))
 
 
 (defun test-all ()
   (run! 'create-blog-repo)
   (run! 'get-all)
-  (run! 'get-latest))
+  (run! 'get-latest)
+  (run! 'get-for-all))
