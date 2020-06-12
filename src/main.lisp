@@ -27,13 +27,14 @@
 (setf (cl-locale:current-dictionary) :default)
 (setf cl-locale:*locale* :en_EN)
 
-;; set default blog-repo
-(blog-repo-fac-init (make-instance 'blog-repo-default :blog-folder *blog-folder-path*))
-
 (defvar *web-handler* nil)
 
 (defun start (&rest args &key server port debug &allow-other-keys)
   (declare (ignore server port debug))
+
+  (log:info "Initializing blog-repo factory.")
+  (blog-repo-fac-init (make-instance 'blog-repo-default :blog-folder *blog-folder-path*))
+
   (log:info "Starting server.")
   (when *web-handler*
     (log:info "Server is already running."))

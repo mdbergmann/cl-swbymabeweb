@@ -80,7 +80,7 @@ tr,td {
 }
 
 .content, .content_title, .content_boldface, .content_light {
-	font-size : 10pt;
+	font-size : 12pt;
 	font-style : normal;
 	line-height:17px;
 	text-align: left;
@@ -100,12 +100,16 @@ tr,td {
 	font-size : 10pt;
 }
 
+.content_tiny {
+	font-size : 9pt;
+}
+
 .content_light {
 	color: #A4A4A4;
 }
 
 .headline {
-	font-size : 13pt;
+	font-size : 14pt;
 	font-style : normal;
 	text-align: left;
 	color: #999999;
@@ -114,7 +118,7 @@ tr,td {
 }
 
 .subline {
-	font-size : 10pt;
+	font-size : 12pt;
 	font-style : normal;
 	text-align: left;
 	color: #ffffff;
@@ -123,28 +127,28 @@ tr,td {
 }
 
 .subm_active {
-	font-size : 10pt;
+	font-size : 11pt;
 	font-weight : bold;
 	color : #999999;
 	text-decoration : none;
 }
 
 .navi_boldwhite {
-	font-size : 13px;
+	font-size : 13pt;
 	font-weight : normal;
 	color : #ffffff;
 	text-align: center;
 }
 
 .subnavi_normalgray {
-	font-size : 10px;
+	font-size : 11pt;
 	font-weight : normal;
 	color : #999999;
 	text-align: left;
 }
 
 a:link {
-	font-size : 14px;
+	font-size : 12pt;
 	font-weight : normal;
 	color : #ffffff;
 	text-align: center;
@@ -152,7 +156,7 @@ a:link {
 }
 
 a:visited {
-	font-size : 14px;
+	font-size : 12pt;
 	font-weight : normal;
 	color : #ffffff;
 	text-align: center;
@@ -160,7 +164,7 @@ a:visited {
 }
 
 a:active {
-	font-size : 14px;
+	font-size : 12pt;
 	font-weight : normal;
 	color : #ffffff;
 	text-align: center;
@@ -168,7 +172,7 @@ a:active {
 }
 
 a:hover {
-	font-size : 14px;
+	font-size : 12pt;
 	font-weight : bold;
 	color : #ffffff;
 	text-align: center;

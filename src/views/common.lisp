@@ -75,7 +75,7 @@
                (:tr
                 (:td
                  (:a :href "/"
-                     (:img :src "gfx/logo.gif"
+                     (:img :src "/gfx/logo.gif"
                            :alt "back to home"
                            :border "0"
                            :height ,logo-height :width ,logo-width)))
@@ -95,7 +95,7 @@
       (:tr
        (:td :class "content_light"
             (i18n "all_copyright"))
-       (:td :class "content_light"
+       (:td :class "content_light content_small"
             (:div :align "right"
                   (str (format-timestring nil (now)
                                           :format +asctime-format+)))))
@@ -108,7 +108,7 @@
      (:html
       (:head
        (:title (str ,title))
-       (:link :rel "stylesheet" :href "css/formate.css")
+       (:link :rel "stylesheet" :href "/css/formate.css")
        (:meta :http-equiv "Content-Type"
               :content "text/html; charset=utf-8"))
       (:body

@@ -34,19 +34,18 @@
   (with-slots (name date text) blog-post
     (with-html-output-to-string (*standard-output* nil :prologue nil :indent t)
       (:div :class "blogLeftPanel"
-            (:div :class "content_light" (str name))
+            (:div :class "content_light content_small" (str name))
             (:hr :class "blogtitle")
-            (:div :class "content" (str date))
+            (:div :class "content_tiny" (str date))
             (:div "&nbsp;")
             (:div :class "content" (str text))))))
 
 (defun blog-post-navigation (blog-posts)
   (with-html-output-to-string (*standard-output* nil :prologue nil :indent t)
     (:div :class "content blogNavPanel"
-          (:table :align "right"
-                  (:tr
-                   (dolist (elem blog-posts)
-                     (str (blog-nav-entry elem))))))))
+          (:ul :align "right"
+               (dolist (elem blog-posts)
+                 (str (blog-nav-entry elem)))))))
 
 (defun name-to-link (blog-name)
   (format nil "/blog/~a"
@@ -54,12 +53,15 @@
 
 (defun blog-nav-entry (post)
   (let* ((post-name (slot-value post 'name))
+         (post-date (slot-value post 'date))
          (post-link (name-to-link post-name)))
     (with-html-output-to-string (*standard-output* nil :prologue nil :indent t)
-      (:td :style "text-align: right;"
+      (:li :style "text-align: left;"
            (:a :href post-link
-               :class "link_small"
+               :class "link"
                (str post-name))
+           (:br)
+           (:span :class "content_tiny" (str post-date))
            (:hr :class "recentsblognav")))))
 
 (defun blog-header ()
