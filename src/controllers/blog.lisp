@@ -57,5 +57,8 @@ This function makes a mapping from the repositotry blog entry to the view model 
                    :name (blog-entry-name blog-entry)
                    :date (format-timestring nil
                                             (universal-to-timestamp (blog-entry-date blog-entry))
-                                            :format +asctime-format+)
+                                            :format '((:day 2) #\Space  :long-month #\Space (:year 4)))
+                   :nav-date (format-timestring nil
+                                                (universal-to-timestamp (blog-entry-date blog-entry))
+                                                :format '((:day 2) #\- (:month 2) #\- (:year 4)))
                    :text (blog-entry-text blog-entry))))

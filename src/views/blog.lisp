@@ -15,9 +15,12 @@
   ((name :initform ""
          :type string
          :initarg :name)
-   (date :initform "unknown"
+   (date :initform ""
          :type string
          :initarg :date)
+   (nav-date :initform ""
+             :type string
+             :initarg :nav-date)
    (text :initform ""
          :type string
          :initarg :text)))
@@ -33,16 +36,16 @@
 (defun blog-post-content (blog-post)
   (with-slots (name date text) blog-post
     (with-html-output-to-string (*standard-output* nil :prologue nil :indent t)
-      (:div :class "blogLeftPanel"
-            (:div :class "content_light content_small" (str name))
+      (:div
+            (:div :class "content_light" (str name))
             (:hr :class "blogtitle")
             (:div :class "content_tiny" (str date))
             (:div "&nbsp;")
-            (:div :class "content" (str text))))))
+            (:div :class "content blogLeftPanel" (str text))))))
 
 (defun blog-post-navigation (blog-posts)
   (with-html-output-to-string (*standard-output* nil :prologue nil :indent t)
-    (:div :class "content blogNavPanel"
+    (:div :class "content"
           (:ul :align "right"
                (dolist (elem blog-posts)
                  (str (blog-nav-entry elem)))))))
@@ -53,16 +56,15 @@
 
 (defun blog-nav-entry (post)
   (let* ((post-name (slot-value post 'name))
-         (post-date (slot-value post 'date))
+         (post-date (slot-value post 'nav-date))
          (post-link (name-to-link post-name)))
     (with-html-output-to-string (*standard-output* nil :prologue nil :indent t)
-      (:li :style "text-align: left;"
+      (:li :class "blog-nav-item"
            (:a :href post-link
-               :class "link"
+               :class "blog-nav-link"
                (str post-name))
            (:br)
-           (:span :class "content_tiny" (str post-date))
-           (:hr :class "recentsblognav")))))
+           (:span :class "content_tiny" (str post-date))))))
 
 (defun blog-header ()
   (with-html-output-to-string (*standard-output* nil :prologue nil :indent t)
@@ -75,8 +77,8 @@
          (str (blog-header))
          (with-content-table
            (:tr
-            (:td (str blog-post))
-            (:td (str blog-navigation)))))))
+            (:td :class "blogLeftPanel"(str blog-post))
+            (:td :class "blogNavPanel" (str blog-navigation)))))))
 
 (defun render (view-model)
   (log:debug "Rendering blog view")

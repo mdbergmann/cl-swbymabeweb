@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.controller-test
-  (:use :cl :fiveam :cl-mock :view.blog :blog-repo)
+  (:use :cl :fiveam :cl-mock :local-time :view.blog :blog-repo)
   (:export #:run!
            #:all-tests
            #:nil)
@@ -148,11 +148,12 @@
     (is (= 1 (length (invocations 'blog-repo:repo-get-for-name))))))
 
 
-;; (run! 'index-controller)
-;; (run! 'imprint-controller)
-;; (run! 'about-controller)
+(defun run-tests ()
+  (run! 'index-controller)
+  (run! 'imprint-controller)
+  (run! 'about-controller)
 
-;; (run! 'blog-controller-index)
-;; (run! 'blog-controller-index-no-blog-entry)
-;; (run! 'blog-controller-for-blog-name)
-;; (run! 'blog-controller-for-blog-name-not-found)
+  (run! 'blog-controller-index)
+  (run! 'blog-controller-index-no-blog-entry)
+  (run! 'blog-controller-for-blog-name)
+  (run! 'blog-controller-for-blog-name-not-found))
