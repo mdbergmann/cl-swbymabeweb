@@ -93,8 +93,8 @@
       (:tr
        (:td :colspan 2 (:hr)))
       (:tr
-       (:td :class "content_light"
-            (i18n "all_copyright"))
+       (:td :class "content_light content_small"
+            (str (i18n "all_copyright")))
        (:td :class "content_light content_small"
             (:div :align "right"
                   (str (format-timestring nil (now)
