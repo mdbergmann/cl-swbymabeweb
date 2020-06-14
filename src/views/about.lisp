@@ -14,10 +14,7 @@
            (content-headline (i18n "about_headline"))
            (content-subline (i18n "about_subline"))
            (with-content-line
-             ,(i18n "mabe_mission_text"))
-           (content-subline (i18n "background_subline"))
-           (with-content-line
-             ,(i18n "background_text"))))))
+             ,(i18n "mabe_mission_text"))))))
 
 (defun render ()
   (log:debug "Rendering about view.")
