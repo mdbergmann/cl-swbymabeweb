@@ -11,4 +11,5 @@
 (defun index ()
   "Just calls `about' view's `render' function."
   (log:debug "About controller.")
-  (cons :ok (view.about:render)))
+  (cons :ok (view.about:render
+             (lambda () (load-content-resource #P"about.md")))))

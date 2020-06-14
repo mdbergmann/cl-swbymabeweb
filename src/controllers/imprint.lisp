@@ -11,4 +11,5 @@
 (defun index ()
   "Just calls `about' view's `render' function."
   (log:debug "Imprint controller.")
-  (cons :ok (view.imprint:render)))
+  (cons :ok (view.imprint:render
+             (lambda () (load-content-resource #P"imprint.md")))))

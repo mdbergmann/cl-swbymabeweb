@@ -8,24 +8,16 @@
 
 (defparameter *page-title* "Manfred Bergmann | Software Development | Imprint")
 
-(defmacro content ()
+(defmacro content (content-fun-call)
   `(htm
     (:div :id "content"
           (with-content-table
             (content-headline (i18n "imprint_headline"))
             (content-subline (i18n "imprint_subline"))
             (with-content-line
-              (:p
-               "Manfred Bergmann" (:br)
-               "Burgbergweg 8" (:br)
-               "90559 Burgthann" (:br)
-               "Germany" (:br)
-               (:br)
-               "E-Mail: webmaster (at) software-by-mabe.com" (:br))
-              (:br)
-              ,(i18n "imprint_text"))))))
+              (str ,content-fun-call))))))
 
-(defun render ()
+(defun render (content-fun)
   (log:debug "Rendering imprint view.")
   (with-page *page-title*
-    (content)))
+    (content (funcall content-fun))))

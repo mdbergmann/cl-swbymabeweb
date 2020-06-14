@@ -29,20 +29,19 @@
 
 (test imprint-view
   "Imprint view"
-  (let ((page-source (view.imprint:render)))
+  (let ((page-source (view.imprint:render (lambda () "<p>Hello Foo</p>"))))
     (is (str:containsp *expected-imprint-page-title* page-source))
     (is (str:containsp "<div id='navigation'" page-source))
     (is (str:containsp "<div id='content'" page-source))
-    (is (str:containsp "<p>This disclaimer applies to the software available and downloadable from this web page.</p>" page-source))))
+    (is (str:containsp "<p>Hello Foo</p>" page-source))))
 
 (test about-view
   "About view"
-  (let ((page-source (view.about:render)))
+  (let ((page-source (view.about:render (lambda () "<p>Hello Bar</p>"))))
     (is (str:containsp *expected-about-page-title* page-source))
     (is (str:containsp "<div id='navigation'" page-source))
     (is (str:containsp "<div id='content'" page-source))
-    (is (str:containsp "<p>Objective of Software by MaBe is to produce high-quality," page-source))
-    (is (str:containsp "<p><b>My experiences includes:</b><br />" page-source))))
+    (is (str:containsp "<p>Hello Bar</p>" page-source))))
 
 (defparameter *blog-post* (make-instance 'blog-post-model
                                          :name "Foo"

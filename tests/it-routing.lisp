@@ -39,7 +39,7 @@
 (test handle-index-route
   "Test routing of index."
   (with-fixture with-server ()
-    (is (str:containsp "<title>Manfred Bergmann | Software Development | Index"
+    (is (str:containsp "<title>Manfred Bergmann | Software Development | Blog"
                        (dex:get "http://localhost:5000/")))))
 
 (test handle-imprint-route
@@ -89,11 +89,12 @@
       (dex:http-request-not-found (e)
         (is (= (dex:response-status e) 404))))))
 
-;;(run! 'handle-index-route)
-;;(run! 'handle-imprint-route)
-;;(run! 'handle-about-route)
+(defun run-tests ()
+  (run! 'handle-index-route)
+  (run! 'handle-imprint-route)
+  (run! 'handle-about-route)
 
-;;(run! 'handle-blog-index-route)
-;;(run! 'handle-blog-route-with-blog-name)
-;;(run! 'handle-blog-route-with-blog-name-not-found)
-;;(run! 'handle-undefined-route)
+  (run! 'handle-blog-index-route)
+  (run! 'handle-blog-route-with-blog-name)
+  (run! 'handle-blog-route-with-blog-name-not-found)
+  (run! 'handle-undefined-route))

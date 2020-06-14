@@ -4,7 +4,7 @@
   (:import-from #:cl-swbymabeweb.config
                 #:config
                 #:*application-root*
-                #:*blog-folder-path*)
+                #:*blog-directory*)
   (:import-from #:clack
                 #:clackup)
   (:import-from #:blog-repo
@@ -28,7 +28,7 @@
   (declare (ignore server port debug))
 
   (log:info "Initializing blog-repo factory.")
-  (blog-repo-fac-init (make-instance 'blog-repo-default :blog-folder *blog-folder-path*))
+  (blog-repo-fac-init (make-instance 'blog-repo-default :blog-folder *blog-directory*))
 
   (log:info "Starting server.")
   (when *web-handler*

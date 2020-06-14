@@ -4,7 +4,9 @@
            #:all-tests
            #:nil)
   (:import-from #:controller.blog
-                #:blog-entry-to-blog-post))
+                #:blog-entry-to-blog-post)
+  (:import-from #:cl-swbymabeweb.config
+                #:*application-root*))
 (in-package :cl-swbymabeweb.controller-test)
 
 (def-suite controller-tests
@@ -27,50 +29,61 @@
 (defun fake-index-page ()
   *expected-page-title-index*)
 
-(defun fake-imprint-page ()
-  *expected-page-title-imprint*)
-
-(defun fake-about-page ()
-  *expected-page-title-about*)
-
 (defun fake-blog-page ()
   *expected-page-title-blog*)
+
+(defparameter *blog-entry* nil)
+(defparameter *blog-model* nil)
+
 
 (test index-controller
   "Test index controller"
 
+  (setf *blog-entry*
+        (blog-repo:make-blog-entry "Foobar"
+                                   (get-universal-time)
+                                   "<b>hello world</b>"))
+  (setf *blog-model*
+        (make-instance 'blog-view-model
+                       :blog-post (blog-entry-to-blog-post *blog-entry*)
+                       :all-blog-posts (mapcar #'blog-entry-to-blog-post (list *blog-entry*))))
   (with-mocks ()
-    ;; we want to call 'render' on an index page view
-    (answer (view.index:render) (fake-index-page))
+    ;; index controller defers to blog
+    (answer (controller.blog:index) (fake-blog-page))
 
     (is (string= (cdr (controller.index:index)) (fake-index-page)))
-    (is (= 1 (length (invocations 'view.index:render))))))
+    (is (= 1 (length (invocations 'controller.blog:index))))))
 
 (test imprint-controller
   "Test imprint controller"
 
   (with-mocks ()
-    (answer (view.imprint:render) (fake-imprint-page))
+    (answer (view.imprint:render content-fun) (funcall content-fun))
 
-    (is (string= (cdr (controller.imprint:index)) (fake-imprint-page)))
+    (let ((imprint-result (controller.imprint:index)))
+      (print imprint-result)
+      (is (eq :ok (car imprint-result)))
+      (is (str:starts-with-p "<p>Manfred Bergmann<br/>"
+                             (cdr imprint-result))))
     (is (= 1 (length (invocations 'view.imprint:render))))))
 
 (test about-controller
   "Test about controller"
 
   (with-mocks ()
-    (answer (view.about:render) (fake-about-page))
+    (answer (view.about:render content-fun) (funcall content-fun))
 
-    (is (string= (cdr (controller.about:index)) (fake-about-page)))
+    (let ((imprint-result (controller.about:index)))
+      (print imprint-result)
+      (is (eq :ok (car imprint-result)))
+      (is (str:starts-with-p "<p>I'm a passionate software-developer,"
+                             (cdr imprint-result))))
     (is (= 1 (length (invocations 'view.about:render))))))
 
 
 ;; -----------------------------------
 ;; blog controller -------------------
 ;; -----------------------------------
-
-(defparameter *blog-entry* nil)
-(defparameter *blog-model* nil)
 
 (test blog-controller-index
   "Test blog controller for index which shows the latest blog entry"

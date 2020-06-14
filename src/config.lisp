@@ -8,7 +8,8 @@
            #:*application-root*
            #:*static-directory*
            #:*template-directory*
-           #:*blog-folder-path*
+           #:*blog-directory*
+           #:*content-directory*
            #:appenv
            #:developmentp
            #:productionp))
@@ -18,7 +19,8 @@
 
 (defparameter *application-root* (asdf:system-source-directory :cl-swbymabeweb))
 (defparameter *static-directory* (merge-pathnames #P"static/" *application-root*))
-(defparameter *blog-folder-path* (merge-pathnames #P"blogs/" *application-root*))
+(defparameter *blog-directory* (merge-pathnames #P"blogs/" *application-root*))
+(defparameter *content-directory* (merge-pathnames #P"content/" *application-root*))
 
 (defconfig :common
     `(:locale :en_EN))
