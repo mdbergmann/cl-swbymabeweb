@@ -32,27 +32,16 @@
 (defun fake-blog-page ()
   *expected-page-title-blog*)
 
-(defparameter *blog-entry* nil)
-(defparameter *blog-model* nil)
 
+;; (test index-controller
+;;   "Test index controller"
 
-(test index-controller
-  "Test index controller"
+;;   (with-mocks ()
+;;     ;; index controller defers to blog
+;;     (answer (controller.blog:index) (fake-blog-page))
 
-  (setf *blog-entry*
-        (blog-repo:make-blog-entry "Foobar"
-                                   (get-universal-time)
-                                   "<b>hello world</b>"))
-  (setf *blog-model*
-        (make-instance 'blog-view-model
-                       :blog-post (blog-entry-to-blog-post *blog-entry*)
-                       :all-blog-posts (mapcar #'blog-entry-to-blog-post (list *blog-entry*))))
-  (with-mocks ()
-    ;; index controller defers to blog
-    (answer (controller.blog:index) (fake-blog-page))
-
-    (is (string= (cdr (controller.index:index)) (fake-index-page)))
-    (is (= 1 (length (invocations 'controller.blog:index))))))
+;;     (is (string= (cdr (controller.index:index)) (fake-index-page)))
+;;     (is (= 1 (length (invocations 'controller.blog:index))))))
 
 (test imprint-controller
   "Test imprint controller"
@@ -84,6 +73,9 @@
 ;; -----------------------------------
 ;; blog controller -------------------
 ;; -----------------------------------
+
+(defparameter *blog-entry* nil)
+(defparameter *blog-model* nil)
 
 (test blog-controller-index
   "Test blog controller for index which shows the latest blog entry"
