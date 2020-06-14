@@ -1,0 +1,795 @@
+<p>
+    I did explore 
+    <a class="link" href="https://elixir-lang.org" target="_blank">Elixir</a>
+     in the last half year.
+    <br/>
+     It's a fantastic language. Relatively young but already mature. It runs on the solid and battle proven Erlang VM.
+</p>
+<p>
+    Now I thought it is time to have a look at the web framework 
+    <a class="link" href="https://www.phoenixframework.org" target="_blank">Phoenix</a>
+    .
+</p>
+<p>
+    After reading a few things and trying my way through 
+    <a class="link" href="https://pragprog.com/book/phoenix14/programming-phoenix-1-4" target="_blank">Programming Phoenix</a>
+     I didn't really understand what's going on underneath this abstraction that Phoenix has built. There seemed to be a lot of magic happening. So I wanted to understand that first.
+</p>
+<p>Of course a lot of brilliant work has gone into Phoenix. However, for some key components like the web server, the request routing, the template library Phoenix more or less just does the glueing.</p>
+<p>
+    But for me it was important to understand how the web server is integrated, and how defining routes and handlers work.
+    <br/>
+     So the result of this exploration was a simple MVC web framework.
+</p>
+<p>
+    It is actually quite easy to develop something simple from scratch. Of course this cannot compete with Phoenix and it should not.
+    <br/>
+     However for simple web pages this might be fully sufficient and it doesn't require a large technology stack.
+</p>
+<p>
+    So I'd like to go though this step by step while crafting the code as we go. The web application will contain a simple form where I want to put in reader values of my house, like electricity or water. When those are submitted they are transmitted to my 
+    <a class="link" href="https://www.openhab.org" target="_blank">openHAB</a>
+     system. So you might see the name 'HouseStatUtil' more often. This is the name of the project.
+</p>
+<p>Those are the components we will have a look at:</p>
+<ul>
+    <li>the web server</li>
+    <li>the request routing and how to define routes</li>
+    <li>how to add controllers and views and the model they use</li>
+    <li>the HTML rendering</li>
+    <li>string resource localisation</li>
+</ul>
+<p>
+    For reference, the complete project is on 
+    <a class="link" href="https://github.com/mdbergmann/elixir_house_stat_util" target="_blank">Github</a>
+    .
+</p>
+<h3 id="toc_1">Project setup</h3>
+<p>
+    You use the usual 
+    <code>mix</code>
+     tooling to create a new project.
+</p>
+<p>
+    Then we'll need some dependencies (extract from 
+    <code>mix.exs</code>
+    ):
+</p>
+<div>
+    <pre class="brush: elixir;">defp deps do
+  [
+    {:plug_cowboy, "~&gt; 2.1.0"},
+    {:eml, git: "https://github.com/zambal/eml.git"},
+    {:gettext, "~&gt; 0.17.1"},
+    {:mock, "~&gt; 0.3.4", only: :test}
+  ]
+end</pre>
+</div>
+<p>
+    As you probably know, if you don't specify 
+    <code>git:</code>
+     in particular 
+    <code>mix</code>
+     will pull the dependencies from 
+    <a class="link" href="https://hex.pm" target="_blank">hex</a>
+    . But 
+    <code>mix</code>
+     can also deal with github projects.
+</p>
+<ul>
+    <li>
+        <a class="link" href="https://hexdocs.pm/plug_cowboy/Plug.Cowboy.html" target="_blank">plug_cowboy</a>
+        : so 
+        <a class="link" href="https://elixirschool.com/en/lessons/specifics/plug/" target="_blank">Plug</a>
+         is an Elixir library that makes building web applications easy. Plugs can be seen as plugins. And so is 
+        <code>plug_cowboy</code>
+         a 'Plug' that bundles the Erlang web server 
+        <a class="link" href="https://ninenines.eu" target="_blank">Cowboy</a>
+        .
+    </li>
+    <li>
+        <a class="link" href="https://github.com/zambal/eml" target="_blank">Eml</a>
+        : is a library for generating HTML in form of Elixir language constructs, a DSL. But as we will later see, Elixir macros are very powerful (almost as Common Lisp macros). We we will build our own HTML DSL abstraction which should make it easy to use any backend library to generate HTML.
+    </li>
+    <li>
+        <a class="link" href="https://hexdocs.pm/gettext/Gettext.html" target="_blank">gettext</a>
+        : is the default localization framework in Elixir. We will see later how that works.
+    </li>
+    <li>
+        <a class="link" href="https://github.com/jjh42/mock" target="_blank">mock</a>
+        : since we do Test-Driven Development (TDD) of course we need a mocking framework. A library for unit tests is not necessary. This is part of the core Elixir.
+    </li>
+</ul>
+<h3 id="toc_2">The web server</h3>
+<p>
+    <a class="link" href="https://ninenines.eu" target="_blank">Cowboy</a>
+     is probably the most well known and used web server in the Erlang world. But we don't have to deal with the details that much.
+</p>
+<p>We have to tell the Erlang runtime to start Cowboy as a separate 'application' in the VM. The term 'application' is a bit misleading. You should see this more as a module or component.</p>
+<p>Since in Erlang most things are actor based, and you can have a hierarchy and eventually a tree of actors that are spawned in an 'application' (or component) you have to at least make sure that those components are up and running before you use them.</p>
+<p>
+    So we'll have to add this to 
+    <code>application.ex</code>
+     which is the application entry point and should be inside the 'lib/' folder.
+</p>
+<p>This is how it looks for my application:</p>
+<div>
+    <pre class="brush: elixir;">require Logger
+
+def start(_type, _args) do
+  children = [
+    Plug.Cowboy.child_spec(
+      scheme: :http,
+      plug: HouseStatUtil.Router,
+      options: [port: application_port()])
+  ]
+
+  opts = [strategy: :one_for_one, name: HouseStatUtil.Supervisor]
+  pid = Supervisor.start_link(children, opts)
+  Logger.info("Server started")
+
+  pid
+end
+
+defp application_port do
+  System.get_env()
+  |&gt; Map.get("PORT", "4001")
+  |&gt; String.to_integer()
+end</pre>
+</div>
+<p>
+    The first thing to note is that we use the Elixir 
+    <code>Logger</code>
+     library. So we need to 
+    <code>require</code>
+     it. (As a side note, usually you do use 
+    <code>import</code>
+     or 
+    <code>alias</code>
+     to import other modules. But 
+    <code>require</code>
+     is needed when the component defines macros.)
+</p>
+<p>
+    The 
+    <code>start</code>
+     function is called by the runtime. Now we have to define the 'children' processes we want to have started. Here we define the 
+    <code>Plug.Cowboy</code>
+     as a child.
+</p>
+<p>
+    The line 
+    <code>plug: HouseStatUtil.Router</code>
+     defines the request router. We'll have a look at this later.
+</p>
+<p>
+    <code>Supervisor.start_link(children, opts)</code>
+     will then start the children actors/processes.
+</p>
+<h3 id="toc_3">Request routing and how to define routes</h3>
+<p>
+    The 
+    <code>HouseStatUtil.Router</code>
+     is the next step. We need to tell Cowboy how to deal with requests that come in. In most web applications you have to define some routing, or define page beans that are mapped to some request paths.
+</p>
+<p>In Elixir this is pretty slick. The language allows to call functions without parentheses like so:</p>
+<div>
+    <pre class="brush: elixir;">get "/" do
+    # do something
+end</pre>
+</div>
+<p>
+    This could be written with parentheses as well: 
+    <code>get("/") do</code>
+</p>
+<p>Here is the complete router module:</p>
+<div>
+    <pre class="brush: elixir;">defmodule HouseStatUtil.Router do
+  use Plug.Router
+
+  alias HouseStatUtil.ViewController.ReaderPageController
+  alias HouseStatUtil.ViewController.ReaderSubmitPageController
+
+  plug Plug.Logger
+
+  plug Plug.Parsers,
+    parsers: [:urlencoded],
+    pass: ["text/*"]
+
+  plug :match
+  plug :dispatch
+
+  get "/" do
+    {status, body} = ReaderPageController.get(conn.params)
+    send_resp(conn, status, body)    
+  end
+
+  post "/submit_readers" do
+    IO.inspect conn.params
+    {status, body} = ReaderSubmitPageController.post(conn.params)
+    send_resp(conn, status, body)
+  end
+
+  match _ do
+    send_resp(conn, 404, "Destination not found!")
+  end
+end</pre>
+</div>
+<p>Let's go though it.</p>
+<p>
+    <code>use Plug.Router</code>
+     is the key element here. This will make this module a router. This also specifies the request types 
+    <code>get</code>
+    , 
+    <code>post</code>
+     and so on.
+</p>
+<p>
+    <code>conn</code>
+     is a connection structure which has all the data about the connection and the request, like the header and query parameters and so on. 
+    <code>conn.params</code>
+     is a combination of payload and query parameters.
+</p>
+<p>
+    Each route definition must send a response to the client. This is done with 
+    <code>send_resp/3</code>
+    . It does take three parameters, the connection structure, a status and a response body (which is the payload).
+</p>
+<p>
+    All the 
+    <code>plug</code>
+     definitions are executed in a chain for each request. Which means every request is url encoded (the request path at least) and must have a content-type of 'text/*'.
+</p>
+<p>
+    <code>plug :match</code>
+     does the matching on the paths. The last 
+    <code>match _ do</code>
+     is a 'catch all' match which here sends a 404 error back to the client.
+</p>
+<p>As you can see we have two routes. Each route is handled by a view controller. The only thing we pass to the view controller are the connection parameters.</p>
+<h5 id="toc_4">Serving static content</h5>
+<p>
+    Most web sites need to serve static content like JavaScript, CSS or images. That is no problem. The 
+    <a class="link" href="https://hexdocs.pm/plug/Plug.Static.html" target="_blank">Plug.Static</a>
+     does this. As with the other plugs you just define this, maybe before 
+    <code>plug :match</code>
+     like so:
+</p>
+<div>
+    <pre class="brush: elixir;">plug Plug.Static, from: "priv/static"</pre>
+</div>
+<p>The 'priv' folder, in this relative form is in your project folder on the same level as the 'lib' and 'test' folders. You can then add sub folders to 'priv/static' for images, css and javascript and define the appropriate paths in your HTML. For an image this would then be:</p>
+<div>
+    <pre class="brush: elixir;">
+        <img src="images/foo.jpg" alt=""/>
+    </pre>
+</div>
+<h4 id="toc_5">Testing the router</h4>
+<p>
+    Of course the router can be tested. The router can nicely act as an integration test.
+    <br/>
+     Add one route test after another. It will fail until you have implemented and integrated the rest of the components (view controller and view). But it will act as a north star. When it passes you can be sure that all components are integrated properly.
+</p>
+<p>Here is the test code of the router:</p>
+<div>
+    <pre class="brush: elixir;">defmodule HouseStatUtil.RouterTest do
+  use ExUnit.Case, async: true
+  use Plug.Test
+
+  alias HouseStatUtil.Router
+
+  @opts HouseStatUtil.Router.init([])
+
+  test "get on '/'" do
+    conn = :get
+    |&gt; conn("/")
+    |&gt; Router.call(@opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
+    assert String.contains?(conn.resp_body, "Submit values to openHAB")
+  end
+
+  test "post on /submit_readers" do
+    conn = :post
+    |&gt; conn("/submit_readers")
+    |&gt; Router.call(@opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
+  end
+end</pre>
+</div>
+<p>
+    There is a bit of magic that is being done by the 
+    <code>Plug.Test</code>
+    . It allows you to specify the 
+    <code>:get</code>
+     and 
+    <code>:post</code>
+     requests as in the tests.
+</p>
+<p>
+    After the 
+    <code>Router.call(@opts)</code>
+     has been made we can inspect the 
+    <code>conn</code>
+     structure and assert on various things. For the 
+    <code>conn.resp_body</code>
+     we only have a chance to assert on some existing string in the HTML output.
+</p>
+<p>
+    This can be done better. A good example is 
+    <a class="link" href="https://wicket.apache.org" target="_blank">Apache Wicket</a>
+    , a Java based web framework that has excellent testing capabilities. But the situation is similar on most of the MVC based frameworks. Since they are not component based the testing capabilities are somewhat limited.
+</p>
+<p>Nonetheless we'll try to make it as good as possible.</p>
+<p>Next step are the view controllers.</p>
+<h3 id="toc_6">How to define controllers and views and the model</h3>
+<h4 id="toc_7">The view controller</h4>
+<p>
+    As you have seen above, each route uses its own view controller. I thought that a view controller can handle 
+    <code>get</code>
+     or 
+    <code>post</code>
+     requests on a route. So that handling more 'views' related to a path can be combined in a view controller. But you can do that as you wish. There is no rule.
+</p>
+<p>
+    As a first step I defined a 
+    <code>behaviour</code>
+     for a view controller. It looks like this:
+</p>
+<div>
+    <pre class="brush: elixir;">defmodule HouseStatUtil.ViewController.Controller do
+  @callback get(params :: %{binary() =&gt; any()}) :: {integer(), binary()}
+  @callback post(params :: %{binary() =&gt; any()}) :: {integer(), binary()}
+end</pre>
+</div>
+<p>
+    It defines two functions who's parameters are 'spec'ed as a map of strings -&gt; anything (
+    <code>binary()</code>
+     is Erlang and is actually something stringlike. I could also use an Elixir 
+    <code>string</code>
+     here). And those functions return a tuple of integer (the status) and again a string (the response body).
+</p>
+<p>
+    I thought that the controller should actually define the status since it has to deal with the logic to render the view and process the form parameters, maybe call some backend or collaborator. So if anything goes wrong there the controller knows it.
+    <br/>
+     This is clearly a debatable design decision. We could argue that the controller should not necessarily know about HTTP status codes.
+</p>
+<p>Here is the source for the controller:</p>
+<div>
+    <pre class="brush: elixir;">defmodule HouseStatUtil.ViewController.ReaderPageController do
+  @behaviour HouseStatUtil.ViewController.Controller
+
+  alias HouseStatUtil.ViewController.Controller
+  alias HouseStatUtil.View.ReaderEntryUI
+  import HouseStatUtil.View.ReaderPageView
+
+  @default_readers [
+    %ReaderEntryUI{
+      tag: :elec,
+      display_name: "Electricity Reader"
+    },
+    %ReaderEntryUI{
+      tag: :water,
+      display_name: "Water Reader"
+    }
+  ]
+
+  @impl Controller
+  def get(_params) do
+    render_result = render(
+      %{
+        :reader_inputs =&gt; @default_readers
+      }
+    )
+
+    cond do
+      {:ok, body} = render_result -&gt; {200, body}
+    end
+  end
+
+  @impl Controller
+  def post(_params), do: {400, ""}
+end</pre>
+</div>
+<p>
+    You see that this controller implements the 
+    <code>behaviour</code>
+     specification in the 
+    <code>get</code>
+     and 
+    <code>post</code>
+     functions. This can optionally be marked with 
+    <code>@impl</code>
+     to make it more visible that those are the implemented behaviours.
+    <br/>
+     A 
+    <code>post</code>
+     is not allowed for this controller and just returns error 400.
+</p>
+<p>
+    The 
+    <code>get</code>
+     function is the important thing here. The response body for 
+    <code>get</code>
+     is generated by the views 
+    <code>render/1</code>
+     function. So we have a view definition here imported as 
+    <code>ReaderPageView</code>
+     which specifies a 
+    <code>render/1</code>
+     function.
+</p>
+<p>
+    The views 
+    <code>render/1</code>
+     function takes a model (a map) where we here just specify some 
+    <code>:reader_input</code>
+     definitions. Those are later rendered as a table with checkbox, label and textfield.
+</p>
+<p>
+    The 
+    <code>render/1</code>
+     function returns a tuple of 
+    <code>{[ok|error], body}</code>
+    . In case of 
+    <code>:ok</code>
+     we return a success response (200) with the rendered body.
+</p>
+<p>So we already have the model in the play here that is used by both controller and view. In this case the controller creates the model that should be used by the view to render.</p>
+<h4 id="toc_8">Generating HTML in the controller</h4>
+<p>For simple responses it's not absolutely necessary to actually create a view. The controller can easily generate simple HTML (in the way we describe later) and just return it. However, it should stay simple and short to not clutter the controller source code. After all it's the views responsibility to do that.</p>
+<h4 id="toc_9">A view controller with submit</h4>
+<p>
+    To support a submit you certainly have to implement the 
+    <code>post</code>
+     function. The 
+    <code>post</code>
+     function in the controller will receive the form parameters as a map. This is how it looks like:
+</p>
+<div>
+    <pre class="brush: elixir;">%{
+  "reader_value_chip" =&gt; "",
+  "reader_value_elec" =&gt; "17917.3",
+  "reader_value_water" =&gt; "",
+  "selected_elec" =&gt; "on"
+}</pre>
+</div>
+<p>The keys of the map are the 'name' attributes of the form components.</p>
+<p>Since we only want to send selected reader values to openHAB we have to filter the form parameter map for those that were selected, which here is only the electricity reader ('reader_value_elec').</p>
+<p>
+    Here is the source of the 'submit_readers' 
+    <code>post</code>
+     controller handler:
+</p>
+<div>
+    <pre class="brush: elixir;">def post(form_data) do
+  Logger.debug("Got form data: #{inspect form_data}")
+
+  post_results = form_data
+  |&gt; form_data_to_reader_values()
+  |&gt; post_reader_values()
+
+  Logger.debug("Have results: #{inspect post_results}")
+
+  post_send_status_tuple(post_results)
+  |&gt; create_response    
+end</pre>
+</div>
+<p>
+    More sophisticated frameworks like Phoenix do some pre-processing and deliver the form parameters in pre-defined or standardised structure types.
+    <br/>
+     We don't have that, so there might be a bit of manual parsing required. But we're developers, right?
+</p>
+<h4 id="toc_10">Testing the controller</h4>
+<p>
+    Since the controller is just a simple module it should be easy to test it. Of course it depends a bit on the dependencies of your controller if this is more or less easy. At least the controller depends on a view component where a 
+    <code>render/1</code>
+     function is called with some model.
+</p>
+<p>But the controller test shouldn't test the rendering of the view. We basically just test a bi-directional pass through here. One direction is the generated model to the views render function, and the other direction is the views render result that should be mapped to a controller result.</p>
+<p>To avoid to really have the view render stuff in the controller test we can mock the views render function.</p>
+<p>
+    In my case here I have a trivial test for the 
+    <code>ReaderPageController</code>
+     which just should render the form and doesn't require mocking (we do some mocking later).
+</p>
+<div>
+    <pre class="brush: elixir;">defmodule HouseStatUtil.ViewController.ReaderPageControllerTest do
+  use ExUnit.Case
+
+  alias HouseStatUtil.ViewController.ReaderPageController
+
+  test "handle GET" do
+    assert {200, _} = ReaderPageController.get(%{})
+  end
+
+  test "handle POST returns error" do
+    assert {400, _} = ReaderPageController.post(%{})
+  end
+end</pre>
+</div>
+<p>
+    The 
+    <code>get</code>
+     test just delivers an empty model to the controller, which effectively means that no form components are rendered except the submit button.
+    <br/>
+     The 
+    <code>post</code>
+     is not supported on this controller and hence should return a 400 error.
+</p>
+<h4 id="toc_11">Mocking out collaborators</h4>
+<p>
+    The situation is a bit more difficult for the submit controller 
+    <code>ReaderSubmitPageController</code>
+    . This controller actually sends the entered and parsed reader results to the openHAB system via a REST interface. So the submit controller has a collaborator called 
+    <code>OpenHab.RestInserter</code>
+    . This component uses 
+    <a class="link" href="https://github.com/edgurgel/httpoison" target="_blank">HTTPoison</a>
+     http client library to submit the values via REST.
+    <br/>
+     I don't want to pull in those dependencies in the controller test, so this is a good case to mock the 
+    <code>RestInserter</code>
+     module.
+</p>
+<p>
+    The first thing we have to do is 
+    <code>import Mock</code>
+     to have the defined functions available in the controller test.
+</p>
+<p>As an example I have a success test case and an error test case to show how the mocking works.</p>
+<p>The tests work on this pre-defined data:</p>
+<div>
+    <pre class="brush: elixir;">@reader_data %{
+  "reader_value_chip" =&gt; "",
+  "reader_value_elec" =&gt; "1123.6",
+  "reader_value_water" =&gt; "4567",
+  "selected_elec" =&gt; "on",
+  "selected_water" =&gt; "on"
+}
+@expected_elec_reader_value %ReaderValue{
+  id: "ElecReaderStateInput",
+  value: 1123.6,
+  base_url: @openhab_url
+}
+@expected_water_reader_value %ReaderValue{
+  id: "WaterReaderStateInput",
+  value: 4567.0,
+  base_url: @openhab_url
+}</pre>
+</div>
+<p>
+    This defines submitted reader form data where reader values for water and electricity were entered and selected. So we expect that the 
+    <code>RestInserter</code>
+     function is called with the 
+    <code>@expected_elec_reader_value</code>
+     and 
+    <code>@expected_water_reader_value</code>
+    .
+</p>
+<h5>A success case</h5>
+<div>
+    <pre class="brush: elixir;">test "handle POST - success - with reader selection" do
+  with_mock RestInserter,
+    [post: fn _reader -&gt; {:ok, ""} end] do
+
+    assert {200, _} = ReaderSubmitPageController.post(@reader_data)
+
+    assert called RestInserter.post(@expected_elec_reader_value)
+    assert called RestInserter.post(@expected_water_reader_value)
+  end
+end</pre>
+</div>
+<p>
+    The key part here is the 
+    <code>with_mock </code>
+    . The module to be mocked is the 
+    <code>RestInserter</code>
+    .
+    <br/>
+     The line 
+    <code>[post: fn _reader -&gt; {:ok, ""} end]</code>
+     defines the function to be mocked, which here is the 
+    <code>post/1</code>
+     function of 
+    <code>RestInserter</code>
+    . We define the mocked function to return 
+    <code>{:ok, ""}</code>
+    , which simulates a 'good' case. Within the 
+    <code>do end</code>
+     we eventually call the controllers post function with the pre-defined submitted form data that normally would come in via the cowboy plug.
+</p>
+<p>
+    Then we want to assert that 
+    <code>RestInserter</code>
+    s 
+    <code>post/1</code>
+     function has been called twice with both the expected electricity reader value and the expected water reader value.
+</p>
+<h5>A failure case</h5>
+<div>
+    <pre class="brush: elixir;">test "handle POST - with reader selection - one error on submit" do
+  with_mock RestInserter,
+    [post: fn reader -&gt;
+      case reader.id do
+        "ElecReaderStateInput" -&gt; {:ok, ""}
+        "WaterReaderStateInput" -&gt; {:error, "Error on submitting water reader!"}
+      end
+    end] do
+
+    {500, err_msg} = ReaderSubmitPageController.post(@reader_data)
+    assert String.contains?(err_msg, "Error on submitting water reader!")
+
+    assert called RestInserter.post(@expected_elec_reader_value)
+    assert called RestInserter.post(@expected_water_reader_value)
+  end
+end</pre>
+</div>
+<p>
+    The failure test case is a bit more complex. Based on the reader value data that the 
+    <code>RestInserter</code>
+     is called with we decide that the mock should return success for the electricity reader but should fail for the water reader.
+</p>
+<p>
+    Now, when calling the controllers post function we expect that to return an internal error (500) with the error message that we defined the 
+    <code>RestInserter</code>
+     to return with.
+</p>
+<p>
+    And of course we also assert that the 
+    <code>RestInserter</code>
+     was called twice.
+</p>
+<p>Still pretty simple, isn't it?</p>
+<h4 id="toc_12">The view</h4>
+<p>The view is responsible to render the HTML and convert that to a string to pass it back to the controller.</p>
+<p>Similarly as for the controller we define a behaviour for this:</p>
+<div>
+    <pre class="brush: elixir;">defmodule HouseStatUtil.View.View do
+  @type string_result :: binary()
+
+  @callback render(
+    assigns :: %{binary() =&gt; any()}
+  ) :: {:ok, string_result()} | {:error, string_result()}
+end</pre>
+</div>
+<p>
+    This behaviour defines the 
+    <code>render/1</code>
+     function along with input and output types. Erlang and Elixir are not statically typed but you can define types which are verified with dialyzer as an after compile process.
+</p>
+<p>
+    So the input for the 
+    <code>render/1</code>
+     function defines 
+    <code>assigns</code>
+     which ia a map of string -&gt; anything entries. This map represents the model to be rendered.
+    <br/>
+     The result of 
+    <code>render/1</code>
+     is a tuple of either 
+    <code>{:ok, string}</code>
+     or 
+    <code>{:error, string}</code>
+     where the 'string' is the rendered HTML.
+    <br/>
+     This is the contract for the render function.
+</p>
+<h4 id="toc_13">Testing the view</h4>
+<p>
+    Testing the view is even more simple than the controller because it is less likely that some collaborator must be mocked or faked here.
+    <br/>
+     As said earlier, classic MVC frameworks, also Phoenix, ASP MVC or 
+    <a class="link" href="https://www.playframework.com" target="_blank">Play</a>
+     mostly only allow to test rendered views for the existence of certain strings.
+    <br/>
+     This is insofar different in 
+    <a class="link" href="https://wicket.apache.org" target="_blank">Wicket</a>
+     that Wicket operates component based and keeps an abstract view representation in memory where it is possible to test the existence of components and certain model values rather than strings in the rendered output.
+</p>
+<p>But any-who, here is an example of a simple test case that checks a heading in the rendered output:</p>
+<div>
+    <pre class="brush: elixir;">test "has form header" do
+  {render_result, render_string} = render()
+
+  assert render_result == :ok
+  assert String.contains?(
+    render_string,
+    h2 do "Submit values to openHAB" end |&gt; render_to_string()
+  )
+end</pre>
+</div>
+<p>
+    As you can see the 
+    <code>render/1</code>
+     function is called without model. This will not render the form components but certain other things that I know should be part of the HTML string. So we can check for it using a 
+    <code>String.contains?</code>
+    .
+</p>
+<p>
+    You might realise that I've used some constructs that I will explain in the next chapter. For the string compare I create a 
+    <code>h2</code>
+     HTML tag the same way as the view creates it and I want it to be part of the rendered view.
+</p>
+<p>Here is another test case that checks for the rendered empty form:</p>
+<div>
+    <pre>test "Render form components, empty reader inputs" do
+    {render_result, render_string} = render()
+
+    assert String.contains?(
+      render_string,
+      form action: "/submit_readers", method: "post" do
+      input type: "submit", value: "Submit"
+      end |&gt; render_to_string
+    )
+end</pre>
+</div>
+<p>The empty form which contains the submit button only is created in the test and expected to be part of the rendered view. Similarly we can certainly pass in a proper model so that we have some reader value entry text fields and all that being rendered.</p>
+<p>Creating those HTML tags using Elixir language constructs is pretty slick, isn't it? I'll talk about this now.</p>
+<h3 id="toc_14">How do to the HTML rendering</h3>
+<p>
+    Let me start with this. I know Phoenix uses 
+    <a class="link" href="https://hexdocs.pm/eex/EEx.html" target="_blank">EEx</a>
+    , the default templating library of Elixir (EEx stands for 'Embedded Elixir'). But, I do prefer (for this little project at least) to create HTML content in Elixir source code as language constructs, a DSL.
+</p>
+<p>Taking the form example from above I want to create HTML like this:</p>
+<div>
+    <pre>form action: "/submit_readers", method: "post" do
+  input type: "checkbox", name: "selected_" &lt;&gt; to_string(reader.tag)
+  input type: "submit", value: "Submit"
+end</pre>
+</div>
+<p>... and so forth. This is pretty cool and just Elixir language.</p>
+<h4 id="toc_15">Using a HTML DSL to abstract HTML generation</h4>
+<p>No matter what backend generates the HTML I want to be flexible. With only a few macros we can create our own DSL that acts as a frontend that lets us use Elixir language constructs to write HTML code.</p>
+<p>
+    This made a blog post by itself. So read about how to create a HTML DSL with Elixir 
+    <a class="link" href="../blog?title=Creating+a+HTML+domain+language+with+Elixir+using+macros" target="_blank">here</a>
+    .
+</p>
+<h3 id="toc_17">Localisation</h3>
+<p>
+    So the controller, view and HTML generation is quite different to how Phoenix does it. The localisation is again similar. Both just use the 
+    <a class="link" href="https://hexdocs.pm/gettext/Gettext.html" target="_blank">gettext</a>
+     module of Elixir.
+</p>
+<p>
+    The way this works is pretty simple. You just create a module in your sources that 'uses' 
+    <code>Gettext</code>
+    .
+</p>
+<div>
+    <pre class="brush: elixir;">defmodule HouseStatUtil.Gettext do
+  use Gettext, otp_app: :elixir_house_stat_util
+end</pre>
+</div>
+<p>
+    This new module acts like a gettext wrapper module for your project. You should import it anywhere where you want to use one of the gettext functions: 
+    <code>gettext/1</code>
+    , 
+    <code>ngettext/3</code>
+    , 
+    <code>dgettext/2</code>
+     for example 
+    <code>gettext("some key")</code>
+     searches for a string key of "some key" in the localisation files.
+    <br/>
+     The localisation files must be created using 
+    <code>mix</code>
+     tool.
+</p>
+<p>
+    So the process is to use the gettext function in your code where needed and then call 
+    <code>mix gettext.extract</code>
+     which then extracts the gettext keys used in the source code to localization resource files.
+    <br/>
+     There is a lot more info on that on that gettext web page. Check it out.
+</p>
+<h3 id="toc_18">Outlook and recap</h3>
+<p>
+    Doing a simple web application framework from scratch is quite easy. If you want to do more by hand and want to have more control over how things work then that seems to be a viable way. However, the larger the web application gets the more you have to carve out concepts which could after all compete with Phoenix. And then, it might be worth using Phoenix right away. In a professional context I would use Phoenix anyway. Because this project has gone though the major headaches already and is battle proven.
+    <br/>
+     Nonetheless this was a nice experience and exploration.
+</p>

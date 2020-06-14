@@ -27,8 +27,8 @@
   nil)
 
 (def-fixture with-server ()
-  (blog-repo:blog-repo-fac-init (make-instance 'blog-repo-fake))
   (start)
+  (blog-repo:blog-repo-fac-init (make-instance 'blog-repo-fake))
   (sleep 0.5)
   (unwind-protect 
        (&body)

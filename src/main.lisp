@@ -1,10 +1,12 @@
 (in-package :cl-user)
 (defpackage cl-swbymabeweb
   (:use :cl :log4cl)
-  (:import-from :cl-swbymabeweb.config
-                :config)
-  (:import-from :clack
-   :clackup)
+  (:import-from #:cl-swbymabeweb.config
+                #:config
+                #:*application-root*
+                #:*blog-folder-path*)
+  (:import-from #:clack
+                #:clackup)
   (:import-from #:blog-repo
                 #:blog-repo-fac-init
                 #:blog-repo-default)
@@ -12,20 +14,13 @@
            :stop))
 (in-package :cl-swbymabeweb)
 
-(defvar *approot-path*
-  (asdf:system-relative-pathname :cl-swbymabeweb #P""))
-
-(defvar *appfile-path*
-  (merge-pathnames #P"app.lisp" *approot-path*))
-
-(defvar *blog-folder-path*
-  (merge-pathnames #P"blogs/" *approot-path*))
+(defvar *appfile-path* (merge-pathnames #P"app.lisp" *application-root*))
 
 (cl-locale:enable-locale-syntax)
 (cl-locale:define-dictionary default
-  (:en_EN (merge-pathnames #P"i18n/en_EN/default.lisp" *approot-path*)))
+  (:en_EN (merge-pathnames #P"i18n/en_EN/default.lisp" *application-root*)))
 (setf (cl-locale:current-dictionary) :default)
-(setf cl-locale:*locale* :en_EN)
+(setf cl-locale:*locale* (config :locale))
 
 (defvar *web-handler* nil)
 

@@ -44,7 +44,16 @@
       (let ((blog (second all-blogs)))
         (is (string= "test 1" (blog-entry-name blog)))
         (is (= (parse-date-time "20190412") (blog-entry-date blog)))
-        (is (string= "<h2>Heading 1</h2><p><a href='/foo' class='link'>MyLink</a>  </p><p><code>foo</code> </p>"
+        (is (string= "<h2>Heading 1</h2>
+
+<p><a href='/foo' class='link'>MyLink</a></p>
+
+<p><code>foo</code></p>
+
+<pre><code>tripple
+quote
+block</code></pre>
+"
                      (blog-entry-text blog)))))))
 
 (test get-latest
@@ -65,7 +74,7 @@
     (let ((blog (repo-get-for-name "not-exists")))
       (is (eq :not-found-error (car blog))))))
 
-(defun test-all ()
+(defun run-tests ()
   (run! 'create-blog-repo)
   (run! 'get-all)
   (run! 'get-latest)

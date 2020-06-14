@@ -20,7 +20,7 @@
            #:blog-repo-fac-get
            #:blog-repo-fac-clean)
   (:local-nicknames (:dtp :cl-date-time-parser))
-  (:local-nicknames (:md :markdown))
+  (:local-nicknames (:md :3bmd))
   (:import-from #:serapeum
                 #:->
                 #:~>
@@ -173,8 +173,10 @@
       (convert-md-to-html file)))
 
 (defun convert-md-to-html (file)
+  (setf 3bmd-code-blocks:*code-blocks* t)
+  
   (let ((stream (make-string-output-stream)))
-    (md:markdown file :stream stream)
+    (md:parse-and-print-to-stream file stream)
     (get-output-stream-string stream)))
 
 (defmethod get-latest ((self blog-repo-default))

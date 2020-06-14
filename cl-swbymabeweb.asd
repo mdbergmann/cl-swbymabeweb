@@ -15,7 +15,9 @@
                "serapeum"
                "uiop"
                "str"
-               "cl-markdown"
+               "3bmd"
+               "3bmd-ext-code-blocks"
+               
 
                ;; for @route annotation
                "cl-syntax-annot"

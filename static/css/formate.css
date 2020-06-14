@@ -271,6 +271,8 @@ a.link, a.link_small, a.titlelink, a.blog-nav-link {
 
 a.blog-nav-link {
     text-decoration: none;
+    font-weight: normal;
+    color: #610008;
 }
 
 a.blog-nav-link:hover {
