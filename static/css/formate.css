@@ -75,12 +75,12 @@ code {
     padding: 1px;
 */
 
-    font: 12pt monospace,Consolas,Monaco,"Andale  Mono","DejaVu Sans Mono";
+    font: 11pt monospace,Consolas,Monaco,"Andale  Mono","DejaVu Sans Mono";
     color: grey;
 }
 
 pre {
-  font-size: 12pt;
+  font-size: 11pt;
   border: 2px solid grey;
   width: 706px;
   border-left: 12px solid #610008;
@@ -136,7 +136,7 @@ li.blog-nav-item {
 }
 
 .content, .content_title, .content_boldface, .content_light, .content_tiny {
-	font-size : 12pt;
+	font-size : 11pt;
 	font-style : normal;
 	text-align: left;
 	color: #666666;
@@ -189,7 +189,7 @@ li.blog-nav-item {
 }
 
 .navi_boldwhite {
-	font-size : 13pt;
+	font-size : 12pt;
 	font-weight : normal;
 	color : #ffffff;
 	text-align: center;
@@ -203,7 +203,6 @@ li.blog-nav-item {
 }
 
 a:link {
-	font-size : 12pt;
 	font-weight : normal;
 	color : #ffffff;
 	text-align: center;
@@ -211,7 +210,6 @@ a:link {
 }
 
 a:visited {
-	font-size : 12pt;
 	font-weight : normal;
 	color : #ffffff;
 	text-align: center;
@@ -219,7 +217,6 @@ a:visited {
 }
 
 a:active {
-	font-size : 12pt;
 	font-weight : normal;
 	color : #ffffff;
 	text-align: center;
@@ -227,7 +224,6 @@ a:active {
 }
 
 a:hover {
-	font-size : 12pt;
 	font-weight : bold;
 	color : #ffffff;
 	text-align: center;
@@ -263,7 +259,7 @@ a.subm:hover {
 }
 
 a.link, a.link_small, a.titlelink, a.blog-nav-link {
-	font-size: 12pt;
+	font-size: 11pt;
 	font-weight: normal;
 	color: #666666;
 	text-decoration: underline;
