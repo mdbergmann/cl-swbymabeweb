@@ -1,0 +1,94 @@
+<p>While working on a Wicket UI cluster support feature in the last weeks I covered quite a bit of new territory that I was only partly aware of, even after ~9 years of doing Wicket. And I had to do quite a bit of research to collect know-how from different sources.</p>
+<p>In this post I&rsquo;d like to share what I have learned and things I want to emphasize that should be applied.</p>
+<p>(I&rsquo;m doing coding in Scala. So some things are Scala related but should generally apply to Java as well.)</p>
+<h3>&nbsp;</h3>
+<h3>Model separation</h3>
+<p>If your application has the potential to get bigger with multiple layers you should separate your models (and not only your models). Honor separation of concerns (<code>SoC</code>) and single responsibility (<code>SRP</code>). Create dedicated models at an architectural, module or package boundary (where necessary) and map your models. Apply orthogonality.</p>
+<p>If you don&rsquo;t it&rsquo;ll hit you in the face at some point. And you are lucky if it does only once.</p>
+<p>You can imagine what the disadvantages are if you don&rsquo;t use dedicated models: changes to the model affect every part of the application where it&rsquo;s directly used which makes the application ridgid.</p>
+<p>After all &rsquo;soft&rsquo;ware implies being &lsquo;soft&rsquo; as in flexible and easy to change.</p>
+<p>In regards to Wicket or other &lsquo;external interfaces&rsquo; the problem is that a loaded model is partly stored in instance variables of Wicket components. The domain model can contain a ton of data and you have no control over what gets serialized and what not without changing your domain model, which you shouldn&rsquo;t do to satisfy the requirements of an external interface.</p>
+<p>So because in a cluster environment those components now must be (de)serialized to be distributed across the cluster nodes and there is no cache anymore it is: <br />a) a performance hit and <br />b) uses up quite some network bandwidth when the session changes a few times per second.</p>
+<p>The approach should be to create a dedicated model for a view, because most probably not all data of a domain model is visualized. Further, when the domain model is used directly, submitting form data goes straight back to the domain model. Instead a dedicated &lsquo;submit form&rsquo; model can be created that only holds the data of the submit and can be merged back into the domain model on a higher level that can better control when, where and how this is done (i.e. applying additional validations, etc.) This certainly takes a bit more time but is worth the effort in the longer run.</p>
+<h3>&nbsp;</h3>
+<h3>Use LoadableDetachableModel</h3>
+<p><code>LoadableDetachableModel</code>s load the model when a request is made and &lsquo;forget&rsquo; it after the response was generated, and before the state is saved to the session. Which means that model data is not stored to the session but reloaded from scratch more often. One has to keep in mind that the session can change multiple times per request/response cycle, in particular if JavaScript based components load their data lazily. In a cluster environment, without the Servlet container&rsquo;s second-level cache (see below), it is better to load the data on a request basis instead of serializing and deserializing large amounts of data which have to be synchronized between cluster nodes. Usually the application has a general caching mechanism on a higher level which makes loading the data acceptable.</p>
+<p>Preferably no model is stored in the components at all but only the state of the components as such. With this the session size can be contained at a few kBytes.</p>
+<p>This is something the Wicket developer has to sensibly consider when developing a component.</p>
+<p>In Wicket models can be chained. I like using <code>CompoundPropertyModel</code>s. But you can still use a <code>LoadableDetachableModel</code> by chaining them together:</p>
+<pre class="brush: scala;">new CompountPropertyModel[Foo](new LoadableDetachableModel(myModelObject))
+</pre>
+<h3>&nbsp;</h3>
+<h3>Extend from <code>Serializable</code> (or use Scala <code>case class</code>es) for any model classes that are UI model</h3>
+<p>This should be obvious. Any class that should be serializable requires inheriting from <code>Serializable</code> interface.</p>
+<p>In Wicket you can also interit from <code>IClusterable</code>, which is just a marker trait inheriting from <code>Serializable</code>.</p>
+<h3>&nbsp;</h3>
+<h3>Add <code>Serializable</code> to abstract parent classes if there is a class hierarchy</h3>
+<p>I&rsquo;ve had a few cases where serialized classes could not be deserialized. The reason was that when you have a class hierarchy the abstract base class must also inherit from <code>Serializable</code>.</p>
+<p>The deserialization of the code below fails even though class <code>Bar</code> inherits from <code>Serializable</code>. Class <code>Foo</code> also <strong>must</strong> inherit from <code>Serializable</code>.:</p>
+<pre class="brush: scala;">@SerialVersionUID(1L)
+abstract class Foo(var1, var2)
+  
+class Bar extends Foo with Serializable
+</pre>
+<h3>&nbsp;</h3>
+<h3>Add <code>@SerialVersionUID</code>, always</h3>
+<p>Wicket components, including the model classes are serializable by default. But to keep compatibility across temporarily different versions of the app when updating a cluster node, add a <code>SerialVersionUID</code> annotation to your component classes (for Scala, in Java it is a static final field). Also add this to every model data class.</p>
+<p>When ommiting this annotation the serial version is dynamically created by Java for each compilation process and hence is incompatible to each other even if no code changes were made. So add this annotation to specify a constant version.</p>
+<p>Add this to your IDEs class template mechnism. Any class created should have this annotation. It doesn&rsquo;t hurt when it&rsquo;s there but not used.</p>
+<p>If you want to know more about this, and how to create compatible versions of classes read this: <a class="small" href="https://docs.oracle.com/javase/8/docs/platform/serialization/spec/version.html" target="_blank">https://docs.oracle.com/javase/8/docs/platform/serialization/spec/version.html</a></p>
+<h3>&nbsp;</h3>
+<h3>No Scala Enumeration, causes trouble at deserialization</h3>
+<p>Use <code>Enumeratum</code> instead or just a combination of Scala <code>case class</code> plus some constant definitions on the companion object.</p>
+<h3>&nbsp;</h3>
+<h3>Enumeratum, add no arg constructor with <code>abstract class</code></h3>
+<p>The below code doesn&rsquo;t deserialize if the auxiliary constructor is missing, keep that in mind:</p>
+<pre class="brush: scala;">@SerialVersionUID(1L)
+sealed abstract class MyEnum(val displayName: String) extends EnumEntry {
+  def this() = this("")
+}
+</pre>
+<h3>&nbsp;</h3>
+<h3>Use Wicket <code>RenderStrategy.ONE_PASS_RENDER</code></h3>
+<p>By default Wicket uses a POST-REDIRECT-GET pattern implementation. This is to avoid the &lsquo;double-submit&rsquo; problem.</p>
+<p>However, in cluster environments it&rsquo;s possible that the GET request goes to a different cluster node than the POST request and hence this could cause trouble.</p>
+<p>So either you have to make certain that the cluster nodes got synchronized between POST and GET or you configure Wicket to the render strategy <code>ONE_PASS_RENDER</code>.</p>
+<p><code>ONE_PASS_RENDER</code> basically returns the page markup as part of the POST response.</p>
+<p>See here for more details: <a class="link" href="https://ci.apache.org/projects/wicket/apidocs/8.x/index.html?org/apache/wicket/settings/RequestCycleSettings.RenderStrategy.html" target="_blank">https://ci.apache.org/projects/wicket/apidocs/8.x/index.html?org/apache/wicket/settings/RequestCycleSettings.RenderStrategy.html</a></p>
+<h3>&nbsp;</h3>
+<h3>Use Wicket <code>HttpSessionStore</code></h3>
+<p>By default Wicket uses a file based session page store where the serialized pages are written to. Wicket stores those to support the browser back button and to render older versions of the page when the back button is pressed.</p>
+<p>In a cluster setup the serialized pages must be stored in the session so that the pages can be synchronized between the cluster nodes.</p>
+<p>In Wicket version 8 you do it like this (in <code>Application#init()</code>):</p>
+<pre class="brush: scala;">setPageManagerProvider(new DefaultPageManagerProvider(this) {
+  override def newDataStore() = {
+    new HttpSessionDataStore(getPageManagerContext, new PageNumberEvictionStrategy(5))
+  }
+})
+</pre>
+<p>The <code>PageNumberEvictionStratety</code> defines how many versions of one page are stored.</p>
+<h3>&nbsp;</h3>
+<h3>Disable the Servlet containers second-level cache</h3>
+<p>Jetty (or generally Servlet containers) usually uses a second-level cache (<code>DefaultSessionCache</code>) where session data, in form of the runtime objects, is stored for quick access without going through the (de)serialization.</p>
+<p>In a cluster environment however this can cause issues because what the second-level cache contains is likely to be different on each cluster node and hence wrong states may be pulled out of it when the load-balancer is delegating to a different node for a request.</p>
+<p>So it is better to not use a second-level cache. In Jetty you do this by setting up a <code>NullSessionCache</code>. To this <code>NullSessionCache</code> you also have to provide the backing <code>SessionDataStore</code> where the session data is written and read from.</p>
+<p>You do this like this on a <code>ServletContextHandler</code> basis (Jetty 9.4):</p>
+<pre class="brush: scala;">val sessionHandler = new SessionHandler
+handler.setSessionHandler(sessionHandler)
+
+val sessionCache = new NullSessionCacheFactory().getSessionCache(handler.getSessionHandler)
+val sessionStore = // set your `SessionDataStore` implementation here
+
+sessionCache.setSessionDataStore(sessionStore)
+sessionHandler.setSessionCache(sessionCache)
+</pre>
+<p>You have different options for the <code>SessionDataStore</code> implementation. Jetty provides a <code>JDBCSessionDataStore</code> which stores the session data into a database.</p>
+<p>But there are also implementations for Memcached or Hazelcast, etc.</p>
+<h3>&nbsp;</h3>
+<h3>Serialization considerations</h3>
+<p>There are other options than the Java object serialization. I&rsquo;d like to name two which are supported by Wicket:</p>
+<ul>
+<li><a class="link" href="https://github.com/wicketstuff/core/tree/master/serializer-kryo2" target="_blank">https://github.com/wicketstuff/core/tree/master/serializer-kryo2</a></li>
+<li><a class="link" href="https://github.com/wicketstuff/core/tree/master/serializer-fast2" target="_blank">https://github.com/wicketstuff/core/tree/master/serializer-fast2</a></li>
+</ul>
+<p>Both provide more performance and flexibility on serialization than the default Java serializer and should be considered.</p>

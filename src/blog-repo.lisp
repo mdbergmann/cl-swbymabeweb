@@ -144,15 +144,15 @@
   "Reads file and takes data from it to create a `blog-entry'"
   (~> file
       (file-namestring)
-      (blog-entry-name-and-datestring)
-      ((lambda (name-and-datestring)
-         (destructuring-bind (blog-name datestring) name-and-datestring
-           (log:debug "Have blog-name: ~a and datestring: ~a~%" blog-name datestring)
-           (make-blog-entry blog-name
+      (blog-entry-datestring-and-name)
+      ((lambda (datestring-and-name)
+         (destructuring-bind (datestring name) datestring-and-name
+           (log:debug "Have blog-name: ~a and datestring: ~a~%" name datestring)
+           (make-blog-entry name
                             (datestring-to-universal-time datestring)
                             (read-file-content-as-string file)))))))
       
-(defun blog-entry-name-and-datestring (filename)
+(defun blog-entry-datestring-and-name (filename)
   "Takes the filename and replaces any '_' with space, plus removes the file extension."
   (~>> filename
        (str:replace-all "_" " ")

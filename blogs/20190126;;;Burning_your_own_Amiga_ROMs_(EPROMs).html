@@ -1,0 +1,31 @@
+<p>With the release of the latest AmigaOS version (3.1.4) the package you could buy included ROM images to be used for either maprom (depending on your accelerator card tool support) or for burning it to a ROM.</p>
+<p>Maprom is probably preferred, because it's more flexible, but not always possible. For instance the A3440 card can't do maprom. Or if you have no accelerator at all you can't do maprom either.</p>
+<p>Which leaves only a few options. Either you can buy the ROM, have someone burn it or burn it yourself.</p>
+<p>Here I want to show how it works to burn it yourself.</p>
+<p>&nbsp;</p>
+<p>What you need:</p>
+<p>- an EPROM programmer. I have chosen the low cost GQ-4x4 USB programmer.</p>
+<p>- to program the EPROMs used&nbsp;in an Amiga you have to get a 16-Bit 40/42 pin ZIF adapter board for the burner:<br />ADP-054 16 Bit EPROM 40/42 pin ZIF adapter</p>
+<p>- an UV eraser, which can erase the EPROMs, in case something goes wrong.</p>
+<p>- then you need EPROMs. The types used in A500/A600/A2000 are 27C400. I found the following to work which can be ordered in eBay: AMD27C400</p>
+<p>- for burning ROMs for A1200/A4000 you need 27C800 / AMD27C800 roms, two of them to burn one ROM.</p>
+<p>- and certainly a ROM image you want to burn.</p>
+<p>&nbsp;</p>
+<p>Sometimes there are good offers at Amazon or eBay for a complete package (except the EPROMs).<br />You shouldn't pay more than &euro;150 for the GQ-4x4, the adapter board and the eraser.</p>
+<p>Here is a picture of the device with attached adapter board with an EPROM inside.</p>
+<p><img src="/gfx/blogs/GQ-Burn-0_small.jpg" alt="GQ programmer with adapter board and EPROM" width="480" height="360" /></p>
+<p>Then you need to download the software for the burner. That is a) the burner software itself named "GQUSBprg". The latest version as of this writing is 7.21.<br />And you need the USB driver 3.0.<br /><br />Can be downloaded here:&nbsp;<a class="link" href="http://mcumall.com/store/device.html" target="_blank">http://mcumall.com/store/device.html</a></p>
+<p>When you connected the burner and installed the software we can start.<br />Now open the burner software. Make sure that there is no EPROM put in.</p>
+<p>1. first step is to select the device, or the EPROM to burn.<br /><br />Make sure you choose either AM27C400 or 27C400.<br /><br /><img src="/gfx/blogs/GQ-Burn-1-SelectDevice_small.jpg" alt="" width="480" height="312" /></p>
+<p>2. Next we'll make a voltage check to see if the burner has all voltages in order to properly burn the EPROM.<br /><br />I found that while you can attached a power supply on the burner it is not required. <strong>The USB provides enough power.</strong><br /><br /><img src="/gfx/blogs/GQ-Burn-2-VoltageCheck_small.jpg" alt="" width="480" height="312" /></p>
+<p>3. Load the ROM image into the buffer.<br /><br />When you load the image make sure you choose .bin (binary).<br /><br /><strong>!!! This is important, or otherwise the programmed ROM won't work.</strong><br /><strong>After you loaded the ROM image, you have to make sure to swap bytes.</strong><br /><strong>This can be done in the 'Command' menu of the software.</strong><br /><br /><img src="/gfx/blogs/GQ-Burn-3-LoadRomAsBinary_small.jpg" alt="" width="480" height="312" /></p>
+<p>4. Now you have to put in your EPROM into the ZIF slot.<br /><br />Make sure it sits tight and doesn't move anymore.</p>
+<p>5. Make a blank check to see if the EPROM is empty.<br /><br /><img src="/gfx/blogs/GQ-Burn-6-BlankCheck-small.jpg" alt="" width="480" height="313" /></p>
+<p>6. When the EPROM is blank we can write it.<br /><br /><img src="/gfx/blogs/GQ-Burn-7-Write_small.jpg" alt="" width="480" height="411" /></p>
+<p>When the write process is finished it's done.<br /><br />You can take out the EPROM and put it into the Amiga and it should work.</p>
+<p><strong>Some notes:</strong><br />Partly this whole process of writing the ROM was a real pain because the GQ burner would just stop writing at some address. And in fact I had to get the package replaced including the adapter board.<br /><br />I had first tried it in a virtual machine (VMware Fusion on Mac) but this doesn't work for some reason as the GQ programmer detaches and re-attaches to the USB bus on some of the operations and that doesn't seem to be working reliably in a VM.</p>
+<p><a class="twitter-follow-button link" href="https://twitter.com/mdbergmann?ref_src=twsrc%5Etfw" data-show-screen-name="false" data-show-count="false">Follow @mdbergmann</a></p>
+<br/>
+<br/>
+<p>Update:</p>
+<p>The Amiga 4000 can only use 512k EPROMs, hence only 27C400 will work. The Amiga 1200 can also use 27C800 (1MB). The byte-swap, if your ROM image is already byte-swapped, then you don't need to do this here. Some ROM images, which are ready to burn have this already. However, if you want to burn ROM images that are used in maprom or UAE, then you have to byte-swap.</p>
