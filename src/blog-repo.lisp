@@ -153,13 +153,13 @@
                             (read-file-content-as-string file)))))))
       
 (defun blog-entry-name-and-datestring (filename)
-  "Takes the filename and replaces any '_' with space, plus reomves the file extension."
+  "Takes the filename and replaces any '_' with space, plus removes the file extension."
   (~>> filename
        (str:replace-all "_" " ")
        (str:substring 0
                       (- (length filename)
                          (1+ (length (pathname-type filename)))))
-       (str:split "-")))
+       (str:split ";;;")))
 
 (defun datestring-to-universal-time (datestring)
   (dtp:parse-date-time datestring))
