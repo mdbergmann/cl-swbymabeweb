@@ -33,52 +33,65 @@
                    :initarg :all-blog-posts
                    :reader model-get-all-posts)))
 
-(defun blog-post-content (blog-post)
-  (with-slots (name date text) blog-post
-    (with-html-output-to-string (*standard-output* nil :prologue nil :indent t)
-      (:div
-            (:div :class "content_light" (str name))
-            (:hr :class "blogtitle")
-            (:div :class "content_tiny" (str date))
-            (:div "&nbsp;")
-            (:div :class "content blogLeftPanel" (str text))))))
+(defmacro blog-post-content (blog-post)
+  (let ((post (gensym))
+        (name (gensym))
+        (date (gensym))
+        (text (gensym)))
+    `(let* ((,post ,blog-post)
+            (,name (slot-value ,post 'name))
+            (,date (slot-value ,post 'date))
+            (,text (slot-value ,post 'text)))
+       (htm
+        (:div
+         (:div :class "content_light" (str ,name))
+         (:hr :class "blogtitle")
+         (:div :class "content_tiny" (str ,date))
+         (:div "&nbsp;")
+         (:div :class "content blogLeftPanel" (str ,text)))))))
 
-(defun blog-post-navigation (blog-posts)
-  (with-html-output-to-string (*standard-output* nil :prologue nil :indent t)
-    (:div :class "content"
-          (:ul :align "right"
-               (dolist (elem blog-posts)
-                 (str (blog-nav-entry elem)))))))
+(defmacro blog-post-navigation (blog-posts)
+  (let ((elem (gensym)))
+    `(htm
+      (:div :class "content"
+            (:ul :align "right"
+                 (dolist (,elem ,blog-posts)
+                   (blog-nav-entry ,elem)))))))
 
 (defun name-to-link (blog-name)
   (format nil "/blog/~a"
           (str:replace-all " " "+" blog-name)))
 
-(defun blog-nav-entry (post)
-  (let* ((post-name (slot-value post 'name))
-         (post-date (slot-value post 'nav-date))
-         (post-link (name-to-link post-name)))
-    (with-html-output-to-string (*standard-output* nil :prologue nil :indent t)
-      (:li :class "blog-nav-item"
-           (:a :href post-link
-               :class "blog-nav-link"
-               (str post-name))
-           (:br)
-           (:span :class "content_tiny" (str post-date))))))
+(defmacro blog-nav-entry (blog-post)
+  (let ((post (gensym))
+        (name (gensym))
+        (nav-date (gensym))
+        (link (gensym)))
+    `(let* ((,post ,blog-post)
+            (,name (slot-value ,post 'name))
+            (,nav-date (slot-value ,post 'nav-date))
+            (,link (name-to-link ,name)))
+       (htm
+        (:li :class "blog-nav-item"
+             (:a :href ,link
+                 :class "blog-nav-link"
+                 (str ,name))
+             (:br)
+             (:span :class "content_tiny" (str ,nav-date)))))))
 
-(defun blog-header ()
-  (with-html-output-to-string (*standard-output* nil :prologue nil :indent t)
+(defmacro blog-header ()
+  `(htm
     (with-content-table
       (content-headline (i18n "blog_headline")))))
 
-(defun content (blog-post blog-navigation)
-  (with-html-output-to-string (*standard-output* nil :prologue nil :indent t)
-   (:div :id "content"
-         (str (blog-header))
-         (with-content-table
-           (:tr
-            (:td :class "blogLeftPanel"(str blog-post))
-            (:td :class "blogNavPanel" (str blog-navigation)))))))
+(defmacro content (blog-post blog-navigation)
+  `(htm
+    (:div :id "content"
+          (str (blog-header))
+          (with-content-table
+            (:tr
+             (:td :class "blogLeftPanel"(str ,blog-post))
+             (:td :class "blogNavPanel" (str ,blog-navigation)))))))
 
 (defun render (view-model)
   (log:debug "Rendering blog view")
@@ -86,16 +99,8 @@
         (all-posts (model-get-all-posts view-model)))
     (log:debug "post name: " (slot-value blog-post 'name))
     (log:debug "all-posts: " (length all-posts))
-    (if blog-post
-        (render-blog-post blog-post all-posts)
-        (render-blog-post-empty all-posts))))
 
-(defun render-blog-post-empty (all-posts)
-  (with-page *page-title*
-    (str (content nil
-                  (blog-post-navigation all-posts)))))
-
-(defun render-blog-post (blog-post all-posts)
-  (with-page *page-title*
-    (str (content (blog-post-content blog-post)
-                  (blog-post-navigation all-posts)))))
+    (with-page *page-title*
+      (str (content (if blog-post
+                        (blog-post-content blog-post) nil)
+                    (blog-post-navigation all-posts))))))
