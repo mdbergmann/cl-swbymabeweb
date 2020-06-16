@@ -95,8 +95,10 @@
   (let ((result (get-for-name (blog-repo-fac-get) name)))
     (if result
         (cons :ok result)
-        (cons :not-found-error
-              (format nil "Blog post with name: ~a does not exist!" name)))))
+        (progn
+          (log:warn "Blog entry for name '~a' not found!" name)
+          (cons :not-found-error
+                (format nil "Blog post with name: ~a does not exist!" name))))))
 
 ;; ---------------------------------------
 ;; blog repo class -----------------------
@@ -147,7 +149,7 @@
       (blog-entry-datestring-and-name)
       ((lambda (datestring-and-name)
          (destructuring-bind (datestring name) datestring-and-name
-           (log:debug "Have blog-name: ~a and datestring: ~a~%" name datestring)
+           (log:debug "Have blog-name: '~a' and datestring: '~a'~%" name datestring)
            (make-blog-entry name
                             (datestring-to-universal-time datestring)
                             (read-file-content-as-string file)))))))
@@ -183,4 +185,10 @@
   (first (get-all self)))
 
 (defmethod get-for-name ((self blog-repo-default) name)
-  (find name (get-all self) :key #'blog-entry-name :test #'string=))
+  (log:debug "Finding blog: '~a'~%" name)
+  (~> name
+      (plus-to-space)
+      (find (get-all self) :key #'blog-entry-name :test #'string=)))
+
+(defun plus-to-space (text)
+  (str:replace-all "+" " " text))
