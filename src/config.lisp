@@ -21,9 +21,11 @@
 (defparameter *static-directory* (merge-pathnames #P"static/" *application-root*))
 (defparameter *blog-directory* (merge-pathnames #P"blogs/" *application-root*))
 (defparameter *content-directory* (merge-pathnames #P"content/" *application-root*))
+(defparameter *error-log-file* (merge-pathnames #P"error.log" *application-root*))
 
 (defconfig :common
-    `(:locale :en_EN))
+    `(:locale :en_EN
+      :error-log *error-log-file*))
 
 (defconfig |development|
     '())

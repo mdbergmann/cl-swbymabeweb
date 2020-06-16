@@ -7,9 +7,6 @@
                 #:response-status))
 (in-package :cl-swbymabeweb.web)
 
-;; for @route annotation
-(syntax:use-syntax :annot)
-
 ;;
 ;; Application
 
