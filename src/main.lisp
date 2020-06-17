@@ -44,3 +44,4 @@
         (clack:stop *web-handler*)
       (log:debug "Server stopped.")
       (setf *web-handler* nil))))
+

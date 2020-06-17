@@ -22,9 +22,7 @@
               path
               nil))
   :root *static-directory*)
- (if (productionp)
-     nil
-     :accesslog)
+ :accesslog
  (if (getf (config) :error-log)
      `(:backtrace
        :output ,(getf (config) :error-log))

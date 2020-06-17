@@ -22,7 +22,7 @@ hr.blog {
 	margin-left:0;
 }
 
-hr.blogtitle {
+hr.blog-title {
 	border: none;
 	border-top: 1px solid #cccccc;
 	width: 750px;
@@ -36,7 +36,7 @@ hr.title {
 	height: 1px;
 }
 
-table.listtable {
+table.list-table {
 	padding: 0;
 	margin-top: 0;
 	margin-bottom: 0;
@@ -45,14 +45,14 @@ table.listtable {
 	width: 1024px;
 }
 
-hr.recentsblognav {
+hr.recents-blog-nav {
 	border: none;
 	border-top: 1px solid #cccccc;
 	width: 100%;
 	height: 1px;
 }
 
-table.mainnav {
+table.main-nav {
 	padding: 0;
 	margin-top: 0;
 	margin-bottom: 0;
@@ -113,19 +113,19 @@ pre {
 /*   font-family:calibri,arial,sans-serif; */
 /* } */
 
-.centerDiv {
+.center-div {
 	width: 1024px;
 	margin-right: auto;
 	margin-left: auto;
 }
 
-.blogNavPanel {
+.blog-nav-panel {
 	width: auto;
 	text-align: right;
 	vertical-align: top;
 }
 
-.blogLeftPanel {
+.blog-left-panel {
 	width: 750px;
 	vertical-align: top;
 }
@@ -135,7 +135,7 @@ li.blog-nav-item {
     margin-bottom: 5px;
 }
 
-.content, .content_title, .content_boldface, .content_light, .content_tiny {
+.content, .content-title, .content-boldface, .content-light, .content-tiny {
 	font-size : 11pt;
 	font-style : normal;
 	text-align: left;
@@ -143,23 +143,23 @@ li.blog-nav-item {
 	font-weight: normal;
 }
 
-.content_title {
+.content-title {
 	font-weight: bolder;
 }
 
-.content_boldface {
+.content-boldface {
 	font-weight: bold;
 }
 
-.content_small {
+.content-small {
 	font-size : 10pt;
 }
 
-.content_tiny {
+.content-tiny {
 	font-size : 9pt;
 }
 
-.content_light {
+.content-light {
 	color: #A4A4A4;
 }
 

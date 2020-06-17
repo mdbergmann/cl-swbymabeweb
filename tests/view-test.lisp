@@ -63,7 +63,7 @@
     (is (str:containsp *expected-blog-page-title* page-source))
     (is (str:containsp "<div id='navigation'" page-source))
     (is (str:containsp "<div id='content'" page-source))
-    (is (str:containsp "<td class='blogNavPanel'" page-source))
+    (is (str:containsp "<td class='blog-nav-panel'" page-source))
 
     (is (str:containsp "Foo" page-source))
     (is (str:containsp "Foobar" page-source))

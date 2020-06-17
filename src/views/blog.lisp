@@ -44,11 +44,11 @@
             (,text (slot-value ,post 'text)))
        (htm
         (:div
-         (:div :class "content_light" (str ,name))
-         (:hr :class "blogtitle")
-         (:div :class "content_tiny" (str ,date))
+         (:div :class "content-light" (str ,name))
+         (:hr :class "blog-title")
+         (:div :class "content-tiny" (str ,date))
          (:div "&nbsp;")
-         (:div :class "content blogLeftPanel" (str ,text)))))))
+         (:div :class "content blog-left-panel" (str ,text)))))))
 
 (defmacro blog-post-navigation (blog-posts)
   (let ((elem (gensym)))
@@ -77,7 +77,7 @@
                  :class "blog-nav-link"
                  (str ,name))
              (:br)
-             (:span :class "content_tiny" (str ,nav-date)))))))
+             (:span :class "content-tiny" (str ,nav-date)))))))
 
 (defmacro blog-header ()
   `(htm
@@ -90,8 +90,8 @@
           (str (blog-header))
           (with-content-table
             (:tr
-             (:td :class "blogLeftPanel"(str ,blog-post))
-             (:td :class "blogNavPanel" (str ,blog-navigation)))))))
+             (:td :class "blog-left-panel"(str ,blog-post))
+             (:td :class "blog-nav-panel" (str ,blog-navigation)))))))
 
 (defun render (view-model)
   (log:debug "Rendering blog view")

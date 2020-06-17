@@ -14,7 +14,7 @@
 
 (defmacro with-content-table (&body body)
   `(htm
-    (:table :class "listtable"
+    (:table :class "list-table"
             (:tbody
              ,@body))))
 
@@ -49,7 +49,7 @@
 (defmacro navigation ()
   `(htm
     (:div :id "navigation"
-          (:table :class "mainnav"
+          (:table :class "main-nav"
                   (:tbody
                    (:tr :class "navi_boldwhite"
                         (nav-entry "70" "/blog" (i18n "blog"))
@@ -67,7 +67,7 @@
          (logo-height 30)
          (bottom-height 70))
     `(htm
-      (:table :class "listtable"
+      (:table :class "list-table"
               (:tbody
                (:tr
                 (:td :height ,top-height :width ,logo-col-width "&nbsp;")
@@ -93,9 +93,9 @@
       (:tr
        (:td :colspan 2 (:hr)))
       (:tr
-       (:td :class "content_light content_small"
+       (:td :class "content-light content-small"
             (str (i18n "all_copyright")))
-       (:td :class "content_light content_small"
+       (:td :class "content-light content-small"
             (:div :align "right"
                   (str (format-timestring nil (now)
                                           :format +asctime-format+)))))
