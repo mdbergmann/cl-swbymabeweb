@@ -9,4 +9,8 @@
 
 (defun render ()
   (log:debug "Rendering index view.")
-  (with-page *page-title*))
+  (with-page *page-title*
+    (with-content-table
+      (with-content-line
+        (:div :style "text-align: center; font-size: xxx-large;"
+              (:p "Hello!"))))))

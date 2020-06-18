@@ -9,7 +9,5 @@
 
 (-> index () controller-result)
 (defun index ()
-  "Not yet sure what this should do, where it delegates to."
   (log:debug "Index controller.")
-  (controller.blog:index))
-  ;;(cons :ok (view.index:render)))
+  (cons :ok (view.index:render)))

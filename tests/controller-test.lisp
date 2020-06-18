@@ -33,15 +33,14 @@
   *expected-page-title-blog*)
 
 
-;; (test index-controller
-;;   "Test index controller"
+(test index-controller
+  "Test index controller"
 
-;;   (with-mocks ()
-;;     ;; index controller defers to blog
-;;     (answer (controller.blog:index) (fake-blog-page))
+  (with-mocks ()
+    (answer (view.index:render) (fake-index-page))
 
-;;     (is (string= (cdr (controller.index:index)) (fake-index-page)))
-;;     (is (= 1 (length (invocations 'controller.blog:index))))))
+    (is (string= (cdr (controller.index:index)) (fake-index-page)))
+    (is (= 1 (length (invocations 'view.index:render))))))
 
 (test imprint-controller
   "Test imprint controller"

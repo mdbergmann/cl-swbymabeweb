@@ -25,7 +25,8 @@
   "Index view renders empty page with only navigation but no content."
   (let ((page-source (view.index:render)))
     (is (str:containsp *expected-index-page-title* page-source))
-    (is (str:containsp "<div id='navigation'" page-source))))
+    (is (str:containsp "<div id='navigation'" page-source))
+    (is (str:containsp "<p>Hello!" page-source))))
 
 (test imprint-view
   "Imprint view"
