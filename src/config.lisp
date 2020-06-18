@@ -24,8 +24,7 @@
 (defparameter *error-log-file* (merge-pathnames #P"error.log" *application-root*))
 
 (defconfig :common
-    `(:locale :en_EN
-      :error-log *error-log-file*))
+    `(:locale :en_EN))
 
 (defconfig |development|
     '())

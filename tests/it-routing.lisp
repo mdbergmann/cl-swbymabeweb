@@ -39,7 +39,7 @@
 (test handle-index-route
   "Test routing of index."
   (with-fixture with-server ()
-    (is (str:containsp "<title>Manfred Bergmann | Software Development | Blog"
+    (is (str:containsp "<title>Manfred Bergmann | Software Development | Index"
                        (dex:get "http://localhost:5000/")))))
 
 (test handle-imprint-route

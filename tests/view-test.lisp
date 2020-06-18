@@ -26,7 +26,7 @@
   (let ((page-source (view.index:render)))
     (is (str:containsp *expected-index-page-title* page-source))
     (is (str:containsp "<div id='navigation'" page-source))
-    (is (str:containsp "<p>Hello!" page-source))))
+    (is (str:containsp "<p style='font-size: 36pt;'>Hello!" page-source))))
 
 (test imprint-view
   "Imprint view"
