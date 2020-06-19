@@ -1,7 +1,7 @@
 (ql:quickload :cl-swbymabeweb)
 
 (defpackage cl-swbymabeweb.app
-  (:use :cl)
+  (:use :cl :log4cl)
   (:import-from :lack.builder
                 :builder)
   (:import-from :ppcre
@@ -15,6 +15,8 @@
                 :*static-directory*))
 (in-package :cl-swbymabeweb.app)
 
+(log:config :info :daily "access-log/access.log")
+
 (builder
  (:static
   :path (lambda (path)
@@ -22,16 +24,7 @@
               path
               nil))
   :root *static-directory*)
- :accesslog
- (if (getf (config) :error-log)
-     `(:backtrace
-       :output ,(getf (config) :error-log))
-     nil)
- :session
- ;; (if (productionp)
- ;;     nil
- ;;     (lambda (app)
- ;;       (lambda (env)
- ;;         (let ((datafly:*trace-sql* t))
- ;;           (funcall app env)))))
+ (:accesslog
+  :logger (lambda (message)
+            (log:info message)))
  *web*)
