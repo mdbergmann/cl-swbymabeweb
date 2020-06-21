@@ -38,6 +38,16 @@
            (setf (response-status *response*) 400)
            "Undefined error!")))))
 
+(defroute "/blog/atom.xml" ()
+  (log:debug "Blog route for atom feed.")
+
+  (let ((result (controller.blog:atom-feed)))
+    (case (car result)
+      (:ok (cdr result))
+      (t (progn
+           (setf (response-status *response*) 400)
+           "Undefined error!")))))
+
 (defroute "/blog/:name" (&key name)
   (log:debug "Blog route called with name: " name)
   (let ((result (controller.blog:for-blog-name name)))

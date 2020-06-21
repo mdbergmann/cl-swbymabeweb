@@ -2,11 +2,13 @@
   (:use :cl :blog-repo :controller :view.blog :local-time)
   (:nicknames :controller.blog)
   (:export #:index
-           #:for-blog-name)
+           #:for-blog-name
+           #:atom-feed)
   (:import-from #:serapeum
                 #:->))
 
 (in-package :cl-swbymabeweb.controller.blog)
+
 
 (-> index () controller-result)
 (defun index ()
@@ -62,3 +64,18 @@ This function makes a mapping from the repositotry blog entry to the view model 
                                                 (universal-to-timestamp (blog-entry-date blog-entry))
                                                 :format '((:day 2) #\- (:month 2) #\- (:year 4)))
                    :text (blog-entry-text blog-entry))))
+
+(-> atom-feed () controller-result)
+(defun atom-feed ()
+  "Call the atom feed generation."
+  (let ((lookup-result (repo-get-all)))
+    (if (eq :ok (car lookup-result))
+        (progn
+          (let ((feed-result
+                  (atom-feed:generate-feed (cdr lookup-result))))
+            (make-controller-result
+             (car feed-result)
+             (cdr feed-result))))
+        (make-controller-result
+         (car lookup-result)
+         (cdr lookup-result)))))

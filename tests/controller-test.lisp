@@ -151,6 +151,56 @@
     (is (= 0 (length (invocations 'blog-repo:repo-get-all))))
     (is (= 1 (length (invocations 'blog-repo:repo-get-for-name))))))
 
+(test blog-controller-atom-feed
+  "Test generating the atom feed."
+
+  (setf *blog-entry*
+        (blog-repo:make-blog-entry "my_blog_name"
+                                   (get-universal-time)
+                                   "<b>hello world</b>"))
+
+  (with-mocks ()
+    (answer (blog-repo:repo-get-all) (cons :ok (list *blog-entry*)))
+    (answer (atom-feed:generate-feed (list *blog-entry*)) (cons :ok "<feed xmlns=\"http://www.w3.org/2005/Atom\">"))
+
+    (let ((controller-result (controller.blog:atom-feed)))
+      (is (eq :ok (car controller-result)))
+      (is (str:containsp "<feed" (cdr controller-result))))
+
+    (is (= 1 (length (invocations 'blog-repo:repo-get-all))))
+    (is (= 1 (length (invocations 'atom-feed:generate-feed))))
+    ))
+
+(test blog-controller-atom-feed--nok-in-blog-repo
+  "Test error result from blog-repo"
+
+  (with-mocks ()
+    (answer (blog-repo:repo-get-all) (cons :nok "Foo"))
+
+    (let ((controller-result (controller.blog:atom-feed)))
+      (is (eq :nok (car controller-result)))
+      (is (string= "Foo" (cdr controller-result))))
+
+    (is (= 1 (length (invocations 'blog-repo:repo-get-all))))
+    (is (= 0 (length (invocations 'atom-feed:generate-feed))))))
+
+(test blog-controller-atom-feed--nok-in-generate-atom-feed
+  "Test error result from atom generation"
+
+  (setf *blog-entry*
+        (blog-repo:make-blog-entry "my_blog_name"
+                                   (get-universal-time)
+                                   "<b>hello world</b>"))
+  (with-mocks ()
+    (answer (blog-repo:repo-get-all) (cons :ok (list *blog-entry*)))
+    (answer (atom-feed:generate-feed (list *blog-entry*)) (cons :nok "Bar"))
+
+    (let ((controller-result (controller.blog:atom-feed)))
+      (is (eq :nok (car controller-result)))
+      (is (string= "Bar" (cdr controller-result))))
+
+    (is (= 1 (length (invocations 'blog-repo:repo-get-all))))
+    (is (= 1 (length (invocations 'atom-feed:generate-feed))))))
 
 (defun run-tests ()
   (run! 'index-controller)
@@ -160,4 +210,8 @@
   (run! 'blog-controller-index)
   (run! 'blog-controller-index-no-blog-entry)
   (run! 'blog-controller-for-blog-name)
-  (run! 'blog-controller-for-blog-name-not-found))
+  (run! 'blog-controller-for-blog-name-not-found)
+
+  (run! 'blog-controller-atom-feed)
+  (run! 'blog-controller-atom-feed--nok-in-blog-repo)
+  (run! 'blog-controller-atom-feed--nok-in-generate-atom-feed))

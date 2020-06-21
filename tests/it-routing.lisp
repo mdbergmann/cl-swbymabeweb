@@ -89,6 +89,13 @@
       (dex:http-request-not-found (e)
         (is (= (dex:response-status e) 404))))))
 
+(test handle-blog-atom
+  "Tests the route for blog atom."
+
+  (with-fixture with-server ()
+    (let ((atom-result (dex:get "http://localhost:5000/blog/atom.xml")))
+      (is (str:containsp "feed xmlns=\"http://www.w3.org/2005/Atom\"" atom-result)))))
+
 (defun run-tests ()
   (run! 'handle-index-route)
   (run! 'handle-imprint-route)
@@ -97,4 +104,5 @@
   (run! 'handle-blog-index-route)
   (run! 'handle-blog-route-with-blog-name)
   (run! 'handle-blog-route-with-blog-name-not-found)
-  (run! 'handle-undefined-route))
+  (run! 'handle-undefined-route)
+  (run! 'handle-blog-atom))
