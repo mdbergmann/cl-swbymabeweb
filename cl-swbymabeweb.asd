@@ -17,6 +17,7 @@
                "str"
                "3bmd"
                "3bmd-ext-code-blocks"
+               "xml-emitter"
                
 
                ;; for @route annotation
@@ -28,17 +29,22 @@
                 :components
                 ((:file "config")
                  (:file "blog-repo")
+                 (:file "atom-feed-util")
                  (:file "main")
-                 (:file "views/common")
-                 (:file "views/index")
-                 (:file "views/imprint")
-                 (:file "views/about")
-                 (:file "views/blog")
-                 (:file "controllers/common")
-                 (:file "controllers/index" :depends-on ("controllers/blog"))
-                 (:file "controllers/imprint")
-                 (:file "controllers/about")
-                 (:file "controllers/blog")
+                 (:module "views"
+                  :components
+                          ((:file "common")
+                           (:file "index")
+                           (:file "imprint")
+                           (:file "about")
+                           (:file "blog")))
+                 (:module "controllers"
+                  :components
+                          ((:file "common")
+                           (:file "index" :depends-on ("blog"))
+                           (:file "imprint")
+                           (:file "about")
+                           (:file "blog")))
                  (:file "web"))))
   :description ""
   :in-order-to ((test-op (test-op "cl-swbymabeweb/tests"))))
