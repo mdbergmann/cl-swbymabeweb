@@ -1,13 +1,4 @@
 (ql:quickload :cl-swbymabeweb)
-(ql:quickload :slynk)
-(ql:quickload :bordeaux-threads)
-
-(defun runner ()
-  (bt:make-thread (lambda ()
-                    (slynk:create-server :port 4006)))
-
-  (cl-swbymabeweb:start :address "0.0.0.0"))
-
 
 (defpackage cl-swbymabeweb.app
   (:use :cl :log4cl)
