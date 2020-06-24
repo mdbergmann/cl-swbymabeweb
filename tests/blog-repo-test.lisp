@@ -88,5 +88,3 @@ block</code></pre>
   (run! 'get-for-name--nok)
   (run! 'get-for-name--ok-name-with-plus))
 
-
-;; TODO: add output interface to as (cons x y)

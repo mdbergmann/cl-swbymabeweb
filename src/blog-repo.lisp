@@ -161,7 +161,7 @@
        (str:substring 0
                       (- (length filename)
                          (1+ (length (pathname-type filename)))))
-       (str:split ";;;")))
+       (str:split "---")))
 
 (defun datestring-to-universal-time (datestring)
   (dtp:parse-date-time datestring))
