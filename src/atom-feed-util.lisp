@@ -55,18 +55,20 @@ Rather it should map together data for the feed generation and let the feed gene
 
 (defun atom-entry (feed-entry)
   (with-tag ("entry")
-    (simple-tag "title" (gethash :title feed-entry) '(("type" "html")))
+    (with-simple-tag ("title" '(("type" "html")))
+      (xml-as-is (format nil "<![CDATA[ ~a ]]>" (gethash :title feed-entry))))
     (simple-tag "link" "" `(("href" ,(gethash :link feed-entry))))
     (simple-tag "updated" (gethash :updated feed-entry))
     (simple-tag "id" (gethash :id feed-entry))
-    (simple-tag "content" (gethash :content feed-entry) '(("type" "html")))))
+    (with-simple-tag ("content" '(("type" "html")))
+      (xml-as-is (format nil "<![CDATA[ ~a ]]>" (gethash :content feed-entry))))))
 
 (defmacro with-atom-feed (&body body)
   (let ((stream (gensym)))
     `(progn
        (setf ,stream (make-string-output-stream))
        (with-xml-output (,stream :encoding "utf-8")
-         (with-tag ("feed" ,''(("xmlns:atom" "http://www.w3.org/2005/Atom")))
+         (with-tag ("feed" ,''(("xmlns" "http://www.w3.org/2005/Atom")))
            ,@body))
        (get-output-stream-string ,stream))))
 

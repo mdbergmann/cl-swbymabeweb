@@ -65,27 +65,27 @@
                                              (list *feed-entry-1*))))))
     (is (str:containsp "<entry>" atom-feed))
     (is (str:containsp "</entry>" atom-feed))
-    (is (str:containsp "<title type=\"html\">My first post</title>" atom-feed))
+    (is (str:containsp "<title type=\"html\"><![CDATA[ My first post ]]></title>" atom-feed))
     (is (str:containsp "<link href=\"http://foo1/\"></link>" atom-feed))
     (is (str:containsp "<updated>2020-06-23</updated>" atom-feed))
     (is (str:containsp "<id>http://id1</id>" atom-feed))
-    (is (str:containsp "<content type=\"html\">My content</content>" atom-feed))
+    (is (str:containsp "<content type=\"html\"><![CDATA[ My content ]]></content>" atom-feed))
   ))
 
 (test atom-feed-generate-with-2-items
   "Test atom feed generation with 2 items"
   (let ((atom-feed (cdr
                     (atom-feed:generate-feed *feed-model-2*))))
-    (is (str:containsp "<title type=\"html\">My first post</title>" atom-feed))
-    (is (str:containsp "<title type=\"html\">My second post</title>" atom-feed))
+    (is (str:containsp "<title type=\"html\"><![CDATA[ My first post ]]></title>" atom-feed))
+    (is (str:containsp "<title type=\"html\"><![CDATA[ My second post ]]></title>" atom-feed))
     (is (str:containsp "<link href=\"http://foo1/\"></link>" atom-feed))
     (is (str:containsp "<link href=\"http://foo2/\"></link>" atom-feed))
     (is (str:containsp "<updated>2020-06-23</updated>" atom-feed))
     (is (str:containsp "<updated>2020-06-22</updated>" atom-feed))
     (is (str:containsp "<id>http://id1</id>" atom-feed))
     (is (str:containsp "<id>http://id2</id>" atom-feed))
-    (is (str:containsp "<content type=\"html\">My content</content>" atom-feed))
-    (is (str:containsp "<content type=\"html\">My second content</content>" atom-feed))
+    (is (str:containsp "<content type=\"html\"><![CDATA[ My content ]]></content>" atom-feed))
+    (is (str:containsp "<content type=\"html\"><![CDATA[ My second content ]]></content>" atom-feed))
   ))
 
 (defun run-all ()
