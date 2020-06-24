@@ -24,7 +24,8 @@
 (defparameter *error-log-file* (merge-pathnames #P"error.log" *application-root*))
 
 (defconfig :common
-    `(:locale :en_EN))
+    `(:locale :en_EN
+      :web-url-base "http://retro-style.software-by-mabe.com"))
 
 (defconfig |development|
     '())

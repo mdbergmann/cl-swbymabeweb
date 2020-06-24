@@ -64,6 +64,7 @@
                  (:file "controller-test" :depends-on ("all-tests"))
                  (:file "view-test" :depends-on ("all-tests"))
                  (:file "blog-repo-test" :depends-on ("all-tests"))
+                 (:file "atom-feed-util-test" :depends-on ("all-tests"))
                  (:file "it-routing" :depends-on ("all-tests"))
                  )))
   :description "Test system for cl-swbymabeweb"

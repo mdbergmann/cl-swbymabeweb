@@ -64,7 +64,7 @@
     (let ((imprint-result (controller.about:index)))
       (print imprint-result)
       (is (eq :ok (car imprint-result)))
-      (is (str:starts-with-p "<p>I'm a passionate software-developer,"
+      (is (str:starts-with-p "<p>Passionate about software development"
                              (cdr imprint-result))))
     (is (= 1 (length (invocations 'view.about:render))))))
 
@@ -151,6 +151,11 @@
     (is (= 0 (length (invocations 'blog-repo:repo-get-all))))
     (is (= 1 (length (invocations 'blog-repo:repo-get-for-name))))))
 
+
+;; -----------------------------------
+;; blog controller - atom ------------
+;; -----------------------------------
+
 (test blog-controller-atom-feed
   "Test generating the atom feed."
 
@@ -161,15 +166,19 @@
 
   (with-mocks ()
     (answer (blog-repo:repo-get-all) (cons :ok (list *blog-entry*)))
-    (answer (atom-feed:generate-feed (list *blog-entry*)) (cons :ok "<feed xmlns=\"http://www.w3.org/2005/Atom\">"))
+    (answer (atom-feed:generate-feed feed-model)
+      (if (not (hash-table-p feed-model))
+          (cons :nok "Wrong input type")
+          (cons :ok "<feed")))
 
     (let ((controller-result (controller.blog:atom-feed)))
       (is (eq :ok (car controller-result)))
-      (is (str:containsp "<feed" (cdr controller-result))))
+      (print controller-result)
+      (print (cdr controller-result))
+      (is (string= "<feed" (cdr controller-result))))
 
     (is (= 1 (length (invocations 'blog-repo:repo-get-all))))
-    (is (= 1 (length (invocations 'atom-feed:generate-feed))))
-    ))
+    (is (= 1 (length (invocations 'atom-feed:generate-feed))))))
 
 (test blog-controller-atom-feed--nok-in-blog-repo
   "Test error result from blog-repo"
@@ -193,7 +202,7 @@
                                    "<b>hello world</b>"))
   (with-mocks ()
     (answer (blog-repo:repo-get-all) (cons :ok (list *blog-entry*)))
-    (answer (atom-feed:generate-feed (list *blog-entry*)) (cons :nok "Bar"))
+    (answer (atom-feed:generate-feed _) (cons :nok "Bar"))
 
     (let ((controller-result (controller.blog:atom-feed)))
       (is (eq :nok (car controller-result)))
