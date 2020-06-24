@@ -41,7 +41,7 @@
   (let ((atom-feed (cdr
                     (atom-feed:generate-feed (make-atom-feed-model (make-hash-table) nil)))))
     (is (str:starts-with-p "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-<feed xmlns:atom=\"http://www.w3.org/2005/Atom\">" atom-feed))
+<feed xmlns=\"http://www.w3.org/2005/Atom\">" atom-feed))
     (is (str:ends-with-p "</feed>" atom-feed))))
 
 (test atom-feed-generate-with-header

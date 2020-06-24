@@ -94,7 +94,7 @@
 
   (with-fixture with-server ()
     (let ((atom-result (dex:get "http://localhost:5000/blog/atom.xml")))
-      (is (str:containsp "feed xmlns:atom=\"http://www.w3.org/2005/Atom\"" atom-result)))))
+      (is (str:containsp "feed xmlns=\"http://www.w3.org/2005/Atom\"" atom-result)))))
 
 (defun run-tests ()
   (run! 'handle-index-route)
