@@ -33,3 +33,10 @@
              :if-exists :append
              :if-does-not-exist :create)))
  *web*)
+
+(defun access-logger (message)
+  (str:to-file
+   (merge-pathnames #P"access.log" *logs-directory*)
+   (format nil "~a~%" message)
+   :if-exists :append
+   :if-does-not-exist :create))

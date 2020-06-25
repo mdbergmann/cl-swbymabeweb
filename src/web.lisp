@@ -40,7 +40,6 @@
 
 (defroute "/blog/atom.xml" ()
   (log:debug "Blog route for atom feed.")
-
   (let ((result (controller.blog:atom-feed)))
     (case (car result)
       (:ok (cdr result))
