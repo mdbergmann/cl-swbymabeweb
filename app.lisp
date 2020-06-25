@@ -12,7 +12,8 @@
   (:import-from #:cl-swbymabeweb.config
                 #:config
                 #:productionp
-                #:*static-directory*))
+                #:*static-directory*
+                #:*logs-directory*))
 (in-package :cl-swbymabeweb.app)
 
 (log:config :info :sane :daily "logs/app.log" :backup nil)
@@ -26,5 +27,9 @@
   :root *static-directory*)
  (:accesslog
   :logger (lambda (message)
-            (log:info message)))
+            (str:to-file
+             (merge-pathnames #P"access.log" *logs-directory*)
+             (format nil "~a~%" message)
+             :if-exists :append
+             :if-does-not-exist :create)))
  *web*)

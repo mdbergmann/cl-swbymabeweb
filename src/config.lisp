@@ -10,6 +10,7 @@
            #:*template-directory*
            #:*blog-directory*
            #:*content-directory*
+           #:*logs-directory*
            #:appenv
            #:developmentp
            #:productionp))
@@ -21,6 +22,7 @@
 (defparameter *static-directory* (merge-pathnames #P"static/" *application-root*))
 (defparameter *blog-directory* (merge-pathnames #P"blogs/" *application-root*))
 (defparameter *content-directory* (merge-pathnames #P"content/" *application-root*))
+(defparameter *logs-directory* (merge-pathnames #P"logs/" *application-root*))
 (defparameter *error-log-file* (merge-pathnames #P"error.log" *application-root*))
 
 (defconfig :common
