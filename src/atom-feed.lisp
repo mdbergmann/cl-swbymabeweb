@@ -8,14 +8,21 @@ Rather it should map together data for the feed generation and let the feed gene
 |#
 
 (defpackage :cl-swbymabeweb.atom-feed
-  (:use :cl :xml-emitter)
+  (:use :cl :xml-emitter :local-time)
   (:nicknames :atom-feed)
   (:export #:generate-feed
            #:make-atom-feed-model
            #:make-atom-feed-header
-           #:make-atom-feed-entry))
+           #:make-atom-feed-entry
+           #:+atom-time-format+
+           #:+atom-datetime-format+))
 
 (in-package :cl-swbymabeweb.atom-feed)
+
+(defparameter +atom-time-format+
+  '((:hour 2) #\: (:min 2) #\: (:sec 2)))
+(defparameter +atom-datetime-format+
+  (append +iso-8601-date-format+ (list #\T) +atom-time-format+ (list :gmt-offset-or-z)))
 
 (defun make-atom-feed-model (header entries)
   "Makes a atom-feed-model that is used to generate the atom xml feed.

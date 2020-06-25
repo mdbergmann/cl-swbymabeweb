@@ -113,4 +113,4 @@ This function makes a mapping from the repositotry blog entry to the view model 
 (defun blog-date-to-atom-timestring (blog-entry)
   (format-timestring nil
                      (universal-to-timestamp (blog-entry-date blog-entry))
-                     :format +iso-8601-format+))
+                     :format atom-feed:+atom-datetime-format+))
