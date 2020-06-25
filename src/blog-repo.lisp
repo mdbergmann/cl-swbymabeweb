@@ -130,7 +130,7 @@
 (defun filter-files (folder)
   (~> folder
       (uiop:directory-files)
-      (remove-if-not #'allowed-file-ext-p _)))
+      (remove-if-not #'allowed-file-p _)))
 
 (defun to-blog-entries (files)
   (mapcar #'file-to-blog-entry files))
@@ -138,9 +138,12 @@
 (defun sort-for-date (blog-entries)
   (sort blog-entries #'> :key #'blog-entry-date))
 
-(defun allowed-file-ext-p (file)
-  (or (str:ends-with-p ".html" (namestring file))
-      (str:ends-with-p ".md" (namestring file))))
+(defun allowed-file-p (file)
+  (let ((filename (file-namestring file)))
+    (and (or (str:ends-with-p ".html" filename)
+             (str:ends-with-p ".md" filename))
+         (str:containsp "---" filename)
+         (str:digitp (str:substring 0 8 filename)))))
 
 (defun file-to-blog-entry (file)
   "Reads file and takes data from it to create a `blog-entry'"
