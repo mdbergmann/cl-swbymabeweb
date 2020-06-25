@@ -15,7 +15,7 @@
                 #:*static-directory*))
 (in-package :cl-swbymabeweb.app)
 
-(log:config :info :sane :daily "access-log/access.log" :backup nil)
+(log:config :info :sane :daily "logs/app.log" :backup nil)
 
 (builder
  (:static
