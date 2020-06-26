@@ -7,7 +7,8 @@
                 #:config
                 #:*application-root*
                 #:*blog-directory*
-                #:*static-directory*)
+                #:*static-directory*
+                #:*logs-directory*)
   (:import-from #:blog-repo
                 #:blog-repo-fac-init
                 #:blog-repo-default)
@@ -41,7 +42,13 @@
           hunchentoot:*dispatch-table*)
 
     (setf *server*
-          (make-instance 'hunchentoot:easy-acceptor :port port :address address))
+          (make-instance 'hunchentoot:easy-acceptor
+                         :port port
+                         :address address
+                         :access-log-destination
+                         (merge-pathnames "access.log" *logs-directory*)
+                         :message-log-destination
+                         (merge-pathnames "message.log" *logs-directory*)))
     
     (hunchentoot:start *server*)))
 
