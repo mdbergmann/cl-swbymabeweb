@@ -3,7 +3,7 @@ html {
 }
 
 body {
-	background-image: url(/gfx/background.gif);
+	background-image: url(/static/gfx/background.gif);
     background-repeat: repeat-x;
     background-color: #F2F2F2;
     line-height: 1.4rem;

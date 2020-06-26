@@ -1,66 +1,53 @@
 (defpackage cl-swbymabeweb.web
-  (:use :cl
-        :caveman2
-        :cl-swbymabeweb.config)
-  (:export :*web*)
-  (:import-from #:lack.response
-                #:response-status))
+  (:use :cl :snooze :cl-swbymabeweb.config)
+  (:export #:make-routes))
 (in-package :cl-swbymabeweb.web)
 
 ;;
 ;; Application
 
-(defclass <web> (<app>) ())
-(defvar *web* (make-instance '<web>))
-(clear-routing-rules *web*)
+(defun make-routes ()
+  (make-hunchentoot-app))
 
 ;;
 ;; Routing rules
 
-(defroute "/" ()
+(defroute home (:get :text/html)
   (log:debug "Index route called.")
   (cdr (controller.index:index)))
 
-(defroute "/imprint" ()
+(defroute imprint (:get :text/html)
   (log:debug "Imprint route called.")
   (cdr (controller.imprint:index)))
 
-(defroute "/about" ()
+(defroute about (:get :text/html)
   (log:debug "About route called.")
   (cdr (controller.about:index)))
 
-(defroute "/blog" ()
+(defroute blog (:get :text/html &optional name)
+  (log:debug "Blog route called with name: " name)
+  (cond
+    ((null name) (blog-index-handler))
+    ((string-equal (string name) "atom") (atom-handler))
+    (t (blog-by-name-handler (string name)))))
+
+(defun blog-index-handler ()
   (log:debug "Blog route called.")
   (let ((result (controller.blog:index)))
     (case (car result)
       (:ok (cdr result))
-      (t (progn
-           (setf (response-status *response*) 400)
-           "Undefined error!")))))
+      (t (http-condition 400 "Undefined error!")))))
 
-(defroute "/blog/atom.xml" ()
-  (log:debug "Blog route for atom feed.")
-  (let ((result (controller.blog:atom-feed)))
-    (case (car result)
-      (:ok (cdr result))
-      (t (progn
-           (setf (response-status *response*) 400)
-           "Undefined error!")))))
-
-(defroute "/blog/:name" (&key name)
-  (log:debug "Blog route called with name: " name)
+(defun blog-by-name-handler (name)
   (let ((result (controller.blog:for-blog-name name)))
     (case (car result)
       (:ok (cdr result))
-      (:not-found-error (progn
-                          (setf (response-status *response*) 404)
-                          (cdr result)))
-      (t (progn
-           (setf (response-status *response*) 400)
-           "Undefined error!")))))
+      (:not-found-error (http-condition 404 (cdr result)))
+      (t (http-condition 400 "Undefined error!")))))
 
-;;
-;; Error pages
-
-(defmethod on-exception ((app <web>) (code (eql 404)))
-  (declare (ignore app)))
+(defun atom-handler ()
+  (log:debug "atom handler")
+  (let ((result (controller.blog:atom-feed)))
+    (case (car result)
+      (:ok (cdr result))
+      (t (http-condition 400 "Undefined error!")))))

@@ -1,12 +1,13 @@
 (in-package :cl-user)
 (defpackage cl-swbymabeweb
   (:use :cl :log4cl)
+  (:import-from #:cl-swbymabeweb.web
+                #:make-routes)
   (:import-from #:cl-swbymabeweb.config
                 #:config
                 #:*application-root*
-                #:*blog-directory*)
-  (:import-from #:clack
-                #:clackup)
+                #:*blog-directory*
+                #:*static-directory*)
   (:import-from #:blog-repo
                 #:blog-repo-fac-init
                 #:blog-repo-default)
@@ -14,34 +15,42 @@
            :stop))
 (in-package :cl-swbymabeweb)
 
-(defvar *appfile-path* (merge-pathnames #P"app.lisp" *application-root*))
-
 (cl-locale:enable-locale-syntax)
 (cl-locale:define-dictionary default
   (:en_EN (merge-pathnames #P"i18n/en_EN/default.lisp" *application-root*)))
 (setf (cl-locale:current-dictionary) :default)
 (setf cl-locale:*locale* (config :locale))
 
-(defvar *web-handler* nil)
+(defvar *server* nil)
 
-(defun start (&rest args &key server port debug &allow-other-keys)
-  (declare (ignore server port debug))
+(defun start (&key debug (port 5000) (address "0.0.0.0") &allow-other-keys)
+  (declare (ignore debug))
 
   (log:info "Initializing blog-repo factory.")
   (blog-repo-fac-init (make-instance 'blog-repo-default :blog-folder *blog-directory*))
 
   (log:info "Starting server.")
-  (when *web-handler*
+  (when *server*
     (log:info "Server is already running."))
-  (unless *web-handler*
-    (setf *web-handler*
-          (apply #'clackup *appfile-path* args))))
+  (unless *server*
+
+    ;; order is important
+    (push (make-routes)
+          hunchentoot:*dispatch-table*)
+    (push (hunchentoot:create-folder-dispatcher-and-handler "/static/" *static-directory*)
+          hunchentoot:*dispatch-table*)
+
+    (setf *server*
+          (make-instance 'hunchentoot:easy-acceptor :port port :address address))
+    
+    (hunchentoot:start *server*)))
 
 (defun stop ()
-  (when *web-handler*
+  (when *server*
     (log:info "Stopping server.")
     (prog1
-        (clack:stop *web-handler*)
+        (hunchentoot:stop *server*)
       (log:debug "Server stopped.")
-      (setf *web-handler* nil))))
+      (setf hunchentoot:*dispatch-table* nil)
+      (setf *server* nil))))
 

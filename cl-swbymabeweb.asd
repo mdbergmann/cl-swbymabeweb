@@ -2,9 +2,8 @@
   :version "0.1.0"
   :author "Manfred Bergmann"
   :license ""
-  :depends-on ("clack"
-               "lack"
-               "caveman2"
+  :depends-on ("hunchentoot"
+               "snooze"
                "envy"
                "cl-ppcre"
                "uiop"
@@ -18,19 +17,12 @@
                "3bmd"
                "3bmd-ext-code-blocks"
                "xml-emitter"
-               
-
-               ;; for @route annotation
-               "cl-syntax-annot"
-
-               ;; html templating
                "cl-who")
   :components ((:module "src"
                 :components
                 ((:file "config")
                  (:file "blog-repo")
                  (:file "atom-feed")
-                 (:file "main")
                  (:module "views"
                   :components
                           ((:file "common")
@@ -45,7 +37,8 @@
                            (:file "imprint")
                            (:file "about")
                            (:file "blog")))
-                 (:file "web"))))
+                 (:file "web")
+                 (:file "main"))))
   :description ""
   :in-order-to ((test-op (test-op "cl-swbymabeweb/tests"))))
 
