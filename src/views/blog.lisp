@@ -3,9 +3,7 @@
   (:nicknames :view.blog)
   (:export #:render
            #:blog-post-model
-           #:blog-view-model
-           #:blog-post
-           #:all-blog-posts))
+           #:blog-view-model))
 
 (in-package :cl-swbymabeweb.view.blog)
 
@@ -31,7 +29,10 @@
               :reader model-get-blog-post)
    (all-blog-posts :initform '()
                    :initarg :all-blog-posts
-                   :reader model-get-all-posts)))
+                   :reader model-get-all-posts)
+   (atom-url :initform nil
+             :initarg :atom-url
+             :reader model-get-atom-url)))
 
 (defmacro blog-post-content (blog-post)
   (let ((post (gensym))
@@ -50,12 +51,17 @@
          (:div "&nbsp;")
          (:div :class "content blog-left-panel" (str ,text)))))))
 
-(defmacro blog-post-navigation (blog-posts)
+(defmacro blog-post-navigation (view-model)
   (let ((elem (gensym)))
     `(htm
       (:div :class "content"
+            (:div :style "text-align: center;"
+                  (:a :href (model-get-atom-url ,view-model)
+                      :class "blog-nav-link"
+                      (str "atom/rss feed")))
+            (:p "&nbsp;")
             (:ul :align "right"
-                 (dolist (,elem ,blog-posts)
+                 (dolist (,elem (model-get-all-posts ,view-model))
                    (blog-nav-entry ,elem)))))))
 
 (defun name-to-link (blog-name)
@@ -95,12 +101,11 @@
 
 (defun render (view-model)
   (log:debug "Rendering blog view")
-  (let ((blog-post (model-get-blog-post view-model))
-        (all-posts (model-get-all-posts view-model)))
+  (let ((blog-post (model-get-blog-post view-model)))
     (log:debug "post name: " (slot-value blog-post 'name))
-    (log:debug "all-posts: " (length all-posts))
 
     (with-page *page-title*
       (str (content (if blog-post
-                        (blog-post-content blog-post) nil)
-                    (blog-post-navigation all-posts))))))
+                        (blog-post-content blog-post)
+                        nil)
+                    (blog-post-navigation view-model))))))

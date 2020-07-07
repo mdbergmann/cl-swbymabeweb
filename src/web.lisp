@@ -49,5 +49,7 @@
   (log:debug "atom handler")
   (let ((result (controller.blog:atom-feed)))
     (case (car result)
-      (:ok (cdr result))
+      (:ok (progn
+             (setf (tbnl:content-type* tbnl:*reply*) "application/atom+xml")
+             (cdr result)))
       (t (http-condition 400 "Undefined error!")))))

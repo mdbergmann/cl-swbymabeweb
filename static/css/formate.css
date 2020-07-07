@@ -12,9 +12,13 @@ body {
 
 hr {
 	border: thin solid;
-	width:1024px;
 	color:#cccccc;
 	height:1pt;
+}
+
+hr.thin {
+    border: none;
+	border-top: 1px solid #cccccc;    
 }
 
 hr.blog {
@@ -36,6 +40,13 @@ hr.title {
 	height: 1px;
 }
 
+hr.recents-blog-nav {
+	border: none;
+	border-top: 1px solid #cccccc;
+	width: 100%;
+	height: 1px;
+}
+
 table.list-table {
 	padding: 0;
 	margin-top: 0;
@@ -43,13 +54,6 @@ table.list-table {
 	margin-left: auto;
 	margin-right: auto;
 	width: 1024px;
-}
-
-hr.recents-blog-nav {
-	border: none;
-	border-top: 1px solid #cccccc;
-	width: 100%;
-	height: 1px;
 }
 
 table.main-nav {

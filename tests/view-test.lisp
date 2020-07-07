@@ -52,15 +52,17 @@
 (defparameter *blog-view-model*
   (make-instance 'blog-view-model
                  :blog-post *blog-post*
-                 :all-blog-posts (list *blog-post*)))
+                 :all-blog-posts (list *blog-post*)
+                 :atom-url "http://foo.bar/atom"))
 (defparameter *blog-view-empty-model*
   (make-instance 'blog-view-model
                  :blog-post nil
-                 :all-blog-posts (list *blog-post*)))
+                 :all-blog-posts (list *blog-post*)
+                 :atom-url "http://foo.bar/atom"))
 
 (test blog-view
   "Blog view renders latest blog entry, if exists."
-  (let* ((page-source (view.blog:render *blog-view-model*)))
+  (let ((page-source (view.blog:render *blog-view-model*)))
     (is (str:containsp *expected-blog-page-title* page-source))
     (is (str:containsp "<div id='navigation'" page-source))
     (is (str:containsp "<div id='content'" page-source))
@@ -69,11 +71,13 @@
     (is (str:containsp "Foo" page-source))
     (is (str:containsp "Foobar" page-source))
     (is (str:containsp "22-09-2020" page-source))
-    (is (str:containsp "22 September 2020" page-source))))
+    (is (str:containsp "22 September 2020" page-source))
+
+    (is (str:containsp "<a href='http://foo.bar/atom' class='blog-nav-link'>atom/rss feed" page-source))))
 
 (test blog-view-nil-model-post
   "Test blog view to show empty div when there is no blog post to show."
-  (let* ((page-source (view.blog:render *blog-view-empty-model*)))
+  (let ((page-source (view.blog:render *blog-view-empty-model*)))
     (is (str:containsp *expected-blog-page-title* page-source))
     (is (str:containsp "<div id='navigation'" page-source))
     ;;(is (str:containsp "<tr><td class=content colspan=2><tr>" page-source))
