@@ -28,7 +28,6 @@
   (log:debug "Blog route called with name: " name)
   (cond
     ((null name) (blog-index-handler))
-    ((string-equal (string name) "atom") (atom-handler))
     (t (blog-by-name-handler (string name)))))
 
 (defun blog-index-handler ()
@@ -45,11 +44,9 @@
       (:not-found-error (http-condition 404 (cdr result)))
       (t (http-condition 400 "Undefined error!")))))
 
-(defun atom-handler ()
-  (log:debug "atom handler")
+(defroute blog-atom-feed (:get "application/xml")
+  (log:debug "Blog route for atom feed")
   (let ((result (controller.blog:atom-feed)))
     (case (car result)
-      (:ok (progn
-             (setf (tbnl:content-type* tbnl:*reply*) "application/atom+xml")
-             (cdr result)))
+      (:ok (cdr result))
       (t (http-condition 400 "Undefined error!")))))

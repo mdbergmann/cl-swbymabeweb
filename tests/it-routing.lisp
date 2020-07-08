@@ -93,8 +93,12 @@
   "Tests the route for blog atom."
 
   (with-fixture with-server ()
-    (let ((atom-result (dex:get "http://localhost:5000/blog/atom.xml")))
-      (is (str:containsp "feed xmlns=\"http://www.w3.org/2005/Atom\"" atom-result)))))
+    (multiple-value-bind (body status headers uri stream)
+        (dex:get "http://localhost:5000/blog-atom-feed")
+      (declare (ignore uri stream))
+      (is (str:containsp "feed xmlns=\"http://www.w3.org/2005/Atom\"" body))
+      (is (= 200 status))
+      (is (string= "application/xml" (gethash "content-type" headers))))))
 
 (defun run-tests ()
   (run! 'handle-index-route)

@@ -46,7 +46,7 @@ an error to the caller which the caller is responsible to handle."
                  (blog-entry-to-blog-post the-blog-entry)
                  :all-blog-posts
                  (mapcar #'blog-entry-to-blog-post all-posts)
-                 :atom-url "/blog/atom.xml"))
+                 :atom-url "/blog-atom-feed"))
 
 (defun blog-entry-to-blog-post (blog-entry)
   "Converts `blog-entry' to `blog-post'.
