@@ -1,4 +1,5 @@
-The third part of clustering with Apache Wicket is about an alternative.
+After the <a href="/blog/Wicket+UI+in+the+Cluster+-+know+how+and+lessons+learned" class="link">first</a> and the <a href="/blog/Wicket+UI+in+the+cluster+-+reflection" class="link">second</a> part.
+The third part of clustering with <a href="https://wicket.apache.org" class="link">Apache Wicket</a> is about an alternative.
 
 Let me list the following options when you want to run Wicket clustered:
 
