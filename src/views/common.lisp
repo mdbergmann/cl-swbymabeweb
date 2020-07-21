@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.view.common
-  (:use :cl :cl-who :cl-locale :local-time)
+  (:use :cl :cl-who :cl-i18n :local-time)
   (:nicknames :view.common)
   (:export #:with-page
            #:with-content-table
@@ -52,11 +52,11 @@
           (:table :class "main-nav"
                   (:tbody
                    (:tr :class "navi_boldwhite"
-                        (nav-entry "70" "/blog" (i18n "blog"))
+                        (nav-entry "70" "/blog" #!"blog")
                         (nav-entry-separator)
-                        (nav-entry "70" "/about" (i18n "about"))
+                        (nav-entry "70" "/about" #!"about")
                         (nav-entry-separator)
-                        (nav-entry "80" "/imprint" (i18n "imprint"))))))))
+                        (nav-entry "80" "/imprint" #!"imprint")))))))
 
 (defmacro page-header (navigation)
   (let* ((max-width 1024)
@@ -94,7 +94,7 @@
        (:td :colspan 2 (:hr)))
       (:tr
        (:td :class "content-light content-small"
-            (str (i18n "all_copyright")))
+            (str #!"all_copyright"))
        (:td :class "content-light content-small"
             (:div :align "right"
                   (str (format-timestring nil (now)

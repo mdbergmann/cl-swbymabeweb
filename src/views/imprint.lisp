@@ -1,6 +1,6 @@
 (in-package :cl-user)
 (defpackage :cl-swbymabeweb.view.imprint
-  (:use :cl :cl-who :cl-locale :view.common)
+  (:use :cl :cl-who :cl-i18n :view.common)
   (:nicknames :view.imprint)
   (:export #:render))
 
@@ -12,8 +12,8 @@
   `(htm
     (:div :id "content"
           (with-content-table
-            (content-headline (i18n "imprint_headline"))
-            (content-subline (i18n "imprint_subline"))
+            (content-headline #!"imprint_headline")
+            (content-subline #!"imprint_subline")
             (with-content-line
               (str ,content-fun-call))))))
 

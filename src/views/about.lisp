@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.view.about
-  (:use :cl :cl-who :cl-locale :view.common)
+  (:use :cl :cl-who :cl-i18n :view.common)
   (:nicknames :view.about)
   (:export #:render))
 
@@ -11,8 +11,8 @@
   `(htm
     (:div :id "content"
           (with-content-table
-            (content-headline (i18n "about_headline"))
-            (content-subline (i18n "about_subline"))
+            (content-headline #!"about_headline")
+            (content-subline #!"about_subline")
             (with-content-line
               (str ,content-fun-call))))))
 

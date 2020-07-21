@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.view.index
-  (:use :cl :cl-who :cl-locale :view.common)
+  (:use :cl :cl-who :cl-i18n :view.common)
   (:nicknames :view.index)
   (:export #:render))
 
@@ -13,6 +13,5 @@
     (with-content-table
       (with-content-line
         (:div :style "text-align: center;"
-              (:p :style "font-size: 36pt;" "Hello!")
-              (:p " ")
-              (:p "Here is my " (:a :href "/blog" :class "link" "blog")))))))
+              (:p :style "font-size: 36pt;" (str #!"index_hello!"))
+              (:p (str #!"index_here_is_my_blog...") (:a :href "/blog" :class "link" "blog")))))))

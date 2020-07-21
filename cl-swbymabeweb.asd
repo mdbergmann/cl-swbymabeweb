@@ -8,7 +8,7 @@
                "cl-ppcre"
                "uiop"
                "log4cl"
-               "cl-locale"
+               "cl-i18n"
                "local-time"
                "cl-date-time-parser"
                "serapeum"
@@ -72,5 +72,8 @@
 
 #|
 TODOs:
+
+extracting string resources:
+(cl-i18n-utils:gen-translation-file "src/views/" "i18n/english.lisp")
 
 |#

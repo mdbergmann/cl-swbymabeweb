@@ -16,11 +16,9 @@
            :stop))
 (in-package :cl-swbymabeweb)
 
-(cl-locale:enable-locale-syntax)
-(cl-locale:define-dictionary default
-  (:en_EN (merge-pathnames #P"i18n/en_EN/default.lisp" *application-root*)))
-(setf (cl-locale:current-dictionary) :default)
-(setf cl-locale:*locale* (config :locale))
+(setf cl-i18n:*translation-file-root*
+      (merge-pathnames #P"i18n/" *application-root*))
+(cl-i18n:load-language "english.lisp")
 
 (defvar *server* nil)
 
