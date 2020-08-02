@@ -189,9 +189,4 @@
 
 (defmethod get-for-name ((self blog-repo-default) name)
   (log:debug "Finding blog: '~a'~%" name)
-  (~> name
-      (plus-to-space)
-      (find (get-all self) :key #'blog-entry-name :test #'string-equal)))
-
-(defun plus-to-space (text)
-  (str:replace-all "+" " " text))
+  (find name (get-all self) :key #'blog-entry-name :test #'string-equal))

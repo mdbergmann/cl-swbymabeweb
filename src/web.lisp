@@ -38,11 +38,14 @@
       (t (http-condition 400 "Undefined error!")))))
 
 (defun blog-by-name-handler (name)
-  (let ((result (controller.blog:for-blog-name name)))
+  (let ((result (controller.blog:for-blog-name (plus-to-space name))))
     (case (car result)
       (:ok (cdr result))
       (:not-found-error (http-condition 404 (cdr result)))
       (t (http-condition 400 "Undefined error!")))))
+
+(defun plus-to-space (text)
+  (str:replace-all "+" " " text))
 
 (defroute blog-atom-feed (:get "application/xml")
   (log:debug "Blog route for atom feed")

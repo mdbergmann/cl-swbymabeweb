@@ -20,14 +20,13 @@
 (defmethod blog-repo::get-all ((self blog-repo-fake))
   (list (blog-repo:make-blog-entry "Foo" (get-universal-time) "Some text")))
 (defmethod blog-repo::get-for-name ((self blog-repo-fake) name)
-  (declare (ignore name))
-  (blog-repo:make-blog-entry "Foo" (get-universal-time) "Some text"))
+  (blog-repo:make-blog-entry "Foo" (get-universal-time) (downcase name)))  ; use 'name' for the name
 (defmethod blog-repo::get-for-name ((self blog-repo-fake-not-found-for-name) name)
   (declare (ignore name))
   nil)
 
 (def-fixture with-server ()
-  (start)
+  (start :address "localhost")
   (blog-repo:blog-repo-fac-init (make-instance 'blog-repo-fake))
   (sleep 0.5)
   (unwind-protect 
@@ -63,8 +62,10 @@
 (test handle-blog-route-with-blog-name
   "Test routing of blog with name of blog."
   (with-fixture with-server ()
-    (is (str:containsp "<title>Manfred Bergmann | Software Development | Blog"
-                       (dex:get "http://localhost:5000/blog/my+first+blog")))))
+    (let ((blog-html (dex:get "http://localhost:5000/blog/my+first+blog")))
+      (is (str:containsp "<title>Manfred Bergmann | Software Development | Blog"
+                         blog-html))
+      (is (str:containsp "my first blog" blog-html)))))
 
 (test handle-blog-route-with-blog-name-not-found
   "Test routing of blog with name of blog."
