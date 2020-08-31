@@ -1,5 +1,5 @@
 (defsystem "cl-swbymabeweb"
-  :version "0.1.0"
+  :version "0.1.1"
   :author "Manfred Bergmann"
   :license ""
   :depends-on ("hunchentoot"
@@ -37,7 +37,7 @@
                            (:file "imprint")
                            (:file "about")
                            (:file "blog")))
-                 (:file "web")
+                 (:file "routes")
                  (:file "main"))))
   :description ""
   :in-order-to ((test-op (test-op "cl-swbymabeweb/tests"))))
@@ -54,6 +54,7 @@
   :components ((:module "tests"
                 :components
                 ((:file "all-tests")
+                 (:file "routes-test" :depends-on ("all-tests"))
                  (:file "controller-test" :depends-on ("all-tests"))
                  (:file "view-test" :depends-on ("all-tests"))
                  (:file "blog-repo-test" :depends-on ("all-tests"))

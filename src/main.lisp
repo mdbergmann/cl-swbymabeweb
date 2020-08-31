@@ -1,7 +1,7 @@
 (in-package :cl-user)
 (defpackage cl-swbymabeweb
   (:use :cl :log4cl)
-  (:import-from #:cl-swbymabeweb.web
+  (:import-from #:cl-swbymabeweb.routes
                 #:make-routes)
   (:import-from #:cl-swbymabeweb.config
                 #:config

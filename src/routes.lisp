@@ -1,7 +1,7 @@
-(defpackage cl-swbymabeweb.web
+(defpackage cl-swbymabeweb.routes
   (:use :cl :snooze :cl-swbymabeweb.config)
   (:export #:make-routes))
-(in-package :cl-swbymabeweb.web)
+(in-package :cl-swbymabeweb.routes)
 
 ;;
 ;; Application
