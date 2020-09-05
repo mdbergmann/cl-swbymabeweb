@@ -38,14 +38,14 @@ We will go through some of the development interatively in a test-driven outside
 
 1. project setup. Though this will be minimal as we add stuff incrementally as needed. But we need a minimum to get started
 2. add the imprint page
-	- setup an acceptance test for the full feature loop
+	- setup an integration test for the full feature loop
 	- create unit tests for all components we touch
 	- add routing for when a request touches the web server
 	- delegate to a MVC controller
 	- create the view with loading content from file
 	- pass the generated HTML back to the web server for delivery to the client 
 3. add the blog page and feature that loads blog posts from file system
-	- setup acceptance tests for the full feature loop
+	- setup integration tests for the full feature loop
 	- create or extend unit tests for all components we touch
 	- add or extend routing
 	- create dedicated MVC controller
@@ -63,7 +63,7 @@ Since this was my first web project with Common Lisp I had to do some research f
 But, once we know how that works we can start a project from scratch. Along the way we can create a template for future projects.
 That means we don't have a lot of setup to start with. We create a project folder and a 'src' and 'tests' folder therein. That's it. We'll add an asdf based project/system definition as we go along.
 
-To get started and since we use a test-driven approach we'll start with adding an acceptance test for the first feature, the imprint page.
+To get started and since we use a test-driven approach we'll start with adding an integration (or acceptance) test for the first feature, the imprint page.
 
 In order to add tests that are part of a full test suite we'll start creating an overall 'all-tests' test suite. So we'll create a new Lisp file and add the following code and save it as 'tests/all-tests.lisp':
 
@@ -87,8 +87,35 @@ This will help us later when creating the asdf test system as we can point it to
 
 ### Implementing a page
 
-Let's take the 'imprint' page for this. There is not much on this page. Just some text to be displayed. So let's create a new Lisp buffer and add the following code:
+We will excercise the first integration test cycle with the 'imprint' page. There is not much content on this page. Just some text to be displayed. But we want to make sure that all components involved with serving this page are properly integrated and are operational. So let's create a new Lisp file, save it as 'tests/it-routing.lisp' and add the following code:
 
 ```
+(defpackage :cl-swbymabeweb-test
+  (:use :cl :fiveam)
+  (:local-nicknames (:dex :dexador))
+  (:import-from #:cl-swbymabeweb
+                #:start
+                #:stop))
+(in-package :cl-swbymabeweb-test)
 
+(def-suite it-routing
+  :description "Routing integration tests."
+  :in cl-swbymabeweb.tests:test-suite)
+
+(in-suite it-routing)
+
+(def-fixture with-server ()
+  (start :address "localhost")
+  (sleep 0.5)
+  (unwind-protect 
+       (&body)
+    (stop)
+    (sleep 0.5)))
+
+(test handle-imprint-route
+  "Test integration of imprint."
+  (with-fixture with-server ()
+    (is (str:containsp "<title>Manfred Bergmann | Software Development | Imprint"
+                       (dex:get "http://localhost:5000/imprint")))))
 ```
+

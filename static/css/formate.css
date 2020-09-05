@@ -85,25 +85,27 @@ code {
 
 pre {
   font-size: 11pt;
-  border: 2px solid grey;
-  width: 706px;
-  border-left: 12px solid #610008;
+  border: 1px solid grey;
+  width: 714px;
+  border-left: 4px solid #610008;
   border-radius: 5px;
   padding: 14px;
   
   /* Fixed line height */
   line-height: 18px;
+
+  background-color: #FCFCFC;
   
   /* Use repeating-linear-gradient for background image */
-   background-image: repeating-linear-gradient(
-      180deg,
-      #eee 0px,
-      #eee 18px,
-      #fff 18px,
-      #fff 36px);
+  /* background-image: repeating-linear-gradient( */
+  /*     180deg, */
+  /*     #eee 0px, */
+  /*     #eee 18px, */
+  /*     #fff 18px, */
+  /*     #fff 36px); */
  
-  /* Offset the background along the y-axis by top padding */
-  background-position: 0 14px;
+  /* /\* Offset the background along the y-axis by top padding *\/ */
+  /* background-position: 0 14px; */
 }
 /* pre { */
 /*   line-height:1.2em; */
