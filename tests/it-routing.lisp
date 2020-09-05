@@ -36,31 +36,31 @@
     (blog-repo:blog-repo-fac-clean)))
 
 (test handle-index-route
-  "Test routing of index."
+  "Test integration of index."
   (with-fixture with-server ()
     (is (str:containsp "<title>Manfred Bergmann | Software Development | Index"
                        (dex:get "http://localhost:5000/")))))
 
 (test handle-imprint-route
-  "Test routing of imprint."
+  "Test integration of imprint."
   (with-fixture with-server ()
     (is (str:containsp "<title>Manfred Bergmann | Software Development | Imprint"
                        (dex:get "http://localhost:5000/imprint")))))
 
 (test handle-about-route
-  "Test routing of about."
+  "Test integration of about."
   (with-fixture with-server ()
     (is (str:containsp "<title>Manfred Bergmann | Software Development | About"
                        (dex:get "http://localhost:5000/about")))))
 
 (test handle-blog-index-route
-  "Test routing of blog - index."
+  "Test integration of blog - index."
   (with-fixture with-server ()
     (is (str:containsp "<title>Manfred Bergmann | Software Development | Blog"
                          (dex:get "http://localhost:5000/blog")))))
 
 (test handle-blog-route-with-blog-name
-  "Test routing of blog with name of blog."
+  "Test integration of blog with name of blog."
   (with-fixture with-server ()
     (let ((blog-html (dex:get "http://localhost:5000/blog/my+first+blog")))
       (is (str:containsp "<title>Manfred Bergmann | Software Development | Blog"
@@ -68,7 +68,7 @@
       (is (str:containsp "my first blog" blog-html)))))
 
 (test handle-blog-route-with-blog-name-not-found
-  "Test routing of blog with name of blog."
+  "Test integration of blog with name of blog."
   (with-fixture with-server ()
 
     (blog-repo:blog-repo-fac-init (make-instance 'blog-repo-fake-not-found-for-name))
