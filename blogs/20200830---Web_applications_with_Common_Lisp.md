@@ -54,18 +54,19 @@ We will go through some of the development interatively in a test-driven outside
 
 During those points we will cover many things like how to properly test using mocks, i18n, how to use cl-who, how to convert Markdown to HTML and other things.
 
-What I write about in this blog, and in particular the workflow, is a smoothed version. I don't write about all the bumps and issues I had to deal with (or only if revelant), otherwise this would get the size of a small book (maybe I do that one day).
-
 ### Project setup
+
+This blog post, and in particular the workflow, is a smoothed version that tries to look a bit behind the scenes and actually partly carve out what a framework would or should do. I don't write about all the bumps and issues I had to deal with (or only if revelant), otherwise this would get the size of a small book (maybe I do that one day).
 
 Since this was my first web project with Common Lisp I had to do some research for how to integrate and run the server and add routes, etc. This is where the scaffolding that frameworks like Caveman2 produce are appeciated.
 
-But, once we know how that works we can start a project from scratch. Along the way we can create a template for future projects.
+But, once we know how that works we can start a project from scratch. Along the way we can create a template for future projects. (This can also be in combination with one of the mentioned frameworks.)
+
 That means we don't have a lot of setup to start with. We create a project folder and a 'src' and 'tests' folder therein. That's it. We'll add an asdf based project/system definition as we go along.
 
 To get started and since we use a test-driven approach we'll start with adding an integration (or acceptance) test for the first feature, the imprint page.
 
-In order to add tests that are part of a full test suite we'll start creating an overall 'all-tests' test suite. So we'll create a new Lisp file and add the following code and save it as 'tests/all-tests.lisp':
+In order to add tests that are part of a full test suite we'll start creating an overall 'all-tests' test suite. Create a new Lisp file and add the following code and save it as 'tests/all-tests.lisp':
 
 ```
 (defpackage :cl-swbymabeweb.tests
@@ -85,7 +86,10 @@ In order to add tests that are part of a full test suite we'll start creating an
 
 This will help us later when creating the asdf test system as we can point it to this 'all-tests' suite and it'll automatically run all tests of it.
 
+
 ### Implementing a page
+
+#### The outer loop (integration test)
 
 We will excercise the first integration test cycle with the 'imprint' page. There is not much content on this page. Just some text to be displayed. But we want to make sure that all components involved with serving this page are properly integrated and are operational. So let's create a new Lisp file, save it as 'tests/it-routing.lisp' and add the following code:
 
@@ -119,3 +123,173 @@ We will excercise the first integration test cycle with the 'imprint' page. Ther
                        (dex:get "http://localhost:5000/imprint")))))
 ```
 
+Let's go though it quickly. It creates a new test package and a new test suite. The `:in cl-swbymabeweb.tests:test-suite` adds this test suite to the 'all-tests' test suite that we've created before.
+
+The test `handle-imprint-route` is a full cycle integration test that uses dexador HTTP client to run a request against the server and expect a certain page title which must be part of the result HTML. Of course, more assertions should be added to make this a proper acceptance test.  
+Since fiveam does not support 'before' or 'after' setup/cleanup functionality we have to workaround this using a fixture that is defined by `def-fixture`. The fixture will `start` and `stop` the HTTP server and in between run code that is the body of `with-fixture`. We also want to wrap all in `unwind-protect` in order to force shutting down the server even if the `@body` raises an error which would otherwise unwind the stack and the HTTP server would keep running which had consequences on the next test we run.
+
+Now, as part of adding this test we define a few things that don't exist yet. For example do we define a package called `cl-swbymabeweb` where we import `start` and `stop` from. Those `start` and `stop` functions obviously do start and stop the web server, so the package `cl-swbymabeweb` should be an application entry package that does those things.  
+This is part of what tests-first and TDD does, it is the first user of production code and hence defines things how they should be from an API user perspective.
+
+When evaluating this buffer/file (I use `sly-eval-buffer`) we realize (from error messages) that there are some missing packages. So in order to at least get this compiled we have to load the dependencies using `quicklisp`. Here this would be `:dexador`, `:fiveam` and `:str` (string library).  
+We also have to create the defined package `cl-swbymabeweb` and add stubs (for now) for the `start`and `stop` functions. That's what we do now. Create a new buffer, add the following code to have the minimum code to make the integration test compile, evaluate and save it under 'src/main.lisp'.
+
+```
+(defpackage :cl-swbymabeweb
+  (:use :cl)
+  (:export #:start
+           #:stop))
+
+(in-package :cl-swbymabeweb)
+
+(defun start (&key address))
+(defun stop ())
+```
+
+We can now go into the test package by doing `(in-package :cl-swbymabeweb-test)` and run the test where we will see the following output:
+
+```
+CL-SWBYMABEWEB-TEST> (run! 'handle-imprint-route)
+
+Running test HANDLE-IMPRINT-ROUTE X
+ Did 1 check.
+    Pass: 0 ( 0%)
+    Skip: 0 ( 0%)
+    Fail: 1 (100%)
+
+ Failure Details:
+ --------------------------------
+ HANDLE-IMPRINT-ROUTE in IT-ROUTING [Test integration of imprint.]: 
+      Unexpected Error: #<USOCKET:CONNECTION-REFUSED-ERROR #x30200389ACBD>
+Error #<USOCKET:CONNECTION-REFUSED-ERROR #x30200389ACBD>.
+ --------------------------------
+```
+
+So, of course. Dexador is trying to connect to the server, but there is no server running. The `start`/`stop` functions are only stubs. This is OK. It is expected.
+
+*Start the server, for real*
+
+In order for the integration test to do it's job and test the full integration we still have a bit more work to do here before we move on. The HTTP server should be working at least. Now, let's do that:
+
+Add the following to 'main.lisp' on top of the `start` function:
+
+```
+(defvar *server* nil)
+```
+
+For the `start` function we'll change the signature like this in order to be able to also specify a different port: `&key (port 5000) (address "0.0.0.0")`. Finally we'll now start the server like so in `start`:
+
+```
+(defun start (&key (port 5000) (address "0.0.0.0") &allow-other-keys)
+  (log:info "Starting server.")
+  (when *server*
+    (log:info "Server is already running."))
+  (unless *server*
+    (setf *server*
+          (make-instance 'hunchentoot:easy-acceptor
+                         :port port
+                         :address address))    
+    (hunchentoot:start *server*)))
+```
+
+This code will make sure that there is no server instance currently being set and if not it will create a server instance and start it.
+
+As a general dependency we use `log4cl`, a logging framework. So we'll also add this to the package `:use` directive.
+
+The `stop` function can be implemented like this:
+
+```
+(defun stop ()
+  (when *server*
+    (log:info "Stopping server.")
+    (prog1
+        (hunchentoot:stop *server*)
+      (log:debug "Server stopped.")
+      (setf hunchentoot:*dispatch-table* nil)
+      (setf *server* nil))))
+```
+
+After 'quickloading' `log4cl` and `hunchentoot` and running the test again we will see the following output instead:
+
+```
+CL-SWBYMABEWEB-TEST> (run! 'handle-imprint-route)
+
+Running test HANDLE-IMPRINT-ROUTE 
+ <INFO> [21:35:21] cl-swbymabeweb (start) - Starting server.
+::1 - [2020-09-07 21:35:22] "GET /imprint HTTP/1.1" 404 339 "-" 
+"Dexador/0.9.14 (Clozure Common Lisp Version 1.12  DarwinX8664); Darwin; 19.6.0"
+X
+ <INFO> [21:35:22] cl-swbymabeweb (stop) - Stopping server.
+ Did 1 check.
+    Pass: 0 ( 0%)
+    Skip: 0 ( 0%)
+    Fail: 1 (100%)
+
+ Failure Details:
+ --------------------------------
+ HANDLE-IMPRINT-ROUTE in IT-ROUTING [Test integration of imprint.]: 
+      Unexpected Error: #<DEXADOR.ERROR:HTTP-REQUEST-NOT-FOUND #x3020032527FD>
+An HTTP request to "http://localhost:5000/imprint" returned 404 not found.
+
+<html><head><title>404 Not Found</title></head><body><h1>Not Found</h1>
+The requested URL /imprint was not found on this server.<p><hr><address>
+<a href='http://weitz.de/hunchentoot/'>Hunchentoot 1.3.0</a> 
+<a href='http://openmcl.clozure.com/'>
+(Clozure Common Lisp Version 1.12  DarwinX8664)</a> 
+at localhost:5000</address></p></body></html>.
+ --------------------------------
+```
+
+This looks a lot better. The test still fails, which is good and expected. But the server works and responds with `404` for a request to `http://localhost:5000/imprint`.
+
+The test will fail until the server responds with the proper page title. In order to have the right page title we'll still have some work to do. So the right thing now is to move on to the smaller components, develop them in the similar style (tests-first, TDD) only that the unit tests for those components should all pass.
+
+*The ASDF system*
+
+But before we do that, and since we still have in mind what we did to make this all work so far we should setup an asdf system that we'll add to and expand as we go along.
+
+So create a new buffer/file, save it as 'cl-swbymabeweb.asd' in the root folder of the project and add the following:
+
+```
+(defsystem "cl-swbymabeweb"
+  :version "0.1.1"
+  :author "Manfred Bergmann"
+  :depends-on ("hunchentoot"
+               "uiop"
+               "log4cl"
+               "str")
+  :components ((:module "src"
+                :components
+                ((:file "main"))))
+  :description ""
+  :in-order-to ((test-op (test-op "cl-swbymabeweb/tests"))))
+
+
+(defsystem "cl-swbymabeweb/tests"
+  :author "Manfred Bergmann"
+  :depends-on ("cl-swbymabeweb"
+               "fiveam"
+               "dexador"
+               "str")
+  :components ((:module "tests"
+                :components
+                ((:file "all-tests")
+                 (:file "it-routing" :depends-on ("all-tests"))
+                 )))
+  :description "Test system for cl-swbymabeweb"
+  :perform (test-op (op c) (symbol-call :fiveam :run!
+                                        (uiop:find-symbol* '#:test-suite
+                                                           '#:cl-swbymabe
+```
+
+This defines the necessary ASDF system and test system to fully load the project to the system so far. When the project is in a folder where asdf can find it (like `~/common-lisp`) then it can be loaded into the image by `(asdf:load-system "cl-swbymabeweb")` and `(asdf:load-system "cl-swbymabeweb/tests")` for the test system. In order to run the full test suite we can `(asdf:test-system "cl-swbymabeweb/tests")` (see `test-system` vs. `load-system`).  
+Since Common Lisp is image based ASDF is a facility that can load a full project into the CL image. It is quite simple to continue working on a project which is merely just: 
+
+1. open Emacs
+2. run Sly/Slime repl
+3. `load-system` (also the test system if tests should be run) of the project to work on.
+
+
+Now we will move on to the inner components
+
+#### The inner loops
