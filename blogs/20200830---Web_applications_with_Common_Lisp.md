@@ -17,13 +17,13 @@ The only one that creates some 'model' abstractions for views is Weblocks. The o
 
 The most complete one for me seemed to Caveman2. It also sets up configuration, and creates test and production environments. But the documentation situation is worst for Caveman2 (and/or <a href="http://8arrow.org/ningle/" class="link">Ningle</a> which Caveman2 is based on). I really had a hard time finding things. The other framework documentations are better. However, since the frameworks for a large part glue together libraries it is possible to look at the documentation for those libraries directly. The documantation for Hunchentoot server, cl-who, Spinneret, etc. are sufficiently complete.
 
-The web application we will be developing during this blog post is based on an old web page design of mine that I'd like to revive. The web application will include some static pages that are based on Markdown and are loaded from the file system. Also the web application will include a blog feature that allows to write blog posts as either HTML or Markdown files that are converted on the fly to HTML before presenting them.
+The web application we will be developing during this blog post is based on an old web page design of mine that I'd like to revive. The web application will include some static pages that are based on Markdown and are loaded from the file system. Also the web application will include a blog feature that allows to write blog posts as either HTML or Markdown files that are converted on the fly to HTML before presenting them. It is meant as an example and it shows a workflow of test-driven development that is excercised during the development.
 
 The application started out with Caveman2, because it seemed to be the most complete framework. But due to the lack of documentation for the framework itself and also for Clack some refactorings were conducted quite early in development where pretty much all of Caveman2 was removed.
 
 So the web application is based on the following libraries (web application relevant only):
 
-- plain Hunchentoot (replaced Clack)
+- plain <a href="https://edicl.github.io/hunchentoot" class="link">Hunchentoot</a> (replaced Clack)
 - <a href="https://github.com/joaotavora/snooze" class="link">Snooze</a> REST routing library. This library is implemented with plain CLOS and hence can be easily unit tested. I didn't find this easily possible with any other routing definitions of the other frameworks. We'll see later how this works.
 - a simple self-made MVC like structure
 - <a href="https://notabug.org/cage/cl-i18n" class="link">cl-i18n</a> internationalization library (I've tried a few others. You'll see later why I did stick with this one)
@@ -54,7 +54,7 @@ We will go through some of the development interatively in a test-driven outside
 
 During those points we will cover many things like how to properly test using mocks, i18n, how to use cl-who, how to convert Markdown to HTML and other things.
 
-### Project setup
+### <a name="project_setup"></a>Project setup
 
 This blog post, and in particular the workflow, is a smoothed version that tries to look a bit behind the scenes and actually partly carve out what a framework would or should do. I don't write about all the bumps and issues I had to deal with (or only if revelant), otherwise this would get the size of a small book (maybe I do that one day).
 
@@ -87,9 +87,9 @@ In order to add tests that are part of a full test suite we'll start creating an
 This will help us later when creating the asdf test system as we can point it to this 'all-tests' suite and it'll automatically run all tests of it.
 
 
-### Implementing a page
+### <a name="imprint"></a>Implementing a page
 
-#### The outer loop (integration test)
+#### <a name="imprint-outer_test_loop"></a>The outer test loop (integration test)
 
 We will excercise the first integration test cycle with the 'imprint' page. There is not much content on this page. Just some text to be displayed. But we want to make sure that all components involved with serving this page are properly integrated and are operational. So let's create a new Lisp file, save it as 'tests/it-routing.lisp' and add the following code:
 
@@ -167,7 +167,7 @@ Error #<USOCKET:CONNECTION-REFUSED-ERROR #x30200389ACBD>.
 
 So, of course. Dexador is trying to connect to the server, but there is no server running. The `start`/`stop` functions are only stubs. This is OK. It is expected.
 
-*Start the server, for real*
+<a name="imprint-start_the_server"></a>*Start the server, for real*
 
 In order for the integration test to do it's job and test the full integration we still have a bit more work to do here before we move on. The HTTP server should be working at least. Now, let's do that:
 
@@ -244,7 +244,7 @@ This looks a lot better. The test still fails, which is good and expected. But t
 
 The test will fail until the server responds with the proper page title. In order to have the right page title we'll still have some work to do. So the right thing now is to move on to the smaller components, develop them in the similar style (tests-first, TDD) only that the unit tests for those components should all pass.
 
-*The ASDF system*
+<a name="imprint-asdf_system"></a>*The ASDF system*
 
 But before we do that, and since we still have in mind what we did to make this all work so far we should setup an asdf system that we'll add to and expand as we go along.
 
@@ -277,19 +277,35 @@ So create a new buffer/file, save it as 'cl-swbymabeweb.asd' in the root folder 
                  (:file "it-routing" :depends-on ("all-tests"))
                  )))
   :description "Test system for cl-swbymabeweb"
-  :perform (test-op (op c) (symbol-call :fiveam :run!
-                                        (uiop:find-symbol* '#:test-suite
-                                                           '#:cl-swbymabe
+  :perform (test-op (op c)
+                    (symbol-call :fiveam :run!
+                                 (uiop:find-symbol* '#:test-suite
+                                                    '#:cl-swbymabeweb.tests))))
 ```
 
-This defines the necessary ASDF system and test system to fully load the project to the system so far. When the project is in a folder where asdf can find it (like `~/common-lisp`) then it can be loaded into the image by `(asdf:load-system "cl-swbymabeweb")` and `(asdf:load-system "cl-swbymabeweb/tests")` for the test system. In order to run the full test suite we can `(asdf:test-system "cl-swbymabeweb/tests")` (see `test-system` vs. `load-system`).  
-Since Common Lisp is image based ASDF is a facility that can load a full project into the CL image. It is quite simple to continue working on a project which is merely just: 
+This defines the necessary ASDF system and test system to fully load the project to the system so far. When the project is in a folder where asdf can find it (like `~/common-lisp`) then it can be loaded into the image by:
+
+```
+;; load (and compile if necessary) the production code
+(asdf:load-system "cl-swbymabeweb")
+
+;; load (and compile if necessary) the test code
+(asdf:load-system "cl-swbymabeweb/tests")
+
+;; run the tests
+(asdf:test-system "cl-swbymabeweb/tests")
+```
+
+Notice `test-system` vs. `load-system`. Since Common Lisp is image based, ASDF is a facility that can load a full project into the CL image. Keeping the system definition up-to-date is a bit combersome because loading the system must be performed on a clean image to really see if it works or not and if all dependencies are named proper. This is something that must be tried manually on a clean image. I usually do this by issuing `sly-restart-inferior-lisp` with loading the system, test system and finally testing the test system. But otherwise it is quite easy to continue working on a project which is merely just:
 
 1. open Emacs
-2. run Sly/Slime repl
+2. run Sly/Slime REPL
 3. `load-system` (also the test system if tests should be run) of the project to work on.
 
 
-Now we will move on to the inner components
+#### <a name="imprint-inner_test_loops"></a>The inner test loops
 
-#### The inner loops
+Now we will move on to the inner components. The first component that is hit by a request is the routing. We have to define which requests, request paths are handled by what and how. As mentioned earlier most frameworks come with a routing mechnism that allows defining routes. We will use <a href="https://github.com/joaotavora/snooze" class="link">Snooze</a> for this. The difference between Snooze and other URL router frameworks is more or less that routes are defined using plain Lisp functions in Snooze and HTTP conditions just Lisp conditions. The author says: _"Since you stay inside Lisp, if you know how to make a function, you know how to make a route. There are no regular expressions to write or extra route-defining syntax to learn."_. The other good thing is that the routing can be easily unit tested.
+
+##### URL routing
+
