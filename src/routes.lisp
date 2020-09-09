@@ -35,7 +35,7 @@
   (let ((result (controller.blog:index)))
     (case (car result)
       (:ok (cdr result))
-      (t (http-condition 400 "Undefined error!")))))
+      (t (http-condition 500 "Undefined error!")))))
 
 (defun blog-by-name-handler (name)
   (let ((result (controller.blog:for-blog-name (plus-to-space name))))

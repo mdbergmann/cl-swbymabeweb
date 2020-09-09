@@ -76,7 +76,7 @@
     (answer (controller.blog:index) (cons :error "Foo"))
 
     (with-request ("/blog") (code)
-      (is (= 400 code))
+      (is (= 500 code))
       (is (= 1 (length (invocations 'controller.blog:index)))))))
 
 (test blog-route-for-name
