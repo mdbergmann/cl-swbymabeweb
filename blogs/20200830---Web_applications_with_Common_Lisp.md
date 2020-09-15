@@ -47,7 +47,7 @@ We will go through some of the development in a test-driven outside-in approach 
 	- create blog post repository facility
 	- create views that generate a result HTML that is delivered back to the caller
 
-During those points we will cover many things like how to properly test using mocks, how to use i18n abd cl-who, how to convert Markdown to HTML and other things.
+During those points we will cover many things like how to properly test using mocks, how to use i18n and cl-who, how to convert Markdown to HTML and other things.
 
 ### <a name="project_setup"></a>Project setup
 
@@ -63,7 +63,7 @@ To get started and since we use a test-driven approach we'll start with adding a
 
 In order to add tests that are part of a full test suite we'll start creating an overall 'all-tests' test suite. Create a new Lisp file and add the following code and save it as _tests/all-tests.lisp_:
 
-```
+```lisp
 (defpackage :cl-swbymabeweb.tests
   (:use :cl :fiveam)
   (:export #:run!
@@ -91,7 +91,7 @@ We will excercise the first integration test cycle with the _blog_ page. There a
 Let's start with the blog index page. This page is shown when a request goes to the path _/blog_. On this path the last available blog post is to be selected.  
 So let's start with the first integration test and create a new Lisp file, save it as 'tests/it-routing.lisp' and add the following code:
 
-```
+```lisp
 (defpackage :cl-swbymabeweb-test
   (:use :cl :fiveam)
   (:local-nicknames (:dex :dexador))
@@ -132,7 +132,7 @@ This is part of what tests-first and TDD does, it is the first user of productio
 When evaluating this buffer/file (I use `sly-eval-buffer`) we realize (from error messages) that there are some missing packages. So in order to at least get this compiled we have to load the dependencies using `quicklisp`. Here this would be `:dexador`, `:fiveam` and `:str` (string library).  
 We also have to create the defined package `cl-swbymabeweb` and add stubs (for now) for the `start`and `stop` functions. That's what we do now. Create a new buffer, add the following code to have the minimum code to make the integration test compile, evaluate and save it under _src/main.lisp_.
 
-```
+```lisp
 (defpackage :cl-swbymabeweb
   (:use :cl)
   (:export #:start
@@ -171,13 +171,13 @@ In order for the integration test to do it's job and test the full integration w
 
 Add the following to _src/main.lisp_ on top of the `start` function:
 
-```
+```lisp
 (defvar *server* nil)
 ```
 
 For the `start` function we'll change the signature like this in order to be able to also specify a different port: `&key (port 5000) (address "0.0.0.0")`. Finally we'll now start the server like so in `start`:
 
-```
+```lisp
 (defun start (&key (port 5000) (address "0.0.0.0") &allow-other-keys)
   (log:info "Starting server.")
   (when *server*
@@ -196,7 +196,7 @@ As a general dependency we use `log4cl`, a logging framework. So we'll also add 
 
 The `stop` function can be implemented like this:
 
-```
+```lisp
 (defun stop ()
   (when *server*
     (log:info "Stopping server.")
@@ -250,7 +250,7 @@ For a quick recall, ASDF is the de-facto standard to define Common Lisp systems 
 
 So create a new buffer/file, save it as _cl-swbymabeweb.asd_ in the root folder of the project and add the following:
 
-```
+```lisp
 (defsystem "cl-swbymabeweb"
   :version "0.1.1"
   :author "Manfred Bergmann"
@@ -284,7 +284,7 @@ So create a new buffer/file, save it as _cl-swbymabeweb.asd_ in the root folder 
 
 This defines the necessary ASDF system and test system to fully load the project to the system so far. When the project is in a folder where asdf can find it (like _~/common-lisp_) then it can be loaded into the image by:
 
-```
+```lisp
 ;; load (and compile if necessary) the production code
 (asdf:load-system "cl-swbymabeweb")
 
@@ -325,7 +325,7 @@ Of course we will start with a test for the routing. There will also be a new ar
 
 So let's put together the first routing test. Create a new buffer/file, save it as _tests/routes-test.lisp_ and put the following in:
 
-```
+```lisp
 (defpackage :cl-swbymabeweb.routes-test
   (:use :cl :fiveam :cl-mock :cl-swbymabeweb.routes)
   (:export #:run!
@@ -349,7 +349,7 @@ Why do we need mocking here? Well, we want to use a collaborating component, the
 
 In order to get the test package compiled we have to _quickload_ two things, that is `snooze` and `cl-mock`. We also have to create the 'package-under-test' package. This can for now simply look like so (save as _src/routes.lisp_):
 
-```
+```lisp
 (defpackage cl-swbymabeweb.routes
   (:use :cl :snooze))
 (in-package :cl-swbymabeweb.routes)
@@ -361,7 +361,7 @@ One thing to remember is to update the ASDF system definition with the new files
 
 Now, let's add the following to the test function `blog-route-index`:
 
-```
+```lisp
   (with-mocks ()
     (answer (controller.blog:index) (cons :ok ""))
 
@@ -375,7 +375,7 @@ Let's move on: the `with-request` macro is copied from the _snooze_ sources. It 
 
 Now to compile and run the test there are a few things missing. First of all the `with-request` macro. Copy the following to _routes-test.lisp_:
 
-```
+```lisp
 (defmacro with-request ((uri
                          &rest morekeys
                          &key &allow-other-keys) args
@@ -397,7 +397,7 @@ Now to compile and run the test there are a few things missing. First of all the
 
 Also we need a stub of the _controller_. Create a new buffer/file, save it as _src/controllers/blog.lisp_ and add the following:
 
-```
+```lisp
 (defpackage :cl-swbymabeweb.controller.blog
   (:use :cl)
   (:export #:index)
@@ -417,19 +417,19 @@ The test and the overall code should now compile. When running the test we see t
 evaluated to `0`. Which means that the _controller_ index function was not called.  
 This is good, because there is no route defined in _src/routes.lisp_. In contrast to the outer loop tests, which we shouldn't solve immediatele, we should of course solve this one. So let's add a route now to make the test 'green'. Add this to _routes.lisp_:
 
-```
+```lisp
 (defroute blog (:get :text/html)
   (controller.blog:index))
 ```
 
 This define a route with a root path of _/blog_. It defines that it must be a _GET_ request and that the output has a content-type of _text/html_.  
-When we now evaluate the new route and run the test again we have both `is` assertions passing. So far so good.
+When we now evaluate the new route and run the test again we have both `is` assertions passing.
 
 At this point we should add a failure case as well. What could be a failure for the _index_ route? The index is supposed to take the last available blog entry and deliver it. Having no blog entry is not an error I would say, rather the HTML content that the controller delivers should be empty, or should contain a simple string saying "there are no blog entries". So the only error that I'd imaging could be returned here is an internal error that was raised somewhere which bubbles up through the controller to the route handler.
 
 Let's add an additional test:
 
-```
+```lisp
 (test blog-route-index-err
   "Tests the blog index route. internal error"
   (with-mocks ()
@@ -442,7 +442,7 @@ Let's add an additional test:
 
 Running the test has one assertion failing. The _code_ is actually 200, but we expect it to be 500. In order to fix it we have to add some error handling and differentiate between `:ok` and `:internal-error` results from the _controller_. Let's do this, change the route definition to this:
 
-```
+```lisp
 (defroute blog (:get :text/html)
   (let ((result (controller.blog:index)))
     (case (car result)
@@ -450,4 +450,159 @@ Running the test has one assertion failing. The _code_ is actually 200, but we e
       (:internal-error (http-condition 500 (cdr result))))))
 ```
 
-This will make all tests green.
+This will make all tests green. I would add another test case for something that is neither of the two result atoms in order to enforce the production code to have a default `case`. But I leave that for you.
+
+The tests of the router don't actually test the string content (_cdr_) of the _controller_ result because it's irrelevant to the router. It's important to only test the responsibilities of the unit-under-test. Any tests that go beyond the responsibilities, or the public interface of the unit-under-test leads to more rigidity and the potential is much higher that tests fail and must be fixed when changes are made to production code elsewhere.
+
+We are now done with this feature slice in the router. There is more to some, but we will add another outer loop cycle first.  
+It is now a good time to bring the ASDF system definition up to date. Add the new library dependencies: _snooze_, _cl-mock_. Also change the `:components` section to look like this:
+
+```lisp
+  :components ((:module "src"
+                :components
+                ((:module "controllers"
+                  :components
+                  ((:file "blog")))
+                 (:file "routes")
+                 (:file "main"))))
+```
+
+This adds the 'controllers' sub-folder as a sub component that can name additional source files under it. When done, restart the REPL, load both systems and also run `test-system`. At this point this should look like this:
+
+```
+ Did 5 checks.
+    Pass: 4 (80%)
+    Skip: 0 ( 0%)
+    Fail: 1 (20%)
+```
+
+The only expected failing test is the integration test.
+
+
+##### <a name="blog-feature_blog-controller-first"></a>The blog controller
+
+Before we go to implement the tests for the _controller_ and the _controller_ itself we have to think a bit about the position of this component in relation to the other components and what are the responsibilies of the blog _controller_? In the MVC pattern it has the role of controlling the _view_. It also has the responsibility to generate the data, the _model_, that the _view_ needs to do its job, namely to produce a representation in a desired output format. The _model_ usually consist of a) the data to present to the user and b) the attributes to control the _view_ components for visibility (enabled/disabled, etc.).  
+In our case we want the _view_ to create a HTML page representation that contains the text and images of a blog entry, the blog navigation, and all the rest of the page. So the _model_ must contain everything that the _view_ needs in order to generate all this.  
+Let's have a look at this diagram:
+
+<figure>
+<img src="/static/gfx/blogs/class-deps-diag.png" alt="Class dependencies" width="375" />
+</figure>
+
+The blog _controller_ should not have to deal with loading the blog entry data from file. This is the responsibility of the _blog repository_. Stripping out this functionality into a separate component has a few advantages. It keeps the _controller_ code small and clean maintaining _single responsibility_. This is reflected in the tests, they will be simple and clean as well. The _blog-repo_ will have to be mocked for the tests. The interface to the _blog-repo_ will also be defined when implementing the tests for the blog _controller_ on a use-case basis. The _blog-repo_ as being in a separate area of the application will have its own model that can carry the data of the blog entries. The _controller_ s job will be to map all relevant data from the _blog-repo_ model to the _view_ model. A _model_ separation is important here for orthogonality. Both parts, the _blog-repo_ and the _controller_ / _view_ combo should be able to move and develop separately and in their own pace. Of course the _controller_, as user of the _blog-repo_ has to adapt to changes of the _blog-repo_ interface and model. But this should only be necessary in one direction.  
+The purpose of _blog-repo-factory_ is to be able to switch the kind of _blog-repo_ implementation for different environments. It allows us to make the _controller_ use a different _blog-repo_ for test and production environment. The _controller_ will only access the _blog-repo_ through the _blog-repo-facade_ which is a simplified interface to the _blog-repo_ that hides away all the inner workings of the blog repository. So the _controller_ will only use two things: the _blog-repo-facade_ and the blog repo model. This simplified interface to the blog repository will also be simple to mock in the _controller_ tests as we will see shortly.
+
+The arrows in this diagram mark the direction of dependencies. The _router_ has an inward dependency on the _controller_. The _controller_ in turn has a dependency on the _view_ and _model_ because it must create both. The _controller_ also has a dependency on the _blog-repo-facade_ and on the model of the _blog-repo_. But none of this should have a dependency on the _controller_. Nor should the _controller_ know about anything happening in the _router_ or deal with HTTP codes directly. This is the responsibility of the _router_.
+
+<a name="blog-feature_mvc-detour"></a>*MVC - a quick detour*
+
+MVC pattern first actually wasn't a pattern. It was added to Smalltalk as a way to program UIs in the late 70's and only later MVC was adopted by other languages and frameworks. It allows a decoupling and a separation of concerns. Different teams can work on _view_, _controller_ and _model_ code. It also allows better testability and a higher reusability of the code. Use-cases grouped as MVC have a high cohesion and a low coupling.
+
+It's interesting, the 70's to 90's were amazing times. Pretty much all technological advancements of programming languages and patterns of computer science come from this time frame. Structured programming, object-oriented programming, functional programming, statically typed languages (Standard ML) and type inference (Hindley-Milner) were invented then. It was a time of open-minded exploration and ideas.
+
+-- _detour end_
+
+Again, we start with test code, the plain blog _controller_ test package. Save this as _tests/blog-controller-test.lisp_:
+
+```lisp
+(defpackage :cl-swbymabeweb.blog-controller-test
+  (:use :cl :fiveam :cl-mock)
+  (:export #:run!
+           #:all-tests
+           #:nil))
+(in-package :cl-swbymabeweb.blog-controller-test)
+
+(def-suite blog-controller-tests
+  :description "Tests for blog controller"
+  :in cl-swbymabeweb.tests:test-suite)
+
+(in-suite blog-controller-tests)
+```
+
+The first test is already a bummer. It is slightly more complex than anything we had so far. But it won't get a lot more complex. It's not trivial to write how this slowly develops applying TDD using the red-green-refactor phases. So I'm just pasting the complete test with all additional needed data. But of course this was developed in the classic TDD style.
+
+```lisp
+(defparameter *expected-page-title-blog*
+  "Manfred Bergmann | Software Development | Blog")
+
+(defparameter *blog-model* nil)
+
+(test blog-controller-index-no-blog-entry
+  "Test blog controller index when there is no blog entry available"
+
+  (setf *blog-model*
+        (make-instance 'blog-view-model
+                       :blog-post nil))
+  (with-mocks ()
+    (answer (blog-repo:repo-get-latest) (cons :ok nil))
+    (answer (blog-repo:repo-get-all) (cons :ok nil))
+    (answer (view.blog:render *blog-model*) *expected-page-title-blog*)
+
+    (is (string= (cdr (controller.blog:index)) *expected-page-title-blog*))
+    (is (= 1 (length (invocations 'view.blog:render))))
+    (is (= 1 (length (invocations 'blog-repo:repo-get-all))))
+    (is (= 1 (length (invocations 'blog-repo:repo-get-latest))))))
+```
+
+The first, simpler test assumes that no blog entry exists. Let's go through it:  
+We have now two things that come into play. It's 1) the _blog-repo-facade_ here represented as `blog-repo` package and 2) the blog _view_ package `view.blog`. The blog _views_ s `render` function will produce HTML output. We will mock the _view_ generation and will `answer` with the pre-defined `*expected-page-title-blog*`. The blog _view_ will also need a _model_, represented as `*blog-model*` parameter.  
+Again we need to setupo mocks using `with-mocks` macro. The `answer` calls represent the interfaces and function calls the _controller_ should do to the `blog-repo` in order to a) retrieve all blog entries (`blog-get-all`) which is internally triggered through the call `blog-get-latest`. So the way the _blog-repo_ works is that in order to retrieve the latest entry all entries must be available which must be collected before. Again we define an output interface of the _blog-repo_ to be a `cons` with an _atom_ as `car` and a result as the `cdr`. The two `blog-repo` facade calls both return with `:ok` but contain an empty result. This is not an error. The _view_ has to render appropriately, which is not tested here. Also again, the _controller_ tests only test the expected behavior of the _controller_ which is more or less: generate the _model_ for the view, pass it to the _view_ and take a response from the _view_.  
+The `view.blog:render` function takes as parameter the blog _model_ and should return just the expected page title. The `*blog-model*` is a class structure which is here initialized kind of empty (`nil` represents empty).
+
+The assertions make sure that a call to `controller.blog:index` actually returns the expected page title as `cdr` and also that all expected functions have been called.
+
+In order for this to compile we have to add a few things. Create a new buffer/file and add the following code for the stub of the _blog-repo-facade_ and save it as _src/blog-repo.lisp_:
+
+```lisp
+(defpackage :cl-swbymabeweb.blog-repo
+  (:use :cl)
+  (:nicknames :blog-repo)
+  (:export ;; facade for repo access
+           #:repo-get-latest
+           #:repo-get-all))
+
+(in-package :cl-swbymabeweb.blog-repo)
+
+;; ---------------------------------------
+;; blog repo facade ----------------------
+;; ---------------------------------------
+
+(defun repo-get-latest ()
+  "Retrieves the latest entry of the blog.")
+
+(defun repo-get-all ()
+  "Retrieves all available blog posts.")
+```
+
+Also we have to add the _view_ stub. Create a new buffer/file, save it as _src/views/blog.lisp_ and add the following:
+
+```lisp
+(defpackage :cl-swbymabeweb.view.blog
+  (:use :cl)
+  (:nicknames :view.blog)
+  (:export #:render
+           #:blog-view-model))
+
+(in-package :cl-swbymabeweb.view.blog)
+
+(defclass blog-view-model ()
+  ((blog-post :initform nil
+              :initarg :blog-post
+              :reader model-get-blog-post)
+   (all-blog-posts :initform '()
+              :initarg :all-blog-posts
+              :reader model-get-all-posts)))
+
+(defun render (view-model))
+```
+
+There is one addition we have to add to the test package. Add the following to right below the `:export`:
+
+```
+  (:import-from #:view.blog
+                #:blog-view-model)
+```
+
+We explicitly import only the things we really need. This is the minimal code to get all compiled but the tests should fail. So we have to implement some logic to the `index` function of the _controller_.
+
+In order for the blog _controller_ code in _src/controllers/blog.lisp_ to know the _view_ functions we should import the `:view.blog` package.
