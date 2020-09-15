@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.blog-repo
-  (:use :cl)
+  (:use :cl :cl-gserver.agent)
   (:nicknames :blog-repo)
   (:export #:blog-entry
            #:blog-entry-p
@@ -48,6 +48,11 @@
          :initarg :text
          :reader blog-entry-text
          :documentation "The content of the file")))
+
+(defmethod print-object ((obj blog-entry) stream)
+  (print-unreadable-object (obj stream :type t)
+    (with-slots (name date text) obj
+      (format stream "name: ~a, date: ~a, size: ~a~%" name date (length text)))))
 
 (defun make-blog-entry (name date text)
   (make-instance 'blog-entry :name name :date date :text text))
@@ -112,20 +117,55 @@
 (defgeneric get-all (blog-repo-base))
 (defgeneric get-for-name (blog-repo-base blog-name))
 
+;; blog cache agent
+
+(defun blog-agent-get-all (blog-agent)
+  (agent-get blog-agent (lambda (blogs) blogs)))
+
+(defun blog-agent-init (blog-agent blog-folder)
+  (agent-update blog-agent (lambda (old-state)
+                             (declare (ignore old-state))
+                             (handler-case
+                                 (load-blog-entries blog-folder)
+                               (error (c)
+                                 (log:error "Error on loading blog entries: " c)
+                                 nil)))))
+
+(defun blog-agent-reinit ()
+  (with-slots (blog-agent blog-folder) (blog-repo-fac-get)
+    (blog-agent-init blog-agent blog-folder)))
+
 ;; blog repo default impl -----------------------
 
 (defclass blog-repo-default (blog-repo-base)
   ((blog-folder :initarg :blog-folder
-                :initform nil
-                :documentation "The folder where the blog posts are expected.")))
+                :initform (error "Blog folder cannot be empty!")
+                :documentation "The folder where the blog posts are expected.")
+   (blog-agent :initform (make-agent (lambda () nil))
+               :documentation "The blog cache agent")))
+
+(defmethod initialize-instance :after ((self blog-repo-default) &key)
+  (with-slots (blog-agent blog-folder) self
+    (blog-agent-init blog-agent blog-folder)))
 
 (defmethod get-all ((self blog-repo-default))
-  (with-slots (blog-folder) self
-    (log:debug "Get all in: " blog-folder)
-    (~> blog-folder
-        (filter-files)
-        (to-blog-entries)
-        (sort-for-date))))
+  (with-slots (blog-agent) self
+    (blog-agent-get-all blog-agent)))
+
+(defmethod get-latest ((self blog-repo-default))
+  (first (get-all self)))
+
+(defmethod get-for-name ((self blog-repo-default) name)
+  (log:debug "Finding blog: '~a'~%" name)
+  (find name (get-all self) :key #'blog-entry-name :test #'string-equal))
+
+
+(defun load-blog-entries (blog-folder)
+  (log:debug "Get all in: " blog-folder)
+  (~> blog-folder
+      (filter-files)
+      (to-blog-entries)
+      (sort-for-date)))
 
 (defun filter-files (folder)
   (~> folder
@@ -183,10 +223,3 @@
   (let ((stream (make-string-output-stream)))
     (md:parse-and-print-to-stream file stream)
     (get-output-stream-string stream)))
-
-(defmethod get-latest ((self blog-repo-default))
-  (first (get-all self)))
-
-(defmethod get-for-name ((self blog-repo-default) name)
-  (log:debug "Finding blog: '~a'~%" name)
-  (find name (get-all self) :key #'blog-entry-name :test #'string-equal))

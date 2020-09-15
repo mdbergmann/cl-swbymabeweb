@@ -19,6 +19,7 @@
                                    (asdf:find-system "cl-swbymabeweb"))))
          (cut (make-instance 'blog-repo-default
                              :blog-folder folder)))
+    (sleep 0.5)
     (format t "using blogs folder: ~a~%" (uiop:native-namestring folder))
     (blog-repo-fac-init cut)
     (&body)))

@@ -17,7 +17,8 @@
                "3bmd"
                "3bmd-ext-code-blocks"
                "xml-emitter"
-               "cl-who")
+               "cl-who"
+               "cl-gserver")
   :components ((:module "src"
                 :components
                 ((:file "config")
