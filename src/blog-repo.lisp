@@ -139,13 +139,17 @@
 
 (defclass blog-repo-default (blog-repo-base)
   ((blog-folder :initarg :blog-folder
-                :initform (error "Blog folder cannot be empty!")
-                :documentation "The folder where the blog posts are expected.")
+                :initform (error "The blog-folder cannot be empty!")
+                :documentation "The folder where the blog files are located")
    (blog-agent :initform (make-agent (lambda () nil))
-               :documentation "The blog cache agent")))
+               :documentation "The caching blog agent")
+   (decorated-repo :initform nil
+                   :documentation "The decorated repo"))
+  (:documentation "A blog-repo implementation that caches entries using an agent."))
 
 (defmethod initialize-instance :after ((self blog-repo-default) &key)
-  (with-slots (blog-agent blog-folder) self
+  (with-slots (decorated-repo blog-folder blog-agent) self
+    (setf decorated-repo (make-instance 'blog-repo-direct :blog-folder blog-folder))
     (blog-agent-init blog-agent blog-folder)))
 
 (defmethod get-all ((self blog-repo-default))
@@ -153,12 +157,39 @@
     (blog-agent-get-all blog-agent)))
 
 (defmethod get-latest ((self blog-repo-default))
-  (first (get-all self)))
+  (with-slots (blog-agent) self
+    (first (blog-agent-get-all blog-agent))))
 
 (defmethod get-for-name ((self blog-repo-default) name)
   (log:debug "Finding blog: '~a'~%" name)
-  (find name (get-all self) :key #'blog-entry-name :test #'string-equal))
+  (with-slots (blog-agent) self
+    (find-blog-for-name name (blog-agent-get-all blog-agent))))
 
+;; blog repo direct implementation
+
+(defclass blog-repo-direct (blog-repo-base)
+  ((blog-folder :initarg :blog-folder
+                :initform (error "The blog-folder cannot be empty!")
+                :documentation "The folder where the blog files are located"))
+  (:documentation "A blog-repo that loads blog entries from file for each call."))
+
+(defmethod get-all ((self blog-repo-direct))
+  (with-slots (blog-folder) self
+    (load-blog-entries blog-folder)))
+
+(defmethod get-latest ((self blog-repo-direct))
+  (with-slots (blog-folder) self
+    (first (load-blog-entries blog-folder))))
+
+(defmethod get-for-name ((self blog-repo-direct) name)
+  (log:debug "Finding blog: '~a'~%" name)
+  (with-slots (blog-folder) self
+    (find-blog-for-name name (load-blog-entries blog-folder))))
+
+;; ----------- utility functions -------------
+
+(defun find-blog-for-name (name blog-entries)
+  (find name blog-entries :key #'blog-entry-name :test #'string-equal))
 
 (defun load-blog-entries (blog-folder)
   (log:debug "Get all in: " blog-folder)
