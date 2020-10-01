@@ -10,12 +10,20 @@ body {
 	margin:0;
 }
 
+h2 {
+    margin-top: 3em;
+}
+
 h3 {
     margin-top: 3em;
 }
 
 h4 {
     margin-top: 2.5em;
+}
+
+h5 {
+    margin-top: 1.5em;
 }
 
 hr {
@@ -102,8 +110,8 @@ pre {
     /* Fixed line height */
     line-height: 18px;
     
-    color: #BCC2CE;
-    background-color: #24272F;
+    /* color: #BCC2CE; */
+    background-color: #E5E5E5 /* #24272F; */
   
   /* Use repeating-linear-gradient for background image */
   /* background-image: repeating-linear-gradient( */

@@ -11,7 +11,7 @@ Those are the frameworks I have had a look at: <a href="http://40ants.com/webloc
 
 The listed frameworks either base on Clack or directly on the defacto standard HTTP server <a href="https://edicl.github.io/hunchentoot/" class="link">Hunchentoot</a>. Pretty much all frameworks allow to define REST styled and static routes.  
 I am not aware of a framework that adds or enforces MVC ('model', 'view', 'controllers'). So if you want MVC you'll have to come up with something yourself.  
-The HTML generation is either based on a Django clone called <a href="https://github.com/mmontone/djula" class="link">Djulia</a> or is done using one of the brilliant HTML generation libraries for Common Lisp <a href="https://github.com/edicl/cl-who" class="link">cl-who</a> (for HTML 4) and <a href="https://github.com/ruricolist/spinneret" class="link">Spinneret</a> (for HTML 5). Those libraries are HTML DSLs that allow you to code 'HTML' as Lisp macros and hence can be type checked and debugged (if needed). Very powerful.  
+The HTML generation is either based on a Django clone called <a href="https://mmontone.github.io/djula/" class="link">Djulia</a> or is done using one of the brilliant HTML generation libraries for Common Lisp <a href="https://github.com/edicl/cl-who" class="link">cl-who</a> (for HTML 4) and <a href="https://github.com/ruricolist/spinneret" class="link">Spinneret</a> (for HTML 5). Those libraries are HTML DSLs that allow you to code 'HTML' as Lisp macros and hence can be type checked and debugged (if needed). Very powerful.  
 I think the only framework that enforces the use of Djulia is Lucerne. The others allow you to use what you want.  
 All frameworks also do some convenience wrapping of the request/response for easier access to parameters.  
 The only one that creates some 'model' abstractions for views is Weblocks. The only one that adds data persistence is Caveman2. But this is just some glue code that you get as convenience. The same libraries can be used in other frameworks.
@@ -25,13 +25,15 @@ The application started out with Caveman2, because it seemed to be the most comp
 
 So the web application is based on the following libraries (web application relevant only):
 
-- plain <a href="https://edicl.github.io/hunchentoot" class="link">Hunchentoot</a> (replaced Clack)
-- <a href="https://github.com/joaotavora/snooze" class="link">Snooze</a> REST routing library. This library is implemented with plain CLOS and hence can be easily unit tested. I didn't find this easily possible with any other routing definitions of the other frameworks. We'll see later how this works.
 - a simple self-made MVC like structure
+- <a href="https://edicl.github.io/hunchentoot" class="link">Hunchentoot</a> HTTP server
+- <a href="https://github.com/joaotavora/snooze" class="link">Snooze</a> REST routing library. This library is implemented with plain CLOS and hence can be easily unit tested. I didn't find this easily possible with any other routing definitions of the other frameworks. We'll see later how this works.
 - <a href="https://notabug.org/cage/cl-i18n" class="link">cl-i18n</a> internationalization library (I've tried a few others. You'll see later why I did stick with this one)
 - <a href="https://github.com/edicl/cl-who" class="link">cl-who</a> for HTML generation, because this old web page is heavy on HTML 4.01. Otherwise I had used Spinneret.
 - <a href="https://github.com/3b/3bmd" class="link">3bmd</a> for Markdown to HTML conversion.
 - <a href="https://github.com/VitoVan/xml-emitter" class="link">xml-emitter</a> for generating XML. Used for the Atom feed generation.
+- <a href="https://github.com/dlowe-net/local-time" class="link">local-time</a> for dealing with date and time formats. Conversions from timestamp to string and vise-versa.
+- <a href="https://github.com/sharplispers/log4cl" class="link">log4cl</a> a logging library.
 - <a href="https://github.com/lispci/fiveam" class="link">fiveam</a> as unit test library.
 
 The project is hosted on <a href="https://github.com/mdbergmann/cl-swbymabeweb" class="link">GitHub</a>. So you can checkout the sources yourself. The life web page is available <a href="http://retro-style.software-by-mabe.com/blog" class="link">here</a>.
@@ -49,7 +51,7 @@ We will go through some of the development in a test-driven outside-in approach 
 
 During those points we will cover many things like how to properly test using mocks, how to use i18n and cl-who, how to convert Markdown to HTML and other things.
 
-### <a name="project_setup"></a>Project setup
+## <a name="project_setup"></a>Project setup
 
 This blog post, and in particular the workflow, is a smoothed version that tries to look a bit behind the scenes and actually partly carve out what a framework would or should do. I don't write about all the bumps and issues I had to deal with (or only if revelant), otherwise this would get the size of a small book (maybe I do that one day).
 
@@ -82,11 +84,11 @@ In order to add tests that are part of a full test suite we'll start creating an
 This will help us later when creating the asdf test system as we can point it to this 'all-tests' suite and it'll automatically run all tests of it.
 
 
-### <a name="blog-feature"></a>The blog feature
+## <a name="blog-feature"></a>The blog feature
 
 We will excercise the first integration test cycle with the _blog_ page. There are a few use cases for the blog page that we will go through. The tests needs to make sure that all components involved with serving this page are properly integrated and are operational.
 
-#### <a name="blog-feature_outer-test-loop-index"></a>The outer test loop (blog index page)
+### <a name="blog-feature_outer-test-loop-index"></a>The outer test loop (blog index page)
 
 Let's start with the blog index page. This page is shown when a request goes to the path _/blog_. On this path the last available blog post is to be selected.  
 So let's start with the first integration test and create a new Lisp file, save it as 'tests/it-routing.lisp' and add the following code:
@@ -315,11 +317,11 @@ Until here we have a ditrectory structure like this:
 
 I need to mention that the ASDF systems we defined explicitely name the source files and dependencies. ASDF can also work in a different mode where it can determine source dependencies according to the `:use` directive in the defined packages that are spread in files (I tend to use one package per file). This mode then just requires the root source file definition and it can sort out the rest. Look in the ASDF documentation for _package-inferred-system_ if you are interessted.
 
-#### <a name="blog-feature_inner-test-loops-first"></a>The inner test loops - first go
+### <a name="blog-feature_inner-test-loops-first"></a>The inner test loops
 
 Now we will move on to the inner components. The first component that is hit by a request is the routing. We have to define which requests, request paths are handled by what and how. As mentioned earlier most frameworks come with a routing mechnism that allows defining routes. We will use <a href="https://github.com/joaotavora/snooze" class="link">Snooze</a> for this. The difference between Snooze and other URL router frameworks is more or less that routes are defined using plain Lisp functions in Snooze and HTTP conditions just Lisp conditions. The author says: _"Since you stay inside Lisp, if you know how to make a function, you know how to make a route. There are no regular expressions to write or extra route-defining syntax to learn."_. The other good thing is that the routing can be easily unit tested.
 
-##### <a name="blog-feature_url-routing"></a>URL routing / introduction of MVC controller
+#### <a name="blog-feature_url-routing"></a>URL routing / introducing the MVC controller
 
 Of course we will start with a test for the routing. There will also be a new architectural component in the play, the _MVC controller_. The URL routing is still a component heavily tied to system boundary as it has to deal with HTTP inputs and outputs and reponse codes. In order to apply separation of concerns and single responsibility (SRP) we make the routing responsible for collecting all relevant input from the HTTP request and pass it on to the _controller_. At this stage we have to establish a contract between the router and the _controller_. So we define the input, expected output of the _controller_ as we see fit from our level of perspective in the router. The output also includes the errors the _controller_ may raise. All this is primarily carved out during developing the routing tests.
 
@@ -430,7 +432,7 @@ At this point we should add a failure case as well. What could be a failure for 
 Let's add an additional test:
 
 ```lisp
-(test blog-route-index-err
+(test blog-route-index--err
   "Tests the blog index route. internal error"
   (with-mocks ()
     (answer (controller.blog:index) (cons :internal-error "Foo"))
@@ -450,7 +452,38 @@ Running the test has one assertion failing. The _code_ is actually 200, but we e
       (:internal-error (http-condition 500 (cdr result))))))
 ```
 
-This will make all tests green. I would add another test case for something that is neither of the two result atoms in order to enforce the production code to have a default `case`. But I leave that for you.
+This will make all existing tests green. But I'd like to add another test for a scenario where the controller result is undefined, or at least not what the router expects. I'd like to prepare for any unforseen that might happen on this route handler so that the response can be a defined proper error code. So add this test:
+
+```lisp
+(test blog-route-index--err-undefined-controller-result
+  "Tests the blog index route.
+internal error when controller result is undefined."
+  (with-mocks ()
+    (answer (controller.blog:index) nil)
+
+    (with-request ("/blog") (code)
+      (is (= 500 code))
+      (is (= 1 (length (invocations 'controller.blog:index)))))))
+```
+
+When executing this test the response code is a 204, which represents 'no content'. And indeed, this is correct. When the _controller_ result is `nil` the router handler will also return `nil` because there is no `case` that handles this _controller_ result so the functions runs through without having defined an explicit return, which then makes the funtion return `nil`. So we have to change the router code a bit to handle this and more cases. Change the route definition to:
+
+```lisp
+(defroute blog (:get :text/html)
+  (handler-case
+      (let ((result (controller.blog:index)))
+        (case (car result)
+          (:ok (cdr result))
+          (:internal-error (http-condition 500 (cdr result)))
+          (t (error "Unknown controller result!"))))
+    (error (c)
+      (let ((error-text (format nil "~a" c)))
+        (log:error "Route error: " error-text)
+        (http-condition 500 error-text)))))
+```
+
+The outer `handler-case` catches any error that may happen and produces a proper code 500. Additionally it logs the error text. The `case` has been enhanced with a 'otherwise' handler which actually produces an error condition that is caught in the outer `handler-case`.  
+When running the tests again we should be fine.
 
 The tests of the router don't actually test the string content (_cdr_) of the _controller_ result because it's irrelevant to the router. It's important to only test the responsibilities of the unit-under-test. Any tests that go beyond the responsibilities, or the public interface of the unit-under-test leads to more rigidity and the potential is much higher that tests fail and must be fixed when changes are made to production code elsewhere.
 
@@ -470,18 +503,17 @@ It is now a good time to bring the ASDF system definition up to date. Add the ne
 This adds the 'controllers' sub-folder as a sub component that can name additional source files under it. When done, restart the REPL, load both systems and also run `test-system`. At this point this should look like this:
 
 ```
- Did 5 checks.
-    Pass: 4 (80%)
+ Did 7 checks.
+    Pass: 6 (85%)
     Skip: 0 ( 0%)
-    Fail: 1 (20%)
+    Fail: 1 (14%)
 ```
 
-The only expected failing test is the integration test.
+The only expected failing test is the integration test. Though the fail reason is still 404 'Not Found'. This is because we have not yet registered the route with the HTTP server. But I'd like to postpone this for when we have implemented the _controller_.
 
+#### <a name="blog-feature_blog-controller-first"></a>The blog controller
 
-##### <a name="blog-feature_blog-controller-first"></a>The blog controller
-
-Before we go to implement the tests for the _controller_ and the _controller_ itself we have to think a bit about the position of this component in relation to the other components and what are the responsibilies of the blog _controller_? In the MVC pattern it has the role of controlling the _view_. It also has the responsibility to generate the data, the _model_, that the _view_ needs to do its job, namely to produce a representation in a desired output format. The _model_ usually consist of a) the data to present to the user and b) the attributes to control the _view_ components for visibility (enabled/disabled, etc.).  
+Before we go to implement the tests for the _controller_ and the code for the _controller_ itself we have to think a bit about the position of this component in relation to the other components and what the responsibilies of the blog _controller_ are. In the MVC pattern it has the role of controlling the _view_. It also has the responsibility to generate the data, the _model_, that the _view_ needs to do its job. The _view_ is responsible to produce a representation in a desired output format. The _model_ usually consist of a) the data to present to the user and b) the attributes to control the _view_ components for visibility (enabled/disabled, etc.).  
 In our case we want the _view_ to create a HTML page representation that contains the text and images of a blog entry, the blog navigation, and all the rest of the page. So the _model_ must contain everything that the _view_ needs in order to generate all this.  
 Let's have a look at this diagram:
 
@@ -563,10 +595,6 @@ In order for this to compile we have to add a few things. Create a new buffer/fi
 
 (in-package :cl-swbymabeweb.blog-repo)
 
-;; ---------------------------------------
-;; blog repo facade ----------------------
-;; ---------------------------------------
-
 (defun repo-get-latest ()
   "Retrieves the latest entry of the blog.")
 
@@ -596,13 +624,328 @@ Also we have to add the _view_ stub. Create a new buffer/file, save it as _src/v
 (defun render (view-model))
 ```
 
+This package also defines the _model_ class. The `blog-view-model` is the aggregated _model_ that is passed in from the _controller_. The `blog-post` and `all-blog-posts` slots model up the 'to-be-displayed' blog entry and all available blog entries which is relevant for the navigation view component. To have a separation from the _blog-repo_ model data (orthogonality) we will add separate model classes that are used only for the _view_. We will do this shortly.  
+Considering the dependencies we have two options of where to define the _model_. It's either right here (this works if we have a simple model class), or we define it in a separate package. In case we have more model classes and more complex ones this would be the better approach.
+
 There is one addition we have to add to the test package. Add the following to right below the `:export`:
 
-```
+```lisp
   (:import-from #:view.blog
                 #:blog-view-model)
 ```
 
-We explicitly import only the things we really need. This is the minimal code to get all compiled but the tests should fail. So we have to implement some logic to the `index` function of the _controller_.
+We explicitly import only the things we really need. This is the minimal code to get all compiled but the tests should still fail. So we have to implement some logic to the `index` function of the _controller_.
 
-In order for the blog _controller_ code in _src/controllers/blog.lisp_ to know the _view_ functions we should import the `:view.blog` package.
+In order for the blog _controller_ code in _src/controllers/blog.lisp_ to know the _view_ functions we should import the `:view.blog` package and let's implement some code to make the tests pass.
+
+<a name="blog-feature_tdd-detour"></a>*TDD - a quick detour*
+
+We just have to look at the test expectations and implement them. An aspect of TDD I haven't talked about is the faking and cheating one can do in order to get the tests green (pass) as quickly as possible. When the tests pass we can refactor and replace the cheating with some 'real' code. Until now I have presented you full implemententations of the production code that fit to the test expectations. But a TDD cycle moves in fast paced iterations  with only small changes from red to green, then refactor, then from green to red for a new test case to restart the cycle. The cycle from red to green can contain cheating. This is because we want feedback as quickly as possible about what we did is either good or no good. When we cheat, this 'good' means just that we meet the current expectation. Iteration for iteration we add new expectations that at some point can't be cheated anymore. This workflow that switches between test code and production code very rapidly and the immediate feedback we get puts _us_ kind of into a symbiosis between the test code and the production code. The realization and the feeling of the code building up this way is enormously satisfying. The fact that you just can concentrate on small fractions of code but have a certain security that you prepared to not forget something because the outer, larger scale test is setting a 'protected' frame and savety net you to work in which allows you can have trust (when done right hopefully).
+
+-- _detour end_
+
+<a name="blog-feature_tdd_cheat"></a>*The cheating*
+
+So now I'll introduce a bit of cheating that just makes the one existing test case and all assertions pass. As I said this actually builds up in much smaller steps. And eventually of course we need to get rid of the cheating.
+
+So, replace the `index` function with the following implementation and also add the other small functions.
+
+```lisp
+(defun index ()
+  (let ((lookup-result (blog-repo:repo-get-latest))
+        (all-posts-result (blog-repo:repo-get-all)))
+    (make-controller-result
+     :ok
+     (view.blog:render
+      (make-view-model (cdr lookup-result) (cdr all-posts-result))))))
+
+(defun make-controller-result (first second)
+  "Convenience function to create a new controller result.
+But also used for visibility of where the result is created."
+  (cons first second))
+
+(defun make-view-model (the-blog-entry all-posts)
+  (make-instance 'blog-view-model
+                 :blog-post nil
+                 :all-blog-posts nil))
+```
+
+This is partly cheated insofar as the view model is generated with hardcoded `nil` values just as the tests expect it. When we compile this we're getting warnings shown for unused variables `the-blog-post` and `all-posts`. Those warnings should be treated seriously. We'll fix them shortly.  
+To better _reveil the intention_ of how the _controller_ works, and the output it generates we add a function `make-controller-result` that can generate the result (which after all is just a `cons`).  
+When we run the tests they will all pass:
+
+```
+Running test BLOG-CONTROLLER-INDEX-NO-BLOG-ENTRY ....
+ Did 4 checks.
+    Pass: 4 (100%)
+    Skip: 0 ( 0%)
+    Fail: 0 ( 0%)
+```
+
+When we now add another test case we will have no other choice as to remove the cheating in order to make the tests pass. We will see now. For the new test case we will need quite a bit additional production code, even if it's just stubs (more or less) but we need to get things compiled in order to even only run the new test. Add the following test case:
+
+```lisp
+(defparameter *blog-entry* nil)
+;; 12 o'clock on the 20th September 2020
+(defparameter *the-blog-entry-date* (encode-universal-time 0 0 12 20 09 2020))
+
+(test blog-controller-index
+  "Test blog controller for index which shows the latest blog entry"
+
+  (setf *blog-entry*
+        (blog-repo:make-blog-entry "Foobar"
+                                   *the-blog-entry-date*
+                                   "<b>hello world</b>"))
+  (setf *blog-model*
+        (make-instance 'blog-view-model
+                       :blog-post
+                       (blog-entry-to-blog-post *blog-entry*)
+                       :all-blog-posts
+                       (mapcar #'blog-entry-to-blog-post (list *blog-entry*))))
+  (with-mocks ()
+    (answer (blog-repo:repo-get-latest) (cons :ok *blog-entry*))
+    (answer (blog-repo:repo-get-all) (cons :ok (list *blog-entry*)))
+    (answer (view.blog:render model-arg)
+      (progn
+        (assert
+         (string= "20 September 2020"
+                  (slot-value (slot-value model-arg 'view.blog::blog-post)
+                              'view.blog::date)))
+        (assert
+         (string= "20-09-2020"
+                  (slot-value (slot-value model-arg 'view.blog::blog-post)
+                              'view.blog::nav-date)))
+        *expected-page-title-blog*))
+
+    (is (string= (cdr (controller.blog:index)) *expected-page-title-blog*))
+    (is (= 1 (length (invocations 'view.blog:render))))
+    (is (= 1 (length (invocations 'blog-repo:repo-get-all))))
+    (is (= 1 (length (invocations 'blog-repo:repo-get-latest))))))
+```
+
+The parameter `*blog-entry*` is set up with the _model_ from the _blog-repo_, which we have to define still. Otherwise it is similar to the previous test case. The difference is that we expect the _blog-repo_ now to actually get us blog entries which are mapped to the _view_ model and passed on to the _view_ to generate the display. We also use a new functionality of the `answer` macro. It can do pattern matching on the provided function parameter and so we can validate the _date_ and _nav-date_ formatting (we will add the model for this shortly). We also pre-define a timestamp with the `*the-blog-entry-date*` parameter which we require to be stable for the test case.  
+Now let's add the missing code to get this compiled. Stay close as we have to modify a few files.
+
+To _src/blog-repo.lisp_ add the following class which represents the blog _model_:
+
+```lisp
+(defclass blog-entry ()
+  ((name :initform ""
+         :type string
+         :initarg :name
+         :reader blog-entry-name
+         :documentation "the blog name, the filename minus the date.")
+   (date :initform nil
+         :type fixnum
+         :initarg :date
+         :reader blog-entry-date
+         :documentation "universal timestamp")
+   (text :initform ""
+         :type string
+         :initarg :text
+         :reader blog-entry-text
+         :documentation "The HTML representation of the blog text.")))
+         
+(defun make-blog-entry (name date text)
+  (make-instance 'blog-entry :name name :date date :text text))         
+```
+
+The `make-blog-entry` is a convenience function to more easily create a `blog-entry` instance. This class structure has three slots. The `name` represents the name of the blog entry. The `date` is the date (timestamp, type `fixnum`) of the last update of the blog entry. And `text` is the HTML representation of the blog entry text. We don't go into detail about the blog `text`. The _blog-repo_ takes care of this detail. What is important is that it delivers the text in a representational format that is immediately usable. There may be different strategies at play in the _blog-repo_ that are able to convert from different sources to HTML. As initially pointed out the goal should be to allow plain HTML and Markdown texts. So at this point _blog-repo_ is a black box for us. We use the data as is.
+
+Then we'll have to add some additional `export`s in this package so that the class itself and the `reader` accessors can be used from importing packages.
+
+```
+(:export #:make-blog-entry
+         #:blog-entry-name
+         #:blog-entry-date
+         #:blog-entry-text
+         ;; facade for repo access
+         #:repo-get-latest
+         #:repo-get-all)
+```
+
+In _src/controllers/blog.lisp_ we need the following additions:
+
+```lisp
+(defun blog-entry-to-blog-post (blog-entry)
+  "Converts `blog-entry' to `blog-post'.
+This function makes a mapping from the repository 
+blog entry to the view model blog entry."
+  (log:debug "Converting post: " blog-entry)
+  (when blog-entry
+    (make-instance 'blog-post-model
+                   :name (blog-entry-name blog-entry)
+                   :date (format-timestring nil
+                                            (universal-to-timestamp
+                                             (blog-entry-date blog-entry))
+                                            :format
+                                            '((:day 2) #\Space
+                                              :long-month #\Space
+                                              (:year 4)))
+                   :nav-date (format-timestring nil
+                                                (universal-to-timestamp
+                                                 (blog-entry-date blog-entry))
+                                                :format
+                                                '((:day 2) #\-
+                                                  (:month 2) #\-
+                                                  (:year 4)))
+                   :text (blog-entry-text blog-entry))))
+```
+
+I'll explain in a bit what this does. Suffice to say for now that this is the function that maps the data from a `blog-entry` data structure to the `blog-post-model` data structure (which we'll define next) as used in the `blog-view-model`.  
+This function uses date-time formatting, so we need an import for the functions `format-timestring` and `universal-to-timestamp`. Those are date-time conversion functions that allows the Common Lisp `get-universal-time` timestamp to be converted to a string using a defined format. Import and quickload the package `local-time` for that. Additionally we need the _controller_ to import `:blog-repo` so that is has access to the `blog-entry` and the _readers_ accessors.
+
+We also need to define another view model class that represents the blog entry to be displayed. Add the following to _src/views/blog.lisp_:
+
+```
+(defclass blog-post-model ()
+  ((name :initform ""
+         :type string
+         :initarg :name)
+   (date :initform ""
+         :type string
+         :initarg :date)
+   (nav-date :initform ""
+             :type string
+             :initarg :nav-date)
+   (text :initform ""
+         :type string
+         :initarg :text)))
+```
+
+This class is relatively close to the _blog-repo_ class `blog-entry`. The _controller_ function `blog-entry-to-blog-post` makes the mapping from one to the other. The _view_ has a different responsibility than the _blog-repo_ has. For example has the `blog-post-model` an additional slot, the `nav-date`. It is used in the 'recents' navigation and must present the blog post create/update date in a different string format than is shown in the full blog post display. Generally we use a `string` type for the `date` and `nav-date` slots here because the instance that controls how something is displayed is the _controller_.  
+So `blog-entry-to-blog-post` makes a full mapping from a `blog-entry` to a `blog-post-model` with all that is actually needed for the _view_. With this we make the _view_ a relatively dump component that just shows what the _controller_ wants. The _controller_ test also defines the date formats to be used. Those formats and date strings as displayed by the _view_ are validated in the `answer` call. Let's have a look at this in more detail:
+
+```
+(answer (view.blog:render model-arg)
+  (progn
+    (assert
+     (string= "20 September 2020"
+              (slot-value (slot-value model-arg 'view.blog::blog-post)
+                          'view.blog::date)))
+    (assert
+     (string= "20-09-2020"
+              (slot-value (slot-value model-arg 'view.blog::blog-post)
+                          'view.blog::nav-date)))
+    *expected-page-title-blog*))
+```
+
+The `answer` macro captures the function call arguments, so we can give the argument a name and check on its values. In our case we want to assert that the date strings are of the correct format, which are two different formats. The `nav-date` for example has to be a bit more condensed than the standard `date` format. After all `answer` has to still return something so we use `progn` which returns the last expression. Since we did not export the slots of `blog-view-model` and `blog-post-model` we use the double colon `::` to access them. We didn't export those symbols because no one except the _view_ itself needs to access them. This is a bit of a grey area because we tap into a private area of the _model_ data structures. On the other hand it would be good to control and verify the format of the date string. So we choose to accept to live with possible test failures when the structure of the _model_ changes.
+
+With the last addition the code compiles now. So we can run the new test. The test of course fails with:
+
+```
+ BLOG-CONTROLLER-INDEX in BLOG-CONTROLLER-TESTS 
+ [Test blog controller for index which shows the latest blog entry]: 
+      Unexpected Error: #<SIMPLE-ERROR #x3020039689ED>
+NIL has no slot named CL-SWBYMABEWEB.VIEW.BLOG::DATE..
+```
+
+This is logical. Because we still have our cheating in place that creates a _view_ model with hard coded `nil` values. So the mocks don't have any effect due to this.
+
+To make the tests pass we have to add the proper implementation of the `make-view-model` function in the _controller_ code (see above). Replace the function with this:
+
+```
+(defun make-view-model (the-blog-entry all-posts)
+  (make-instance 'blog-view-model
+                 :blog-post
+                 (blog-entry-to-blog-post the-blog-entry)
+                 :all-blog-posts
+                 (mapcar #'blog-entry-to-blog-post all-posts)))
+```
+
+This will now pass the _blog-repo_ blog entry through the mapping function for the single `blog-post` slot as well as for all available blog posts generated by `mapcar` for `all-blog-posts`. Compiling this will now also remove the warnings we have had with this previously as the two function arguments are now used. Running the tests again now will give us a nice:
+
+```
+Running test BLOG-CONTROLLER-INDEX ....
+ Did 4 checks.
+    Pass: 4 (100%)
+    Skip: 0 ( 0%)
+    Fail: 0 ( 0%)
+```
+
+<a name="blog-feature_reflection"></a>*Taking a step back and reflect*
+
+The MVC blog _controller_ is a relatively complex and central piece in this application. Let's take a step back for a moment and recapture what we have done and how we should continue.
+
+The _controller_ is using two collaborators to do its work. Those two are the _blog-repo_ and the _view_. Both are not part of the _controller_ unit and hence must be tested reparately. The _controller_ as the driver of the functionality wants to control how to talk to the two collaborators. So the _controller_ tests define the interface which is then implemented in the _controller_ code and in both the _blog-repo_ and the _view_. For now the collaborators are only implemented with stubs so that the mocking can be applied. Since the _controller_ is the only 'user' of the two collaborating components it can more or less freely define the interface as it requires it. Would there be more 'users' there would be a bit more of 'pulling' from each 'user' so that eventually the interface would be more of a compromise or just had more functionality. We have also decided that the _controller_ controls what and how the _view_ displays the data. This was done for the date formats that are being displayed in the view.
+
+Before we move on to working on the _view_ we should recheck the outer loop test to verify that it still fails. Also now is a good time to register the routing on the HTTP server.
+
+<a name="blog-feature_outer-loop-revisit"></a>*Revisit the outer test loop*
+
+The registration of the routes on the HTTP server is a missing piece in the full integration. The error the test provokes should get more accurate the closer we get to the end. So we're closing that gap now. To recall, the integration test raises a 404 'Not Found' error on the _/blog_ route. That can be 'fixed' because we have implemented the route.
+
+Extend the _erc/routes.lisp_ with the following function:
+
+```
+(defun make-routes ()
+  (make-hunchentoot-app))
+```
+
+This function must also be exported: `(:export #:make-routes)`.  
+Then in _src/main.lisp_ import this function:
+
+```
+(:import-from #:cl-swbymabeweb.routes
+              #:make-routes)
+```
+and change the `start` function to this (partly):
+
+```
+  (unless *server*
+    (push (make-routes)
+          hunchentoot:*dispatch-table*)
+    (setf *server*
+          (make-instance 'hunchentoot:easy-acceptor
+                         :port port
+                         :address address))    
+    (hunchentoot:start *server*)))
+```
+
+The `make-routes` function will create route definitions that can be applied on Hunchentoot HTTP server `*dispatch-table*`. This is a feature of _snooze_. It can do this for other servers as well.
+
+Running the integration test now will give a different result.
+
+```
+<ERROR> [13:20:51] cl-swbymabeweb.routes routes.lisp (blog get text/html) - 
+Route error: CL-SWBYMABEWEB.ROUTES::ERROR-TEXT: 
+"The value \"Retrieves the latest entry of the blog.\" 
+is not of the expected type LIST."
+```
+
+This is a bit odd. What's going on?  
+When looking at it more closely it makes sense. This is in fact great. It shows us that many parts are still missing for a full integration of all components. The text 'Retrieves the latest entry of the blog.' is returned by the function `repo-get-latest` of the _blog-repo_ facade. Since it defines no explicit return it will implicitly return the only element in the function, which here is the docstring. But later, in the controller, the return of the `repo-get-latest` is expected to be a `cons` (the error says LIST, but a list is a list of `cons` elements) but apparently it is no `cons`. So when trying to access elements of the `cons` with `car` or `cdr` we will see this error.  
+This tells us that there is still quite a bit of work left. We will later fix the integration test without fully implementing the _blog-repo_. This blog post has already grown too large, so we'll shortcut this part later.
+
+<a name="blog-feature_ctrl-update-asd"></a>*Updating ASDF*
+
+Also a good time to bring the ASDF system up-to-date. Add all the new files and library dependencies. Add the _src/views/blog.lisp_ component similarly as we added the _controller_ component. Also add _src/blog-repo.lisp_. It should be defined before the _view_ and the _controller_ definitions due to the direction of dependency. Also add _local-time_ library dependency.
+
+To check if the system definitions work you can always do those four steps:
+
+1. restart the inferior lisp process.
+2. load the default system (`asdf:load-system`) and fix missing components if it doesn't compile.
+3. load the test system. Fix missing components if necessary.
+4. test the test system (`asdf:test-system`).
+
+
+#### <a name="blog-feature_blog-view"></a>The blog view
+
+We are free to generate the view representation as we like. We can use any library we like to. We could even mix those. What the _controller_ expects the _view_ to deliver is HTML as a string. This is the only contract we have. What are our options to generate HTML? We could use:
+
+1. a templating library. Templating libraries are based on template files which represent pages or smaller page components. A page template is usually composed of smaller component templates. Templates also allow inheritance. Templating libraries usually provide 'language' constructs that allow 'structured programming' (to some extend) in the template, like _for_ loops, _if/else_, etc. The template library then evaluates the template and expands the language constructs to HTML code:
+	- <a href="https://mmontone.github.io/djula/" class="link">Djulia</a>: This one is close to Pythons Django and provides a custom template language.
+	- <a href="https://gitlab.common-lisp.net/mraskin/cl-emb" class="link">cl-emb</a>: This is a templating library that allows using Common Lisp code in the template. It's use-case is not limited to HTML.
+
+2. a DSL that allows to write Lisp code which looks close to HTML constructs. There are a few libraries in Common Lisp that do this. Generally DSLs are relatively easy to create in Common Lisp using macros:
+	- <a href="https://github.com/edicl/cl-who" class="link">cl-who</a>: This library has a long history. It is very mature. However, it is limited to HTML 4.
+	- <a href="https://github.com/ruricolist/spinneret" class="link">spinneret</a>: This is a younger library that concentrates on HTML 5.
+
+There are a few more options for both variants. If you are curious you can have a look at <a href="https://github.com/CodyReichert/awesome-cl#html-generators-and-templates" class="link">awesome-cl</a>.  
+We are choosing cl-who for this project mainly because I like the expressivness of Lisp code. When I can write HTML this way, the better. In addition, since it is Lisp code I get an almost immediate feedback about the validity of the code in the editor when compiling a code snippet. For larger projects however the templating variant may be a better choice because of the separation between the HTML and the backing code it provides, even though the template language weakens this separation. But yet it might be easier to non-coders to work with the HTML template files.
+
+<a name="blog-feature_view-test"></a>*Testing the view*
+
+If we recall, we had created a package for the _view_ where we did define the view _model_ classes that the _controller_ instantiates and fills with data. But we had not created tests for this because the `render` function of the _view_ was mocked in the _controller_ test.
+
