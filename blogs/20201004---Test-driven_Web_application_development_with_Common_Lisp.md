@@ -1,5 +1,3 @@
-=> check incremental vs. iterative
-
 This article is intended to do the following things:
 
 - give a tutorial for the workflow of developing outside-in (or top-down) with tests-first
