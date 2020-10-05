@@ -6,7 +6,7 @@ The intention of this article is to:
 
 **Outside-in with tests-first**
 
-Outside-in (or top-down) nor tests-first is something new. Outside-in approach has been done for probably as long as there are computer languages. The same is true for tests-first. This all has been done for a very long time. The Smalltalk community in the 80's, did tests-first. Kent Beck then developed the workflow and discipline of test-driven development (TDD) a little bit later.  
+Outside-in (or top-down) nor tests-first is something new. Outside-in approach has been done for probably as long as there are computer languages. Similarly for tests-first. This all has been done for a very long time. The Smalltalk community in the 80's, did tests-first. Kent Beck then developed the workflow and discipline of test-driven development (TDD) a little bit later.  
 Combining the two makes sense. The idea is that you have two test cycles. An outer test loop which represents an integration or acceptance test, where new test cases (which represent features or parts of a feature) are added incrementally, but only when a previous test case passes. The outer test case fails until the feature was completely integrated and all components were added. And inner test loops that represent all the unit test that are developed in a TDD style for the components to be added.
 
 Adding features incrementally in the context of outside-in means that a feature is developed as a vertical slice of the application rather than building layer by layer horizontally.  
