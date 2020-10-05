@@ -1,25 +1,26 @@
-This article is intended to do the following things:
+The intention of this article is to:
 
 - give a tutorial for the workflow of developing outside-in (or top-down) with tests-first
 - give an introduction to creating web applications in <a href="https://common-lisp.net/" class="link">Common Lisp</a> including some of the available libraries and frameworks
-- explain a little bit about test-driven development in general
+- explain a bit about test-driven development in general
 
 **Outside-in with tests-first**
 
-Outside-in (or top-down) nor tests-first is something new. Outside-in approach has been done for probably as long as there are computer languages. The same is true for tests-first. This all has been done for a very long time. The Smalltalk community in the 80's, did tests-first. Kent Beck then developed the workflow and discipline of test-driven development (TDD) a little bit later. Combining the two makes sense. The idea is that you have two test cycles. An outer test loop which represents an integration or acceptance test, where new test cases (which represent features or parts of a feature) are added incrementally, but only when a previous test case passes. An outer test case fails until the feature was completely integrated and all components were added. The inner test loops represent all the unit test that are developed in a TDD style for the components to be added.
+Outside-in (or top-down) nor tests-first is something new. Outside-in approach has been done for probably as long as there are computer languages. The same is true for tests-first. This all has been done for a very long time. The Smalltalk community in the 80's, did tests-first. Kent Beck then developed the workflow and discipline of test-driven development (TDD) a little bit later.  
+Combining the two makes sense. The idea is that you have two test cycles. An outer test loop which represents an integration or acceptance test, where new test cases (which represent features or parts of a feature) are added incrementally, but only when a previous test case passes. The outer test case fails until the feature was completely integrated and all components were added. And inner test loops that represent all the unit test that are developed in a TDD style for the components to be added.
 
 Adding features incrementally in the context of outside-in means that a feature is developed as a vertical slice of the application rather than building layer by layer horizontally.  
 This is what we will go though in this article for a single feature of a web application developed from scratch.  
 At this point I'd like to recommend the book "Growing Object-Oriented Software, Guided by Tests" which talks at length about this topic.
 
-The application here will be developed also incrementally and iteratively. Following the guidelines you should be getting a working application. The iterations shown here don't represent TDD iterations. TDD iterations are much smaller steps but this is hard to really show in writing. For this article it made little sense to really do this. The important thing was to transport the general workflow.
+The application here will be developed also incrementally and iteratively. Following the guidelines you should be getting a working application. The iterations shown here don't represent TDD iterations. TDD iterations are much smaller steps but this is hard to really show in writing. For this article it made little sense to really do this. The important thing is to transport the general workflow.
 
 **Common Lisp**
 
 I wished I had found the Common Lisp world (or the Lisp world in general) earlier. So, I just found Common Lisp somewhen in early 2019. I'm otherwise mostly working in the Java/Scala ecosystem, for almost 20 years. Of course I looked at many other languages and runtimes.  
 The number of computer languages that have been developed in the last two decades and are being developed mostly have one big flaw, they have nothing new and don't solve anything. I said 'mostly' because there are a few that are a more significant iteration than the others. Most do nothing new that hasn't existed for 40 - 50 years (if not longer) and are effectively only a distraction from more important things.
 
-Common Lisp is a representative of the Lisp family that has pretty much every language feature you could think of. It's not statically typed in a way like Haskell or OCaml (ML family) is. But I don't wanna get into the dynamic vs. static types thingy now. What I can say is that both variants have existed for more than 40 years and each has it's pros and cons.
+Common Lisp is a representative of the Lisp family that has pretty much every language feature you could think of. It's not statically typed in a way like Haskell or OCaml (ML family) is (I don't wanna get into the dynamic vs. static types thingy now). But what I can say is that both variants have existed for more than 40 years and each has it's pros and cons.
 
 **Content overview**
 
