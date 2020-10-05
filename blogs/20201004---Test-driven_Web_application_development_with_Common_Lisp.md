@@ -26,26 +26,26 @@ Common Lisp is a representative of the Lisp family that has pretty much every la
 
 As already said, we will go through the development in a test-driven outside-in approach where we will slice vertically through the application and implement a feature with a full integration test and inner unit tests. We will have a look at the following things:
 
-- <a href="the-web" class="link">Getting to the web / Intro</a>
-- <a href="starting" class="link">Project start</a>
-- <a href="feature" class="link">Adding the blog feature</a>
-	- <a href="blog-feature_outer-test-loop-index" class="link">The outer test loop</a>
-	    - <a href="blog-feature-start_the_server" class="link">Starting the server, for real</a>
-	    - <a href="blog-feature_asdf-system" class="link">ASDF - a quick detour</a>
-	- <a href="blog-feature_inner-test-loops-first" class="link">The inner test loops</a>
-	    - <a href="blog-feature_url-routing" class="link">URL routing / introducing the MVC controller</a>
-	    - <a href="blog-feature_blog-controller-first" class="link">The blog controller</a>
-	        - <a href="blog-feature_mvc-detour" class="link">MVC - a quick detour</a>
-	        - <a href="blog-feature_tdd-detour" class="link">TDD - a quick detour</a>
-	        - <a href="blog-feature_tdd_cheat" class="link">TDD - the cheating</a>
-	        - <a href="blog-feature_reflection" class="link">Taking a step back and reflect</a>
-	        - <a href="blog-feature_outer-loop-revisit" class="link">Revisit the outer test loop</a>
-	        - <a href="blog-feature_ctrl-update-asd" class="link">Updating the ASDF system</a>
-	    - <a href="blog-feature_blog-view" class="link">The blog view</a>
-	        - <a href="blog-feature_view-test" class="link">Testing the view</a>
-	        - <a href="blog-feature_view-roundup" class="link">Roundup</a>
-	- <a href="blog-feature_deployment" class="link">Some words on deployment</a>
-- <a href="conclusion" class="link">Conclusion</a>
+- <a href="#the-web" class="link">Getting to the web / Intro</a>
+- <a href="#starting" class="link">Project start</a>
+- <a href="#feature" class="link">Adding the blog feature</a>
+	- <a href="#blog-feature_outer-test-loop-index" class="link">The outer test loop</a>
+	    - <a href="#blog-feature-start_the_server" class="link">Starting the server, for real</a>
+	    - <a href="#blog-feature_asdf-system" class="link">ASDF - a quick detour</a>
+	- <a href="#blog-feature_inner-test-loops-first" class="link">The inner test loops</a>
+	    - <a href="#blog-feature_url-routing" class="link">URL routing / introducing the MVC controller</a>
+	    - <a href="#blog-feature_blog-controller-first" class="link">The blog controller</a>
+	        - <a href="#blog-feature_mvc-detour" class="link">MVC - a quick detour</a>
+	        - <a href="#blog-feature_tdd-detour" class="link">TDD - a quick detour</a>
+	        - <a href="#blog-feature_tdd_cheat" class="link">TDD - the cheating</a>
+	        - <a href="#blog-feature_reflection" class="link">Taking a step back and reflect</a>
+	        - <a href="#blog-feature_outer-loop-revisit" class="link">Revisit the outer test loop</a>
+	        - <a href="#blog-feature_ctrl-update-asd" class="link">Updating the ASDF system</a>
+	    - <a href="#blog-feature_blog-view" class="link">The blog view</a>
+	        - <a href="#blog-feature_view-test" class="link">Testing the view</a>
+	        - <a href="#blog-feature_view-roundup" class="link">Roundup</a>
+	- <a href="#blog-feature_deployment" class="link">Some words on deployment</a>
+- <a href="#conclusion" class="link">Conclusion</a>
 
 
 ### <a name="the-web"></a>Getting to the web / Intro
