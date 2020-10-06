@@ -18,8 +18,8 @@ The application here will be developed also incrementally and iteratively. Follo
 **Common Lisp**
 
 I wished I had found the Common Lisp world (or the Lisp world in general) earlier. So, I just found Common Lisp somewhen in early 2019. I'm otherwise mostly working in the Java/Scala ecosystem, for almost 20 years. Of course I looked at many other languages and runtimes.  
-The number of computer languages that have been developed in the last two decades and are being developed mostly have one big flaw, they have nothing new and don't solve anything. I said 'mostly' because there are a few that are a more significant iteration than the others. Most do nothing new that hasn't existed for 40 - 50 years (if not longer) and are effectively only a distraction from more important things.
-
+There are many 'new' computer languages these days that have in fact nothing new and are insignificant iterations of something that existed before. In fact nothing new in computer languages came up in the last 40 years or so.  
+The other thing is, if you want to learn something about programming languages there is no way around having a deeper look at Lisp. The Lisp language is brilliantly simple and expressive. A really practical and productive variant is Common Lisp.  
 Common Lisp is a representative of the Lisp family that has pretty much every language feature you could think of. It's not statically typed in a way like Haskell or OCaml (ML family) is (I don't wanna get into the dynamic vs. static types thingy now). But what I can say is that both variants have existed for more than 40 years and each has it's pros and cons.
 
 **Content overview**
