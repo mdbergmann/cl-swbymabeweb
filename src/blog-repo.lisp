@@ -251,7 +251,7 @@
 
 (defun convert-md-to-html (file)
   (setf 3bmd-code-blocks:*code-blocks* t)
-  (setf 3bmd-code-blocks:*renderer* :colorize)
+  (setf 3bmd-code-blocks:*renderer* :nohighlight)
   
   (let ((stream (make-string-output-stream)))
     (md:parse-and-print-to-stream file stream)
