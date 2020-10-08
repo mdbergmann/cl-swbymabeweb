@@ -128,8 +128,9 @@
                              (handler-case
                                  (load-blog-entries blog-folder)
                                (error (c)
-                                 (log:error "Error on loading blog entries: " c)
-                                 nil)))))
+                                 (let ((errMsg (format nil "Error on loading blog entries: ~a" c)))
+                                   (log:error errMsg)
+                                   nil))))))
 
 (defun blog-agent-reinit ()
   (with-slots (blog-agent blog-folder) (blog-repo-fac-get)
@@ -250,6 +251,7 @@
 
 (defun convert-md-to-html (file)
   (setf 3bmd-code-blocks:*code-blocks* t)
+  (setf 3bmd-code-blocks:*renderer* :colorize)
   
   (let ((stream (make-string-output-stream)))
     (md:parse-and-print-to-stream file stream)

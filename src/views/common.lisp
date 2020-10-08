@@ -109,6 +109,9 @@
       (:head
        (:title (str ,title))
        (:link :rel "stylesheet" :href "/static/css/formate.css")
+       (:link :rel "stylesheet" :href "/static/js/styles/default.css")
+       (:script :src "/static/js/highlight.pack.js")
+       (:script (str "hljs.initHighlightingOnLoad()"))
        (:meta :http-equiv "Content-Type"
               :content "text/html; charset=utf-8"))
       (:body
