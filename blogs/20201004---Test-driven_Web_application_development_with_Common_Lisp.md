@@ -232,7 +232,7 @@ For the `start` function we'll change the signature like this in order to be abl
 
 This code will make sure that there is no server instance currently being set and if not it will create a server instance and start it.
 
-As a general dependency we use `log4cl`, a logging framework.
+As a general dependency we use _log4cl_, a logging framework.
 
 The `stop` function can be implemented like this:
 
@@ -247,7 +247,7 @@ The `stop` function can be implemented like this:
       (setf *server* nil))))
 ```
 
-After 'quickloading' `log4cl` and `hunchentoot` and running the test again we will see the following output instead:
+After 'quickloading' _log4cl_ and _hunchentoot_ and running the test again we will see the following output instead:
 
 ```nohighlight
 CL-SWBYMABEWEB-TEST> (run! 'handle-blog-index-route)
