@@ -232,7 +232,7 @@ For the `start` function we'll change the signature like this in order to be abl
 
 This code will make sure that there is no server instance currently being set and if not it will create a server instance and start it.
 
-As a general dependency we use `log4cl`, a logging framework. So we'll also add this to the package `:use` directive.
+As a general dependency we use `log4cl`, a logging framework.
 
 The `stop` function can be implemented like this:
 
