@@ -3,12 +3,12 @@
 <p>So here is what we have to do to create a HTML DSL.</p>
 <p>First we need a collection of tags. I have hardcoded them into a list:</p>
 <div>
-<pre class="brush: elixir;">  @tags [:html, :head, :title, :base, :link, :meta, :style,
+<pre class="elixir">  @tags [:html, :head, :title, :base, :link, :meta, :style,
          :script, :noscript, :body, :div, :span, :article, ...]</pre>
 </div>
 <p>Then I want to allow to define tags in two styles. A one-liner style and a style with a multi-line body to be able to express multiple child elements.</p>
 <div>
-<pre class="brush: elixir;"># one-liner
+<pre class="elixir"># one-liner
 span id: "1", class: "span-class", do: "my span text"
 
 # multi-liner
@@ -19,7 +19,7 @@ end</pre>
 </div>
 <p>We need two macros for this. The <code>do:</code> in the one-liner is seen just as an attribute to the macro. So we have to strip out the <code>do:</code> attribute and use it as body. The macro for this looks like this:</p>
 <div>
-<pre class="brush: elixir;">  defmacro tag(name, attrs \\ []) do
+<pre class="elixir">  defmacro tag(name, attrs \\ []) do
     {inner, attrs} = Keyword.pop(attrs, :do)
      quote do: HouseStatUtil.HTML.tag(unquote(name),
                                       unquote(attrs), do: unquote(inner))
@@ -27,7 +27,7 @@ end</pre>
 </div>
 <p>First we extract the value for the <code>:do</code> key in the <code>attrs</code> list and then pass the <code>name</code>, the remaining <code>attrs</code> and the extracted body as <code>inner</code> to the actual macro which looks like this and does the whole thing.</p>
 <div>
-<pre class="brush: elixir;">  defmacro tag(name, attrs, do: inner) do
+<pre class="elixir">  defmacro tag(name, attrs, do: inner) do
     parsed_inner = parse_inner_content(inner)
     
     quote do
@@ -43,11 +43,11 @@ end</pre>
 <p>Here we get the first glimpse of Eml (the <code>%E{}</code> in there is an Eml structure type to create HTML tags). The helper function is to differentiate between having an AST as inner block or non-AST elements. But I don't want to go into more detail here.<br /> Instead I recommend reading the book <a class="link" href="https://pragprog.com/book/cmelixir/metaprogramming-elixir" target="_blank">Metaprogrammning Elixir</a> by Chris McCord which deals a lot with macros and explains how it works.</p>
 <p>But something is still missing. We now have a <code>tag</code> macro. With this macro we can create HTML tags like this:</p>
 <div>
-<pre class="brush: elixir;">tag "span", id: "1", class: "class", do: "foo"</pre>
+<pre class="elixir">tag "span", id: "1", class: "class", do: "foo"</pre>
 </div>
 <p>But that's not yet what we want. One step is missing. We have to create macros for each of the defined HTML tags. Remember the list of tags from above. Now we take this list and create macros from the atoms in the list like so:</p>
 <div>
-<pre class="brush: elixir;">  for tag 
+<pre class="elixir">  for tag 
 </pre>
 </div>
 <p>This creates three macros for each tag. I.e. for <code>span</code> it creates: <code>span/0</code>, <code>span/1</code> and <code>span/2</code>. The first two are because the <code>attrs</code> are optional but Elixir creates two function signatures for it. The third is a version that has a <code>do</code> block.</p>
@@ -55,7 +55,7 @@ end</pre>
 <h4 id="toc_16">Testing the DSL</h4>
 <p>Of course we test this. This is a test case for a one-liner tag:</p>
 <div>
-<pre class="brush: elixir;">  test "single element with attributes" do
+<pre class="elixir">  test "single element with attributes" do
     elem = input(id: "some-id", name: "some-name", value: "some-value")
     |&gt; render_to_string
 
@@ -71,7 +71,7 @@ end</pre>
 <p>This should be backend agnostic. So no matter which backend generated the HTML we want to see the test pass.</p>
 <p>Here is a test case with inner tags:</p>
 <div>
-<pre class="brush: elixir;">  test "multiple sub elements - container" do
+<pre class="elixir">  test "multiple sub elements - container" do
     html_elem = html class: "foo" do
       head
       body class: "bar"

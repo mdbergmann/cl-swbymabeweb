@@ -56,7 +56,7 @@
     ):
 </p>
 <div>
-    <pre class="brush: elixir;">defp deps do
+    <pre class="elixir">defp deps do
   [
     {:plug_cowboy, "~&gt; 2.1.0"},
     {:eml, git: "https://github.com/zambal/eml.git"},
@@ -114,7 +114,7 @@ end</pre>
 </p>
 <p>This is how it looks for my application:</p>
 <div>
-    <pre class="brush: elixir;">require Logger
+    <pre class="elixir">require Logger
 
 def start(_type, _args) do
   children = [
@@ -174,7 +174,7 @@ end</pre>
 </p>
 <p>In Elixir this is pretty slick. The language allows to call functions without parentheses like so:</p>
 <div>
-    <pre class="brush: elixir;">get "/" do
+    <pre class="elixir">get "/" do
     # do something
 end</pre>
 </div>
@@ -184,7 +184,7 @@ end</pre>
 </p>
 <p>Here is the complete router module:</p>
 <div>
-    <pre class="brush: elixir;">defmodule HouseStatUtil.Router do
+    <pre class="elixir">defmodule HouseStatUtil.Router do
   use Plug.Router
 
   alias HouseStatUtil.ViewController.ReaderPageController
@@ -256,11 +256,11 @@ end</pre>
      like so:
 </p>
 <div>
-    <pre class="brush: elixir;">plug Plug.Static, from: "priv/static"</pre>
+    <pre class="elixir">plug Plug.Static, from: "priv/static"</pre>
 </div>
 <p>The 'priv' folder, in this relative form is in your project folder on the same level as the 'lib' and 'test' folders. You can then add sub folders to 'priv/static' for images, css and javascript and define the appropriate paths in your HTML. For an image this would then be:</p>
 <div>
-    <pre class="brush: elixir;">
+    <pre class="elixir">
         <img src="images/foo.jpg" alt=""/>
     </pre>
 </div>
@@ -272,7 +272,7 @@ end</pre>
 </p>
 <p>Here is the test code of the router:</p>
 <div>
-    <pre class="brush: elixir;">defmodule HouseStatUtil.RouterTest do
+    <pre class="elixir">defmodule HouseStatUtil.RouterTest do
   use ExUnit.Case, async: true
   use Plug.Test
 
@@ -340,7 +340,7 @@ end</pre>
      for a view controller. It looks like this:
 </p>
 <div>
-    <pre class="brush: elixir;">defmodule HouseStatUtil.ViewController.Controller do
+    <pre class="elixir">defmodule HouseStatUtil.ViewController.Controller do
   @callback get(params :: %{binary() =&gt; any()}) :: {integer(), binary()}
   @callback post(params :: %{binary() =&gt; any()}) :: {integer(), binary()}
 end</pre>
@@ -359,7 +359,7 @@ end</pre>
 </p>
 <p>Here is the source for the controller:</p>
 <div>
-    <pre class="brush: elixir;">defmodule HouseStatUtil.ViewController.ReaderPageController do
+    <pre class="elixir">defmodule HouseStatUtil.ViewController.ReaderPageController do
   @behaviour HouseStatUtil.ViewController.Controller
 
   alias HouseStatUtil.ViewController.Controller
@@ -450,7 +450,7 @@ end</pre>
      function in the controller will receive the form parameters as a map. This is how it looks like:
 </p>
 <div>
-    <pre class="brush: elixir;">%{
+    <pre class="elixir">%{
   "reader_value_chip" =&gt; "",
   "reader_value_elec" =&gt; "17917.3",
   "reader_value_water" =&gt; "",
@@ -465,7 +465,7 @@ end</pre>
      controller handler:
 </p>
 <div>
-    <pre class="brush: elixir;">def post(form_data) do
+    <pre class="elixir">def post(form_data) do
   Logger.debug("Got form data: #{inspect form_data}")
 
   post_results = form_data
@@ -497,7 +497,7 @@ end</pre>
      which just should render the form and doesn't require mocking (we do some mocking later).
 </p>
 <div>
-    <pre class="brush: elixir;">defmodule HouseStatUtil.ViewController.ReaderPageControllerTest do
+    <pre class="elixir">defmodule HouseStatUtil.ViewController.ReaderPageControllerTest do
   use ExUnit.Case
 
   alias HouseStatUtil.ViewController.ReaderPageController
@@ -542,7 +542,7 @@ end</pre>
 <p>As an example I have a success test case and an error test case to show how the mocking works.</p>
 <p>The tests work on this pre-defined data:</p>
 <div>
-    <pre class="brush: elixir;">@reader_data %{
+    <pre class="elixir">@reader_data %{
   "reader_value_chip" =&gt; "",
   "reader_value_elec" =&gt; "1123.6",
   "reader_value_water" =&gt; "4567",
@@ -571,7 +571,7 @@ end</pre>
 </p>
 <h5>A success case</h5>
 <div>
-    <pre class="brush: elixir;">test "handle POST - success - with reader selection" do
+    <pre class="elixir">test "handle POST - success - with reader selection" do
   with_mock RestInserter,
     [post: fn _reader -&gt; {:ok, ""} end] do
 
@@ -610,7 +610,7 @@ end</pre>
 </p>
 <h5>A failure case</h5>
 <div>
-    <pre class="brush: elixir;">test "handle POST - with reader selection - one error on submit" do
+    <pre class="elixir">test "handle POST - with reader selection - one error on submit" do
   with_mock RestInserter,
     [post: fn reader -&gt;
       case reader.id do
@@ -647,7 +647,7 @@ end</pre>
 <p>The view is responsible to render the HTML and convert that to a string to pass it back to the controller.</p>
 <p>Similarly as for the controller we define a behaviour for this:</p>
 <div>
-    <pre class="brush: elixir;">defmodule HouseStatUtil.View.View do
+    <pre class="elixir">defmodule HouseStatUtil.View.View do
   @type string_result :: binary()
 
   @callback render(
@@ -691,7 +691,7 @@ end</pre>
 </p>
 <p>But any-who, here is an example of a simple test case that checks a heading in the rendered output:</p>
 <div>
-    <pre class="brush: elixir;">test "has form header" do
+    <pre class="elixir">test "has form header" do
   {render_result, render_string} = render()
 
   assert render_result == :ok
@@ -761,7 +761,7 @@ end</pre>
     .
 </p>
 <div>
-    <pre class="brush: elixir;">defmodule HouseStatUtil.Gettext do
+    <pre class="elixir">defmodule HouseStatUtil.Gettext do
   use Gettext, otp_app: :elixir_house_stat_util
 end</pre>
 </div>
