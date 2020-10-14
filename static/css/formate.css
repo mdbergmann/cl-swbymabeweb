@@ -1,5 +1,5 @@
 html {
-	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-family : Lato, Arial, Helvetica, sans-serif;
 }
 
 body {
@@ -160,7 +160,7 @@ li.blog-nav-item {
 }
 
 .content, .content-title, .content-boldface, .content-light, .content-tiny {
-	font-size : 11pt;
+	font-size : 12pt;
 	font-style : normal;
 	text-align: left;
 	color: #666666;
