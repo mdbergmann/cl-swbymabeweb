@@ -4,7 +4,7 @@ Some time ago I had a discussion with someone on Twitter about "Agile" (notice s
 
 I'm not sure how it came to it, there was a bit of back and forth, but I explained that there is no magic in doing agile software development or in agility in general. It's not a secret. It's actually very simple. It's mostly common sense and many people apply this (without knowing) every day in their lifes.
 
-At the core of agility is feedback. Very frequent feedback. And this is the major difference to waterfall or other processes. So you have to see that you place feedback loops at places where you want to adjust decisions and make changes. From the very low levels, like the feedback loop of test-driven development to higher levels like the feedback of frequent continous integration/delivery and deployment.
+At the core of agility is feedback. Very frequent feedback. And this is the major difference to waterfall or other processes. So you have to see that you place feedback loops at places where you want to adjust decisions and make changes. From the very low levels, like the feedback loop of test-driven development to higher levels like the feedback of frequent continous integration/delivery and deployment and of course the primary feedback loop with a client/customer that tries out a newly integrated story (this client can also be the product owner of your company).
 
 This feedback implicitly allows you to make *'Working software'* frequently. The feedback is also at the core of the relationships with your customers towards *'Customer collaboration'* and is the source of *'Responding to change'*. But that's not all. Feedback from your fellow collegues in QA or the dev team also allows you to change quickly and is at the heart of *'Individuals and interactions'*.
 
