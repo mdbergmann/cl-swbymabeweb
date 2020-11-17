@@ -8,10 +8,10 @@ At the core of agility is feedback. Very frequent feedback. So you have to see t
 
 This feedback implicitly allows you to make *'Working software'* frequently. The feedback is also at the core of the relationships with your customers towards *'Customer collaboration'* and is the source of *'Responding to change'*. But that's not all. Feedback from your fellow collegues in QA or the dev team also allows you to change quickly and is at the heart of *'Individuals and interactions'*.
 
-So, this guy then actually said I would be 'out of reality'. Because I suggested something so simple and pragmatic. Weird.
+So, this guy then said I would be 'out of reality'. Because I suggested something so simple and pragmatic. Weird.
 
 As Dave Thomas puts it: the adjective 'agile' is something you can't sell. You can't sell adjectives. But you can sell nouns.  
-A whole "Agile" industry has grown after the "Manifesto for Agile Software Development" was written down and many people and consulting companies make a lot of money explaining clients how "Agile" works.
+A whole "Agile" industry has grown after the "Manifesto for Agile Software Development" was written and many people and consulting companies make a lot of money explaining clients how "Agile" works. So of course "Agile" must be something magic, something incomprehendable that must be explained to companies for a lot of money.
 
 But after all it's as simple as (again from Dave Thomas, not literally):  
 - see where you are  
@@ -21,7 +21,7 @@ But after all it's as simple as (again from Dave Thomas, not literally):
 - repeat
 
 Do that towards your clients/customers when collaborating on a product, or a feature.  
-Do that in the dev team by applying TDD.  
+Do that in the dev team by applying TDD, and generally by requesting and providing feedback for code changes, features, etc.  
 Do that when interacting dev <-> QA team.  
-Do that xyz...
+etc.
 
