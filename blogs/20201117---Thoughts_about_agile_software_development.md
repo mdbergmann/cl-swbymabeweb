@@ -25,3 +25,5 @@ Do that in the dev team by applying TDD, and generally by requesting and providi
 Do that when interacting dev <-> QA team.  
 etc.
 
+So far so good. Here comes the challenge.
+Doing this in practice it not easy. Because there are possibly more people having the see the value in this and most of the people have to pull in the same direction and spend effort to apply this.
