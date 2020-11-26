@@ -26,5 +26,5 @@ Do that when interacting dev <-> QA team.
 etc.
 
 So far so good. Here comes the challenge.  
-Doing this in practice it not easy. Because there are possibly more people having the see the value in this and most of the people have to pull in the same direction and spend effort to apply this.
+Doing this in practice it not easy. Because there are possibly more people having to see the value in this and most of the people have to pull in the same direction and spend effort to apply this.
 Effectively it requires imposing discipline for how you work on yourself. That is not easy either.
