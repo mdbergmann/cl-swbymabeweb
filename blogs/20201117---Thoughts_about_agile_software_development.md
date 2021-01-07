@@ -1,30 +1,23 @@
-Thoughts about agile software development (agility).
+Lazy sequences are sequences that are generated on demand. Many languages have them built in or as libraries.
 
-Some time ago I had a discussion with someone on Twitter about "Agile" (notice spelled with a capital "A" as for a proper noun).
+If you don't know what this is then here is an example:
 
-I'm not sure how it came to it, there was a bit of back and forth, but I explained that there is no magic in doing agile software development or in agility in general. It's not a secret. It's actually very simple. It's mostly common sense and many people apply this (without knowing) every day in their lifes.
+```lisp
+(take 5 (range :from 100))
+(100 101 102 103 104)
+```
 
-At the core of agility is feedback. Very frequent feedback. And this is the major difference to waterfall or other processes. So you have to see that you place feedback loops at places where you want to adjust decisions and make changes. From the very low levels, like the feedback loop of test-driven development to higher levels like the feedback of frequent continous integration/delivery and deployment and of course the primary feedback loop with a client/customer that tries out a newly integrated story (this client can also be the product owner of your company).
+`take` takes the first 5 elements from the a generator `range` which starts counting at 100. Each 'take' make the `range` generator compute a new value rather then computing 5 elements up-front.
 
-This feedback implicitly allows you to make *'Working software'* frequently. The feedback is also at the core of the relationships with your customers towards *'Customer collaboration'* and is the source of *'Responding to change'*. But that's not all. Feedback from your fellow collegues in QA or the dev team also allows you to change quickly and is at the heart of *'Individuals and interactions'*.
+That's why it is called 'lazy'. The elements of the sequence are computed when needed. In a very simple form a `range` generator can be implemented using a simple 'let over lambda', like this:
 
-So, this guy then said I would be 'out of reality' (not very nice). Because I suggested something so simple and pragmatic. Weird. But we came to a conclusion eventually.
+```lisp
+(defun range (&key (from 0))
+  (let ((n from))
+    (lambda () (prog1
+              n
+            (incf n)))))
+```
 
-As <a href="https://www.youtube.com/watch?v=a-BOSpxYJ9M" class="link" target="_blank">Dave Thomas puts it</a>: 'agile' is an adjective. You can't sell adjectives. But you can sell nouns.  
-A whole "Agile" industry has grown after the "Manifesto for Agile Software Development" was written and many people and consulting companies make a lot of money explaining clients how "Agile" works. So of course "Agile" must be something magic, something inexplicable that must be explained to companies by consultants for a lot of money.
+The `range` function returns a lambda which has bound the `n` variable. This is also called 'closure'. When we now call the the lambda function it will return and increment `n` as a last step. (If you don't know, the `prog1` form returns the first element and continues to evaluate the rest)
 
-But after all it's as simple as (again from Dave Thomas, not literally):  
-- see where you are  
-- make a small step in the direction you want to go  
-- see how that went (feedback)  
-- review and adjust  
-- repeat
-
-Do that towards your clients/customers when collaborating on a product, or a feature.  
-Do that in the dev team by applying TDD, and generally by requesting and providing feedback for code changes, features, etc.  
-Do that when interacting dev <-> QA team.  
-etc.
-
-So far so good. Here comes the challenge.  
-Doing this in practice it not easy. Because there are possibly more people having to see the value in this and most of the people have to pull in the same direction and spend effort to apply this.
-Effectively it requires imposing discipline for how you work on yourself. That is not easy either.
