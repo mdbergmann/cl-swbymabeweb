@@ -1,4 +1,4 @@
-Lazy sequences are sequences whose elements are generated on demand. Many languages have them built in or available as libraries.
+Lazy (evaluated) sequences are sequences whose elements are generated on demand. Many languages have them built in or available as libraries.
 
 If you don't know what this is then here is an example:
 
@@ -9,7 +9,7 @@ If you don't know what this is then here is an example:
 
 `take` takes the first 5 elements from the a generator `range` which starts counting at 100. Each 'take' makes the `range` generator compute a new value rather then computing 5 elements up-front.
 
-That's why it is called 'lazy'. The elements of the sequence are computed when needed. In a very simple form a `range` generator can be implemented using a simple 'let over lambda', like this:
+That's why it is called 'lazy'. The elements of the sequence are computed when needed. In a very simple form lazy evaluated sequences can be implemented using a generator that we call `range` and a set of consumers, like `take`. The generator can be implemented in a stateful way using a 'let over lambda', like this:
 
 ```lisp
 (defun range (&key (from 0))
