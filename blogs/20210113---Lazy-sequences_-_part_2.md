@@ -21,7 +21,7 @@ So we will look at proper *lazy sequences.* What I'm writing about is fully hand
 
 **Primitives**
 
-As you might know, a `cons` cell is the basis for lists. A `cons` is _cons_tructed of two cells. In Lisp the left part is called `car` and the right part is called `cdr` (those two names still refer to (maybe obsolete) implementation details as 'address register' and 'decrement register'). With combining conses it is possible to generate linked lists when the `cdr` is again a `cons`. The `car` also represents the head of the list and the `cdr` the tail.
+As you might know, a `cons` cell is the basis for lists. A `cons` is *cons*tructed of two cells. In Lisp the left part is called `car` and the right part is called `cdr` (those two names still refer to (maybe obsolete) implementation details as 'address register' and 'decrement register'). With combining conses it is possible to generate linked lists when the `cdr` is again a `cons`. The `car` also represents the head of the list and the `cdr` the tail.
 
 Now, in lazy sequences the computation of the `cdr` part is deferred until needed like this. (I've called this `cons` wrapper just `lazy-cons`):
 
@@ -62,7 +62,7 @@ In order to access `car` and `cdr` of the `lazy-cons` we introduce two more prim
 
 `lazy-car` just calls `car`. We could certainly just use `car` directly, but to be consistent and to create a new metaphor to be used for this lazy sequence we'll add both.
 
-`lazy-cdr` does somthing additional. This is a key element. When accessing the `cdr` of the list we now en_force_ the computation of it. `force` is very simple. Where `delay` wrapped the expression into a lambda we now have to unwrap it by _fun_calling this lambda to compute the expression. So `force` looks like this:
+`lazy-cdr` does somthing additional. This is a key element. When accessing the `cdr` of the list we now en*force* the computation of it. `force` is very simple. Where `delay` wrapped the expression into a lambda we now have to unwrap it by *funcall*ing this lambda to compute the expression. So `force` looks like this:
 
 ```lisp
 (defun force (delayed-object)
