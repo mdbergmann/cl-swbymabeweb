@@ -90,7 +90,7 @@ tr,td {
     border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-    border: 1px solid #BCC2CE;
+    border: 0px solid #BCC2CE;
     padding: 1px;
     
     background-color: #E5E5E5;
@@ -163,7 +163,7 @@ li.blog-nav-item {
 	font-size : 12pt;
 	font-style : normal;
 	text-align: left;
-	color: #666666;
+	color: #333333;
 	font-weight: normal;
 }
 
@@ -184,14 +184,14 @@ li.blog-nav-item {
 }
 
 .content-light {
-	color: #A4A4A4;
+	color: #777777;
 }
 
 .headline {
 	font-size : 14pt;
 	font-style : normal;
 	text-align: left;
-	color: #999999;
+	color: #777777;
 	font-weight: bold;
     margin-top: 10px;
 }
