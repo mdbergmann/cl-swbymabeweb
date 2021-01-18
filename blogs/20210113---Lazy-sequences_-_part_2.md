@@ -48,7 +48,7 @@ But I want to create a few primitives to hide the details of this and to make wo
 
 Both of the definitions above have to be macros because otherwise both `delay` and `b` when passed into `lazy-cons` would be evaluated immediately. But that should be delayed until wanted.
 
-In order to access `car` and `cdr` of the `lazy-cons` we introduce two more primitives, `lazy-car` and `lazy-cons`:
+In order to access `car` and `cdr` of the `lazy-cons` we introduce two more primitives, `lazy-car` and `lazy-cdr`:
 
 ```lisp
 (defun lazy-car (lazy-seq)
