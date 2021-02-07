@@ -1,4 +1,4 @@
-Peter Norvig (one of the main people behind Common Lisp) claimed that many design patterns are either not needed or much simpler in Lisp or dynamic languages generally. See <a href="http://norvig.com/design-patterns/design-patterns.pdf" class="link" target="_blank">this PDF</a>.
+Peter Norvig (one of the main people behind Common Lisp at the time) claimed that many design patterns are either not needed or much simpler in Lisp or dynamic languages generally. See <a href="http://norvig.com/design-patterns/design-patterns.pdf" class="link" target="_blank">this PDF</a>.
 
 In this series of blog posts I'd like to go through some of the well known design patterns and make a comparison between the implementation in Scala and Common Lisp.  
 <a href="https://scala-lang.org/" class="link" target="_blank">Scala</a> is a statically typed, multi-paradigm language running on the Java Virtual Machine.  
