@@ -99,4 +99,4 @@ To be fair, to some degree a similar approach is also possible for Scala/Java us
 Foo.class.getDeclaredConstructors()[0].newInstance()
 ```
 
-But the handling of this is quite combersome and by far not as convenient as with Common Lisp. In particular if there are different constructors. Also this approach leaves the type safe area thatz SCala provides. What `newInstance()` creates is just an `Object` which requires a manual cast.
+But the handling of this is quite combersome and by far not as convenient as with Common Lisp. In particular if there are different constructors. Also this approach leaves the type safe area that Scala provides. What `newInstance()` creates is just an `Object` which requires a manual cast.
