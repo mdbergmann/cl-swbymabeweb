@@ -48,7 +48,7 @@ A user will now only use `ButtonFactory.makeButton()` to create buttons. It impl
 
 In Common Lisp something similar could be easily created using CLOS (Common Lisp Object System). But there is a more simple way. Is it not necessary to maintain two parallel hierarchies. Just the buttons are needed.
 
-In Common Lisp classes are represented by a symbol. For instance a class "foo" is represented by the symbol 'foo.
+In Common Lisp classes are designated by a symbol. For instance a class "foo" is designated by the symbol 'foo.
 
 ```lisp
 (defclass foo () ())
@@ -87,7 +87,7 @@ We also need the buttons:
 
 In a test we can easily set a mock or fake class for `*button-class*`.
 
-New button implementation can easily be added without affecting existing buttons or the factory.
+New button implementations can easily be added without affecting existing buttons or the factory.
 
 #### Summary
 
