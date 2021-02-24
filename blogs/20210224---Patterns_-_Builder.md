@@ -122,7 +122,7 @@ This first creates a dungeon object of `'cellar` type, then sets difficulty, add
 (defgeneric add-special-items (dungeon amount))
 ```
 
-Similarly as the Builders we created in Scala those generic function definitions should be in the same package as the dungeon class and the factory function is. If we want to apply a different set of monsters for different dungeon types we have to do two things. First we need to define sub-classes for those dungeon types. And second, we have to provide different implementation of the `add-monsters` builder protocol. Let's have a look and the classes and the factory function:
+Similarly as the Builders we created in Scala those generic function definitions should be in the same package as the dungeon class and the factory function is. If we want to apply a different set of monsters for different dungeon types we have to do two things. First we need to define sub-classes for those dungeon types. And second, we have to provide different implementation of the `add-monsters` builder protocol. Let's have a look at the classes and the factory function:
 
 ```lisp
 (defclass dungeon ()
@@ -158,8 +158,8 @@ The specialization of the `add-monsters` generic function on the class type does
   obj)
 ```
 
-Common Lisp automatically does a match on the first function parameter for the class type. This is called multi-dispatch or multi-methods.
-There is not really a lot more to it. All we did here is use the language features.
+Common Lisp automatically does a match on the first function parameter for the class type. This is called multi-dispatch or multi-methods. So a different `add-monsters` implementation is called depending on whether the dungeon is create with type `'castle` or `'cellar`.
+There is otherwise not really a lot more to it. All we did here is use the language features.
 
 #### Summary
 
