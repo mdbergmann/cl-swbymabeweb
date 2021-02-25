@@ -6,10 +6,6 @@ One could say patterns are code constructs that are repetetive. Almost like a la
 
 Today we look at the Builder pattern. Similarly as the Abstract-Factory pattern is the Builder a creator pattern. It can help creating instances of objects. The difference to Abstract-Factory is that the Builder is tightly coupled to the class it creates. Yet, it allows to hide details of the class that only the Builder has access to while being in the same package. There can be different Builders that create instances of the same class but with a different configuration. If we wanted to do this with the classes directly we'd have to open them up. A Builder can also hide complexities when creating objects while providing a more simple interface to the user.
 
-Since we make a comparison with Common Lisp the simple short story is: there is no Builder pattern needed in Common Lisp.
-
-But let's see later why and how.
-
 #### Example in Scala
 
 First, we will look at some Scala code.  
