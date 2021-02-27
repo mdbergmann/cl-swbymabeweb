@@ -154,7 +154,7 @@ The specialization of the `add-monsters` generic function on the class type does
   obj)
 ```
 
-Common Lisp automatically does a match on the first function parameter for the class type. This is called multi-dispatch or multi-methods. So a different `add-monsters` implementation is called depending on whether the dungeon is create with type `'castle` or `'cellar`.
+Common Lisp automatically does a match on the first function parameter for the class type. This is called multi-dispatch or multi-methods. So a different `add-monsters` implementation is called depending on whether the dungeon is created with type `'castle` or `'cellar`.
 There is otherwise not really a lot more to it. All we did here is use the language features.
 
 #### Summary
