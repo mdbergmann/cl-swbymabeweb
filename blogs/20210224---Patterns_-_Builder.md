@@ -161,4 +161,4 @@ There is otherwise not really a lot more to it. All we did here is use the langu
 
 The Builder pattern in many object-oriented languages requires separate builder classes around a class they should create. This is used for abstraction and data encapsulation which would not be easily possible without the Builder.
 
-In Common Lisp dedicated Builder classes are not needed. But dedicated classes are required to allow the multi-methods to do their work. Yet, this is hardly a pattern, just use of existing language features.
+In Common Lisp dedicated Builder classes are not needed. But dedicated classes are required to allow the multi-methods to do their work. This structure of this can also be recognized as a pattern, but it is simpler.
