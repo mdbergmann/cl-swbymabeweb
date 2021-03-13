@@ -145,6 +145,6 @@ When we fully macro expand `defbuilderclass`:
   (find-class 'person))
 ```
 
-We see that what the macro generates is just ordinary Lisp code. And yet on the top have extended the language with new functionality.
+We see that what the macro generates is just ordinary Lisp code. And yet on the top we have extended the language with new functionality.
 
 Cheers
