@@ -56,16 +56,16 @@ So we'll have to create those setter functions ourselves. A bit More DSL to crea
 It would be cool if those setters (and also getters) could be auto-generated whenever we define a new class. So we want to define a class, that automatically generates setter and getters like this:
 
 ```lisp
-(defbuilderclass person () (name lastname age gender))
+(defbeanclass person () (name lastname age gender))
 ```
 
-`defbuilderclass` doesn't exist. The rest of the syntax is equal to `defclass`. So we'll create a macro that can do this:
+`defbeanclass` doesn't exist. The rest of the syntax is equal to `defclass`. So we'll create a macro that can do this:
 
 ```lisp
-(defmacro defbuilderclass (name
-                           direct-superclasses
-                           direct-slots
-                           &rest options)
+(defmacro defbeanclass (name
+                        direct-superclasses
+                        direct-slots
+                        &rest options)
   `(progn
      (defclass ,name ,direct-superclasses ,direct-slots ,@options)
      (generate-beans ,name)
@@ -124,7 +124,7 @@ This macro has again some code that must execute on macro expansion. We have to 
 Looking more closely this generates exactly the `setf` slot access we had above which we wanted to replace.  
 So we can now define classes that auto-generate getters and setters the way we want to use them in the builder.
 
-When we fully macro expand `defbuilderclass`:
+When we fully macro expand `defbeanclass`:
 
 ```lisp
 (progn
