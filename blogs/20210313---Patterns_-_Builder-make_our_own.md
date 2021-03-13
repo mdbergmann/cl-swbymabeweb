@@ -28,7 +28,7 @@ We can easily come up with a simple macro that does this:
      ,var))
 ```
 
-The parameters `clazz` is the class to create (here `'person`), `var` is the variable name we want to use for the instance, and `body` are all expressions inside `build` (`set-name`, etc.). What the macro creates is a 'quoted' (quasi-quote) expression. Quoted expressions are not evaluated. Effectively they are just a data, a list. When we use the `build` macro then what the compiler does is to replace `build` and everything inside it with the quoted expression. After the compiler expanded the macro it looks like this:
+The parameters `clazz` is the class to create (here `'person`), `var` is the variable name we want to use for the instance, and `body` are all expressions inside `build` (`set-name`, etc.). What the macro creates is a 'quoted' (quasi-quote) expression. Quoted expressions are not evaluated. Effectively they are just data, a list. When we use the `build` macro then what the compiler does is to replace `build` and everything inside it with the quoted expression. After the compiler expanded the macro it looks like this:
 
 ```lisp
 (let ((p (make-instance 'person)))
@@ -74,7 +74,7 @@ It would be cool if those setters (and also getters) could be auto-generated whe
 
 This macro basically just wraps the default `defclass` macro. `generate-beans` is another macro that generates the setters and getters. We'll look shortly at this. Then finally `find-class` is responsible to return the generated class. (There might be a better way to do this.)
 
-`generate-beans` (you might remembered Java) looks like this:
+`generate-beans` (you might remember Java) looks like this:
 
 ```lisp
 (defmacro generate-beans (clazz)
