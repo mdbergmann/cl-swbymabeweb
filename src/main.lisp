@@ -10,7 +10,7 @@
                 #:*static-directory*
                 #:*logs-directory*)
   (:import-from #:blog-repo
-                #:blog-repo-fac-init
+                #:*blog-repo*
                 #:blog-repo-default)
   (:export :start
            :stop))
@@ -26,7 +26,7 @@
   (declare (ignore debug))
 
   (log:info "Initializing blog-repo factory.")
-  (blog-repo-fac-init (make-instance 'blog-repo-default :blog-folder *blog-directory*))
+  (setf *blog-repo* (make-instance 'blog-repo-default :blog-folder *blog-directory*))
 
   (log:info "Starting server.")
   (when *server*

@@ -21,7 +21,7 @@
                              :blog-folder folder)))
     (sleep 0.5)
     (format t "using blogs folder: ~a~%" (uiop:native-namestring folder))
-    (blog-repo-fac-init cut)
+    (setf *blog-repo* cut)
     (&body)))
 
 (test create-blog-repo

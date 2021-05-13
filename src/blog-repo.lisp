@@ -12,13 +12,9 @@
            #:repo-get-all
            #:repo-get-for-name
            ;; blog-repo class
+           #:*blog-repo*
            #:blog-repo-base
-           #:blog-repo-default
-           ;; factory
-           #:blog-repo-fac
-           #:blog-repo-fac-init
-           #:blog-repo-fac-get
-           #:blog-repo-fac-clean)
+           #:blog-repo-default)
   (:local-nicknames (:dtp :cl-date-time-parser))
   (:local-nicknames (:md :3bmd))
   (:import-from #:serapeum
@@ -27,6 +23,10 @@
                 #:~>>))
 
 (in-package :cl-swbymabeweb.blog-repo)
+
+(defparameter *blog-repo* nil
+  "the blog repo instance based on `blog-repo-base`.
+It is possible to override this parameter for tests with a mock implementation.")
 
 ;; ---------------------------------------
 ;; blog repo model -----------------------
@@ -61,43 +61,20 @@
   (typep entry 'blog-entry))
 
 ;; ---------------------------------------
-;; blog repo factory ---------------------
-;; ---------------------------------------
-
-(defclass blog-repo-fac ()
-  ((instance
-    :initform nil
-    :accessor instance
-    :allocation :class))
-  (:documentation "The blog repo factory."))
-
-(defvar *blog-repo-fac* (make-instance 'blog-repo-fac))
-
-(defun blog-repo-fac-init (repo-instance)
-  (setf (instance *blog-repo-fac*) repo-instance))
-(defun blog-repo-fac-get ()
-  (if (null (instance *blog-repo-fac*))
-      (error "Set an instance first!")
-      (instance *blog-repo-fac*)))
-(defun blog-repo-fac-clean ()
-  (setf (instance *blog-repo-fac*) nil))
-
-
-;; ---------------------------------------
 ;; blog repo facade ----------------------
 ;; ---------------------------------------
 
 (defun repo-get-latest ()
   "Retrieves the latest entry of the blog."
-  (cons :ok (get-latest (blog-repo-fac-get))))
+  (cons :ok (get-latest *blog-repo*)))
 
 (defun repo-get-all ()
   "Retrieves all available blog posts."
-  (cons :ok (get-all (blog-repo-fac-get))))
+  (cons :ok (get-all *blog-repo*)))
 
 (defun repo-get-for-name (name)
   "Retrieves a blog entry for the given name."
-  (let ((result (get-for-name (blog-repo-fac-get) name)))
+  (let ((result (get-for-name *blog-repo* name)))
     (if result
         (cons :ok result)
         (progn

@@ -27,13 +27,13 @@
 
 (def-fixture with-server ()
   (start :address "localhost")
-  (blog-repo:blog-repo-fac-init (make-instance 'blog-repo-fake))
+  (setf blog-repo:*blog-repo* (make-instance 'blog-repo-fake))
   (sleep 0.5)
   (unwind-protect 
        (&body)
     (stop)
     (sleep 0.5)
-    (blog-repo:blog-repo-fac-clean)))
+    (setf blog-repo:*blog-repo* nil)))
 
 (test handle-index-route
   "Test integration of index."
@@ -71,7 +71,7 @@
   "Test integration of blog with name of blog."
   (with-fixture with-server ()
 
-    (blog-repo:blog-repo-fac-init (make-instance 'blog-repo-fake-not-found-for-name))
+    (setf blog-repo:*blog-repo* (make-instance 'blog-repo-fake-not-found-for-name))
     
     (handler-case
         (progn
