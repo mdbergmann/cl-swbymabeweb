@@ -9,6 +9,23 @@
 (defun make-routes ()
   (make-hunchentoot-app))
 
+(defun my-default-resource-name (uri)
+  (when (or (string= "" uri)
+            (string= "/" uri))
+    (return-from my-default-resource-name (values nil nil)))
+  (let* ((first-slash-or-qmark (position-if #'(lambda (char)
+                                                (member char '(#\/ #\?)))
+                                            uri
+                                            :start 1)))
+    (values (cond (first-slash-or-qmark
+                   (subseq uri 1 first-slash-or-qmark))
+                  (t
+                   (subseq uri 1)))
+            (if first-slash-or-qmark
+                (subseq uri first-slash-or-qmark)))))
+
+(setf *resource-name-function* #'my-default-resource-name)
+
 ;;
 ;; Routing rules
 

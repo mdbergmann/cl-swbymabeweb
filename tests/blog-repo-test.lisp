@@ -51,7 +51,7 @@
 
 <p><code>foo</code></p>
 
-<pre><code>tripple
+<pre class=\"\"><code>tripple
 quote
 block</code></pre>
 "
