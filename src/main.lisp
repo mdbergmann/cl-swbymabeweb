@@ -25,7 +25,7 @@
 (defun start (&key debug (port 5000) (address "0.0.0.0") &allow-other-keys)
   (declare (ignore debug))
 
-  (log:info "Initializing blog-repo factory.")
+  (log:info "Initializing blog-repo instance.")
   (setf *blog-repo* (make-instance 'blog-repo-default :blog-folder *blog-directory*))
 
   (log:info "Starting server.")
