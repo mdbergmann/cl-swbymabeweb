@@ -30,6 +30,7 @@
                            (:file "index")
                            (:file "imprint")
                            (:file "about")
+                           (:file "projects")
                            (:file "blog")))
                  (:module "controllers"
                   :components
