@@ -53,6 +53,12 @@
     (is (str:containsp "<title>Manfred Bergmann | Software Development | About"
                        (dex:get "http://localhost:5000/about")))))
 
+(test handle-projects-route
+  "Test integration of projects"
+  (with-fixture with-server ()
+    (is (str:containsp "<title>Manfred Bergmann | Software Development | Projects"
+                       (dex:get "http://localhost:5000/projects")))))
+
 (test handle-blog-index-route
   "Test integration of blog - index."
   (with-fixture with-server ()
