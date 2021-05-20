@@ -44,6 +44,8 @@
     (is (str:containsp "<div id='content'" page-source))
     (is (str:containsp "<p>Hello Bar</p>" page-source))))
 
+
+
 (defparameter *blog-post* (make-instance 'blog-post-model
                                          :name "Foo"
                                          :date "22 September 2020"
@@ -82,11 +84,3 @@
     (is (str:containsp "<div id='navigation'" page-source))
     ;;(is (str:containsp "<tr><td class=content colspan=2><tr>" page-source))
     ))
-
-(defun run-tests ()
-  (run! 'index-view)
-  (run! 'imprint-view)
-  (run! 'about-view)
-
-  (run! 'blog-view)
-  (run! 'blog-view-nil-model-post))

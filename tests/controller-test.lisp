@@ -61,13 +61,25 @@
   (with-mocks ()
     (answer (view.about:render content-fun) (funcall content-fun))
 
-    (let ((imprint-result (controller.about:index)))
-      (print imprint-result)
-      (is (eq :ok (car imprint-result)))
+    (let ((about-result (controller.about:index)))
+      (print about-result)
+      (is (eq :ok (car about-result)))
       (is (str:starts-with-p "<p>Passionate about software development"
-                             (cdr imprint-result))))
+                             (cdr about-result))))
     (is (= 1 (length (invocations 'view.about:render))))))
 
+(test projects-controller
+  "Test projects controller"
+
+  (with-mocks ()
+    (answer (view.projects:render content-fun) (funcall content-fun))
+
+    (let ((projects-result (controller.projects:index)))
+      (print projects-result)
+      (is (eq :ok (car projects-result)))
+      (is (str:starts-with-p "<p>My software projects"
+                             (cdr projects-result))))
+    (is (= 1 (length (invocations 'view.projects:render))))))
 
 ;; -----------------------------------
 ;; blog controller -------------------
@@ -210,17 +222,3 @@
 
     (is (= 1 (length (invocations 'blog-repo:repo-get-all))))
     (is (= 1 (length (invocations 'atom-feed:generate-feed))))))
-
-(defun run-tests ()
-  (run! 'index-controller)
-  (run! 'imprint-controller)
-  (run! 'about-controller)
-
-  (run! 'blog-controller-index)
-  (run! 'blog-controller-index-no-blog-entry)
-  (run! 'blog-controller-for-blog-name)
-  (run! 'blog-controller-for-blog-name-not-found)
-
-  (run! 'blog-controller-atom-feed)
-  (run! 'blog-controller-atom-feed--nok-in-blog-repo)
-  (run! 'blog-controller-atom-feed--nok-in-generate-atom-feed))
