@@ -37,6 +37,7 @@
                            (:file "index" :depends-on ("blog"))
                            (:file "imprint")
                            (:file "about")
+                           (:file "projects")
                            (:file "blog")))
                  (:file "routes")
                  (:file "main"))))

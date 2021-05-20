@@ -41,6 +41,10 @@
   (log:debug "About route called.")
   (cdr (controller.about:index)))
 
+(defroute projects (:get :text/html)
+  (log:debug "Projects route called.")
+  (cdr (controller.projects:index)))
+
 (defroute blog (:get :text/html &optional name)
   (log:debug "Blog route called with name: " name)
   (cond

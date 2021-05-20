@@ -59,6 +59,15 @@
       (is (= 200 code))
       (is (= 1 (length (invocations 'controller.about:index)))))))
 
+(test projects-route
+  "Tests the projects index route"
+  (with-mocks ()
+    (answer (controller.projects:index) (cons :ok ""))
+
+    (with-request ("/projects") (code)
+      (is (= 200 code))
+      (is (= 1 (length (invocations 'controller.projects:index)))))))
+
 (test blog-route-index
   "Tests the blog index route. No name"
 
