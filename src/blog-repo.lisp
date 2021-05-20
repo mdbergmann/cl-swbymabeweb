@@ -18,7 +18,6 @@
   (:local-nicknames (:dtp :cl-date-time-parser))
   (:local-nicknames (:md :3bmd))
   (:import-from #:serapeum
-                #:->
                 #:~>
                 #:~>>))
 
@@ -110,7 +109,7 @@ It is possible to override this parameter for tests with a mock implementation."
                                    nil))))))
 
 (defun blog-agent-reinit ()
-  (with-slots (blog-agent blog-folder) (blog-repo-fac-get)
+  (with-slots (blog-agent blog-folder) *blog-repo*
     (blog-agent-init blog-agent blog-folder)))
 
 ;; blog repo default impl -----------------------

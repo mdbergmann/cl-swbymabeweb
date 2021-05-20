@@ -1,4 +1,4 @@
-The last blog <a href="http://retro-style.software-by-mabe.com/blog/Patterns+-+Abstract-Factory" class="link" target="_blank">post</a> was about the Abstract-Factory pattern. We have seen that in  Common Lisp there is hardly a pattern visible.
+The last blog <a href="/blog/Patterns+-+Abstract-Factory" class="link" target="_blank">post</a> was about the Abstract-Factory pattern. We have seen that in  Common Lisp there is hardly a pattern visible.
 
 One could say patterns are code constructs that are repetetive. Almost like a language in a language. Paul Graham once asked: "Are Patterns a language smell?".
 

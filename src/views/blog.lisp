@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.view.blog
-  (:use :cl :cl-who :str :cl-i18n :blog-repo :view.common)
+  (:use :cl :cl-who :str :cl-i18n :view.common)
   (:nicknames :view.blog)
   (:export #:render
            #:blog-post-model

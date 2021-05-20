@@ -1,4 +1,4 @@
-Add-on to the post about the <a href="http://retro-style.software-by-mabe.com/blog/Patterns+-+Builder" class="link" target="_blank">Builder</a> pattern.  
+Add-on to the post about the <a href="/blog/Patterns+-+Builder" class="link" target="_blank">Builder</a> pattern.  
 In this post we'll create our own simple Common Lisp builder DSL using macros.
 
 Macros are a crucial component of Common Lisp, making the language so enormously extendable. The term 'macro' is a bit convoluted. Because many things are called 'macro' but have little do to with Lisp macros. The C macros for example are just a simple textual replacements. Today other languages have macros as well. The difference with Lisp macros is that Lisp macros are just Lisp code while other languages have a different AST (Abstract Syntax Tree) representation of the code. This is much more complicated to deal with. Lisp has no AST.
