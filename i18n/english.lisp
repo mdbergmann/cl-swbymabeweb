@@ -9,25 +9,20 @@ translation "all copyright by Manfred Bergmann"
 plurals-form ""
 status :TRANSLATED
 plurals NIL
- id "about"
+ id "about-top-nav"
 translation "about"
 plurals-form ""
-status :TRANSLATED
+status :UNTRANSLATED
 plurals NIL
  id "index_here_is_my_blog..."
 translation "Here is my "
 plurals-form ""
 status :TRANSLATED
 plurals NIL
- id "blog"
-translation "blog"
-plurals-form ""
-status :TRANSLATED
-plurals NIL
- id "imprint"
+ id "imprint-top-nav"
 translation "imprint"
 plurals-form ""
-status :TRANSLATED
+status :UNTRANSLATED
 plurals NIL
  id "imprint_subline"
 translation "Imprint and Disclaimer"
@@ -49,6 +44,11 @@ translation "Projects"
 plurals-form ""
 status :UNTRANSLATED
 plurals NIL
+ id "projects-top-nav"
+translation "projects"
+plurals-form ""
+status :UNTRANSLATED
+plurals NIL
  id "about_subline"
 translation "Mission"
 plurals-form ""
@@ -63,5 +63,10 @@ plurals NIL
 translation "About"
 plurals-form ""
 status :TRANSLATED
+plurals NIL
+ id "blog-top-nav"
+translation "blog"
+plurals-form ""
+status :UNTRANSLATED
 plurals NIL
 )

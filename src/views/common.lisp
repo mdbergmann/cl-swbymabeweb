@@ -52,11 +52,13 @@
           (:table :class "main-nav"
                   (:tbody
                    (:tr :class "navi_boldwhite"
-                        (nav-entry "70" "/blog" #!"blog")
+                        (nav-entry "70" "/blog" #!"blog-top-nav")
                         (nav-entry-separator)
-                        (nav-entry "70" "/about" #!"about")
+                        (nav-entry "85" "/projects" #!"projects-top-nav")
                         (nav-entry-separator)
-                        (nav-entry "80" "/imprint" #!"imprint")))))))
+                        (nav-entry "70" "/about" #!"about-top-nav")
+                        (nav-entry-separator)
+                        (nav-entry "80" "/imprint" #!"imprint-top-nav")))))))
 
 (defmacro page-header (navigation)
   (let* ((max-width 1024)

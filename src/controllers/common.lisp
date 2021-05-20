@@ -1,7 +1,6 @@
 (defpackage :cl-swbymabeweb.controller
   (:use :cl)
   (:nicknames :controller)
-  (:local-nicknames (:md :3bmd))
   (:import-from #:cl-swbymabeweb.config
                 #:*content-directory*)
   (:export #:controller-result
@@ -22,6 +21,6 @@ But also used for visibility of where the result is created."
 (defun load-content-resource (resource)
   (let ((stream (make-string-output-stream))
         (resource-file (merge-pathnames resource *content-directory*)))
-    (md:parse-and-print-to-stream resource-file stream)
+    (3bmd:parse-and-print-to-stream resource-file stream)
     (get-output-stream-string stream)))
 
