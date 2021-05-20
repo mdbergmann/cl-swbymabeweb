@@ -12,8 +12,9 @@
   (:import-from #:blog-repo
                 #:*blog-repo*
                 #:blog-repo-default)
-  (:export :start
-           :stop))
+  (:export #:start
+           #:stop
+           #:re-init-blog-repo))
 (in-package :cl-swbymabeweb)
 
 (setf cl-i18n:*translation-file-root*
@@ -59,3 +60,5 @@
       (setf hunchentoot:*dispatch-table* nil)
       (setf *server* nil))))
 
+(defun re-init-blog-repo ()
+  (blog-repo::blog-agent-reinit))
