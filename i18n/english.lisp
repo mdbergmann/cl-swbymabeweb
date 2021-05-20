@@ -2,7 +2,7 @@
 (id "projects_subline"
 translation "My software projects"
 plurals-form ""
-status :UNTRANSLATED
+status :TRANSLATED
 plurals NIL
  id "all_copyright"
 translation "all copyright by Manfred Bergmann"
@@ -12,7 +12,7 @@ plurals NIL
  id "about-top-nav"
 translation "about"
 plurals-form ""
-status :UNTRANSLATED
+status :TRANSLATED
 plurals NIL
  id "index_here_is_my_blog..."
 translation "Here is my "
@@ -22,7 +22,7 @@ plurals NIL
  id "imprint-top-nav"
 translation "imprint"
 plurals-form ""
-status :UNTRANSLATED
+status :TRANSLATED
 plurals NIL
  id "imprint_subline"
 translation "Imprint and Disclaimer"
@@ -42,12 +42,12 @@ plurals NIL
  id "projects_headline"
 translation "Projects"
 plurals-form ""
-status :UNTRANSLATED
+status :TRANSLATED
 plurals NIL
  id "projects-top-nav"
 translation "projects"
 plurals-form ""
-status :UNTRANSLATED
+status :TRANSLATED
 plurals NIL
  id "about_subline"
 translation "Mission"
@@ -67,6 +67,6 @@ plurals NIL
  id "blog-top-nav"
 translation "blog"
 plurals-form ""
-status :UNTRANSLATED
+status :TRANSLATED
 plurals NIL
 )
