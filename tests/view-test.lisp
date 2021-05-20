@@ -17,6 +17,8 @@
   "Manfred Bergmann | Software Development | Imprint")
 (defparameter *expected-about-page-title*
   "Manfred Bergmann | Software Development | About")
+(defparameter *expected-projects-page-title*
+  "Manfred Bergmann | Software Development | Projects")
 (defparameter *expected-blog-page-title*
   "Manfred Bergmann | Software Development | Blog")
 
@@ -44,6 +46,13 @@
     (is (str:containsp "<div id='content'" page-source))
     (is (str:containsp "<p>Hello Bar</p>" page-source))))
 
+(test projects-view
+  "Projects view"
+  (let ((page-source (view.projects:render (lambda () "<p>Hello Buzz</p>"))))
+    (is (str:containsp *expected-projects-page-title* page-source))
+    (is (str:containsp "<div id='navigation'" page-source))
+    (is (str:containsp "<div id='content'" page-source))
+    (is (str:containsp "<p>Hello Buzz</p>" page-source))))
 
 
 (defparameter *blog-post* (make-instance 'blog-post-model
