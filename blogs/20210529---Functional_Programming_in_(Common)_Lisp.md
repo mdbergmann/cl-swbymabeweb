@@ -66,7 +66,7 @@ When we look at the important characteristics for FP:
 - immutable data structures
 - non-destructive functions
 
-Then we have to be a bit careful what to use of all the things available in Common Lisp. All data structures in Lisp are mutable. Lists are still useable because they are usually used in a non-destructive way. Like the function `cons` creates a new list by prepending a new element to the head of to a list. This means that the old list is not modified or destroyed but a new list is created. `delete-if` (in contrast to `remove-if`) is destructive because it modifies the input list. The array/vector and hashmap data structures and their functions are destructive and shouldn't be used when doing FP.
+Then we have to be a bit careful what to use of all the things available in Common Lisp. All data structures in Lisp are mutable. Lists are still useable because they are usually used in a non-destructive way. Like the function `cons` creates a new list by prepending a new element to the head of to a list. This means that the old list is not modified or destroyed but a new list is created. `delete-if` (in contrast to `remove-if`) is destructive because it modifies the input list. The array/vector and hashmap data structures and their functions are destructive and shouldn't be used when doing FP, or you create a copy for each change. See `modf` later.
 
 #### Immutable data structures - FSet
 
