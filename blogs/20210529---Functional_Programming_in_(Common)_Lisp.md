@@ -51,7 +51,7 @@ Just a few words on this. Most of the design patterns of object-oriented program
 
 ### Imperative programming
 
-Imperative programming (IP) on the other hand is more about mutating the state of a machine with every instruction/statement. I would tend to say that also Object-Oriented Programming (OOP) is imperative. The difference being that OOP allows to give more structure to the program. From a memory and CPU perspective the paradigm of IP is actually more efficient. And I've read somewhere (can't remember where, but it makes sense to me) that IP did replace FP in the mid to late 90's because memory was expensive and CPUs were not fast, and IP clearly had an advantage there when the value of a memory location is just changed instead of a new memory location allocated and the old one has to be cleaned up.  
+Imperative programming (IP) on the other hand is more about mutating the state of a machine with every instruction/statement. I would tend to say that also Object-Oriented Programming (OOP) is imperative. The difference being that OOP allows to give more structure to the program. From a memory and CPU perspective the paradigm of IP is actually more efficient. And I've read somewhere (can't remember where, but it makes sense to me) that IP did replace FP in the mid to late of last century because memory was expensive and CPUs were not fast, and IP clearly had an advantage there when the value of a memory location is just changed instead of a new memory location allocated and the old one has to be cleaned up.  
 But in todays multi-core and multi-threaded computing world state is a problem. It's not possible without state but how it is dealt with is important and different in FP.
 
 So, but this blog post should actually be about FP and Common Lisp.
@@ -66,7 +66,7 @@ When we look at the important characteristics for FP:
 - immutable data structures
 - non-destructive functions
 
-Then we have to be a bit careful what to use of all the things available in Common Lisp. All data structures in Lisp are mutable. Lists are still useable because they are usually used in a non-destructive way. Like the function `cons` creates a new list by prepending a new element to the head of to a list. This means that the old list is not modified or destroyed but a new list is created. `delete-if` (in contrast to `remove-if`) is destructive because it modifies the input list. The array/vector and hashmap data structures and their functions are destructive and shouldn't be used when doing FP.
+Then we have to be a bit careful what to use of all the things available in Common Lisp. All data structures in Lisp are mutable. Lists are still useable because they are usually used in a non-destructive way. Like the function `cons` creates a new list by prepending a new element to the head of to a list. This means that the old list is not modified or destroyed but a new list is created. `delete-if` (in contrast to `remove-if`) is destructive because it modifies the input list. The array/vector and hashmap data structures and their functions are destructive and shouldn't be used when doing FP, or you create a copy for each change. See `modf` later.
 
 #### Immutable data structures - FSet
 
