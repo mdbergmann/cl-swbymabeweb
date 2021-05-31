@@ -191,7 +191,7 @@ Here a simple example:
 
 ```lisp
 ;; matching on an FSet map
-(match (fset:map (:x 5) (:y 10))
+(match (map (:x 5) (:y 10))
    ((fset-map :x x :y y)
     (list x y)))
 => (5 10)
