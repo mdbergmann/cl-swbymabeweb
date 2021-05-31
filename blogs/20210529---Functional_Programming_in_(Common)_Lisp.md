@@ -183,6 +183,27 @@ CL-USER> (binding-arrows:->
 
 The normal 'thread' arrow `->` passes the previous value as the first argument to the next function. There is also a `->>` arrow operator which passes the value as the last argument.
 
+##### Pattern matching
+
+Pattern matching is kind of standard on languages that have FP features. In Common Lisp pattern matching is not part of the standard. Bit the library <a href="https://github.com/guicho271828/trivia" target="_blank" class="link">Trivia</a> fills that gap. Trivia has an amazing feature set. It can match (and capture) on all native Common Lisp data structures, including structure and class slots. There are extensions for pattern matching on regular expressions and also for the before mentioned FSet library. And it can be relatively easily expanded with new patterns. The documentation is OK but could be more and better structured.
+
+Here a simple example:
+
+```lisp
+;; matching on an FSet map
+(match (fset:map (:x 5) (:y 10))
+   ((fset-map :x x :y y)
+    (list x y)))
+=> (5 10)
+          
+;; matching on a list with capturing the tail
+(match '(1 2 3)
+   ((list* 1 tail)
+    tail))
+=> (2 3)
+```
+
+
 ##### Currying
 
 <a href="https://en.wikipedia.org/wiki/Currying" target="_blank" class="link">Currying</a> is something you see in most FP languages. It is a way to decompose one function with multiple arguments into a sequence of functions with less arguments. In practical terms it reduces the dimension of available inputs to a function. For example, say you have a function `coords` that takes 2 arguments and produces a coordinate in a x-y coordinate system. With currying we can lock one dimension, x or y.
