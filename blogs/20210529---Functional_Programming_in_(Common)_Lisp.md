@@ -1,5 +1,3 @@
-Functional programming in (Common) Lisp
-
 Functional programming (FP) is again getting popular in recent years. Why again? Because the paradigm of FP is very old. Early languages like Lisp, APL from the 1950/60s were already functional. Later imperative languages like C, Pascal, etc. replaced functional languages to some degree. Since some years functional languages become again more popular.
 
 ### What is the difference between the two styles?
