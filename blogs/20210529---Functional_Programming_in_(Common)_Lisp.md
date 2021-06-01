@@ -75,7 +75,7 @@ There are more alternatives offering this functionality. See for example <a href
 #### Custom immutable types
 
 While immutable maps are commonly used in FP instead of classes or structure types, they have one disadvantage. They don't allow mapping on a type. In some FP languages like Erlang/Elixir it's possible to dispatch a function based on a destructuring of the function arguments, like a map or list. But Elixir also allows to define a type for a map structure which helps in the dispatch. And to give the map a 'name' could be a good thing.  
-In Common Lisp it would be cool to use the generic functions facility also for FP because it allows multi-dispatch and is generally a nice feature. But it can't destructure lists or maps on function arguments, it can only check on a type or on symbols using `eql`. Both won't work when using FSet.  
+In Common Lisp it would be cool to use the generic functions facility also for FP because it allows multi-dispatch and is generally a nice feature. But it can't destructure lists or maps on function arguments, it can only check on a type or identity of any object using `eql`. Both won't work well when using FSet with just maps, or sets.  
 So in addition to the data structures available in FSet the structure type in Common Lisp (`defstruct`) could still be useable. It defines a type, so we can use it with generic functions, we can check equality on the slots with `equalp`, and we can set the slots to `:read-only` which prevents from changing the slot values. `defstruct` automatically generates a 'copier' function that copies a structure. This copy is just a flat copy and it doesn't allow to change values while copying. Let's have a quick look at some of the structure things:
 
 ```lisp
