@@ -128,7 +128,7 @@ CL-USER> *foo*
 #S(FOO :X 1 :Y 2)
 ```
 
-Following this little example we see that `modf` doesn't touch the original `*foo*` instance but creates a new one with `x = 5`. This is pretty cool. It's getting better. This also works for CLOS classes:
+Following this little example we see that `modf` doesn't touch the original `*foo*` instance but creates a new one with `x = 5`. This is pretty cool. It's getting better. This also works for standard objects of CLOS:
 
 ```lisp
 CL-USER> (defclass my-class () 
@@ -170,7 +170,7 @@ CL-USER> (funcall (alexandria:compose #'1+ #'1+ #'1+) 1)
 
 This generates a composition function of the three functions `1+` like: `(1+ (1+ (1+ 1)))` which then can be called using `funcall`, or provided as a higher-order function. The call order is still from right to left.
 
-There is another alternative way of composing functions which comes from Clojure. It's actually rather a piping than a composition. Elixir also knows this as the `|>` operator. In Clojure it's called 'threading'. In Common Lisp there 3 different libraries available which implement this. The one used here is <a href="https://github.com/phoe/binding-arrows/" target="_blank" class="link">binding-arrows</a>. It has a few more operators (macros) for threading with slightly different features. I like this a lot and use it often.
+There is another alternative way of composing functions which comes from Clojure. It's actually rather a piping than a composition. Elixir also knows this as the `|>` operator. In Clojure it's called 'threading'. In Common Lisp there 3 different libraries available which implement this. The one used here is <a href="https://github.com/phoe/binding-arrows/" target="_blank" class="link">binding-arrows</a>. There are a few more operators (macros) available for threading with slightly different features than the used `->`. I like this a lot and use it often.
 
 ```lisp
 CL-USER> (binding-arrows:->
@@ -185,7 +185,7 @@ The normal 'thread' arrow `->` passes the previous value as the first argument t
 
 ##### Pattern matching
 
-Pattern matching is kind of standard on languages that have FP features. In Common Lisp pattern matching is not part of the standard. Bit the library <a href="https://github.com/guicho271828/trivia" target="_blank" class="link">Trivia</a> fills that gap. Trivia has an amazing feature set. It can match (and capture) on all native Common Lisp data structures, including structure and class slots. There are extensions for pattern matching on regular expressions and also for the before mentioned FSet library. And it can be relatively easily expanded with new patterns. The documentation is OK but could be more and better structured.
+Pattern matching is kind of standard on languages that have FP features. In Common Lisp pattern matching is not part of the standard. But the library <a href="https://github.com/guicho271828/trivia" target="_blank" class="link">Trivia</a> fills that gap. Trivia has an amazing feature set. It can match (and capture) on all native Common Lisp data structures, including structure and class slots. There are extensions for pattern matching on regular expressions and also for the before mentioned FSet library. And it can be relatively easily expanded with new patterns. The documentation is OK but could be more and better structured.
 
 Here a simple example:
 
