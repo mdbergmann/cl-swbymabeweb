@@ -42,6 +42,14 @@ iex(3)> x = y
 
 See, the last part works in Elixir. But there is still an important difference to a normal assignment. The new `x` has a different memory location than the previous `x` which means the value in the old memory locations is not altered.
 
+#### Immutability
+
+Immutability is usually a key characteristic in FP languages. FP languages provide immutable datatypes like tuples, lists, arrays, maps, trees, etc.  
+Buut not only do they provide immutable datatypes but the datatype functions are pure functions as they create a new output from the input while not changing the input. For example removing or adding items to a list create a new list.  
+This behavior is built into FP languages (ML, Haskell, Erlang/Elixir, just to name a few). So when programming one is mostly in an immutable bubble. To maintain immutability inside the immutable bubble a 'shallow' copy of the data is usually sufficient. This means that datatype functions create a copy of the datatype but share the instances that the datatype holds.  
+What is not necessarily built-it are deep copies that are necessary when one leaves the immutable bubble, i.e. to do I/O.
+
+
 #### Design Patterns
 
 Just a few words on this. Most of the design patterns of object-oriented programming, as captured in the Gang of Four book, apply also for FP, but their implementation is in many cases much simpler. I.e. A strategy pattern in FP is just a function. A visitor pattern could in a simple form just be a reduce function. But more on that in my <a href="/blog/Patterns+-+Abstract-Factory" target="_blank" class="link">blog series</a> about desing pattern in Common Lisp.
@@ -154,6 +162,9 @@ Regular classes don't implement `print-object` automatically. But we see from th
 So now we basically have our immutable custom types. The only important thing to remember, which again requires discipline, is to use `modf` instead of `setf`.
 
 Even though `modf` also works on the built-in data structures like lists, arrays and hashmaps I would probably still tend to use a library like FSet.
+
+One thing to mention here is that `modf` only does 'shallow' copies of the data, which means that only a new instance of the 'container' is created while the internal objects (if they are references) are shared.
+
 
 #### More things that help doing FP
 
