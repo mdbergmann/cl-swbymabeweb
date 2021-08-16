@@ -45,7 +45,7 @@ See, the last part works in Elixir. But there is still an important difference t
 #### Immutability
 
 Immutability is usually a key characteristic in FP languages. FP languages provide immutable datatypes like tuples, lists, arrays, maps, trees, etc.  
-Buut not only do they provide immutable datatypes but the datatype functions are pure functions as they create a new output from the input while not changing the input. For example removing or adding items to a list create a new list.  
+Not only do they provide immutable datatypes but the datatype functions are pure functions as they create a new output from the input while not changing the input. For example removing or adding items to a list create a new list.  
 This behavior is built into FP languages (ML, Haskell, Erlang/Elixir, just to name a few). So when programming one is mostly in an immutable bubble. To maintain immutability inside the immutable bubble a 'shallow' copy of the data is usually sufficient. This means that datatype functions create a copy of the datatype but share the instances that the datatype holds.  
 What is not necessarily built-it are deep copies that are necessary when one leaves the immutable bubble, i.e. to do I/O.
 
