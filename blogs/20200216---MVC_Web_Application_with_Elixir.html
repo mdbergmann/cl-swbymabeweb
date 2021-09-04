@@ -451,12 +451,11 @@ end</code></pre>
 </p>
 <div>
   <pre class="elixir"><code>%{
-      "reader_value_chip" =&gt; "",
-      "reader_value_elec" =&gt; "17917.3",
-      "reader_value_water" =&gt; "",
-      "selected_elec" =&gt; "on"
-      }</code>
-  </pre>
+  "reader_value_chip" =&gt; "",
+  "reader_value_elec" =&gt; "17917.3",
+  "reader_value_water" =&gt; "",
+  "selected_elec" =&gt; "on"
+}</code></pre>
 </div>
 <p>The keys of the map are the 'name' attributes of the form components.</p>
 <p>Since we only want to send selected reader values to openHAB we have to filter the form parameter map for those that were selected, which here is only the electricity reader ('reader_value_elec').</p>
@@ -477,8 +476,7 @@ end</code></pre>
       
       post_send_status_tuple(post_results)
       |&gt; create_response    
-      end</code>
-  </pre>
+      end</code></pre>
 </div>
 <p>
     More sophisticated frameworks like Phoenix do some pre-processing and deliver the form parameters in pre-defined or standardised structure types.
@@ -512,8 +510,7 @@ defmodule HouseStatUtil.ViewController.ReaderPageControllerTest do
   test "handle POST returns error" do
     assert {400, _} = ReaderPageController.post(%{})
   end
-end</code>
-  </pre>
+end</code></pre>
 </div>
 <p>
     The 
@@ -720,7 +717,7 @@ end</code>></pre>
 </p>
 <p>Here is another test case that checks for the rendered empty form:</p>
 <div>
-    <pre>test "Render form components, empty reader inputs" do
+    <pre class="elixir"><code>>test "Render form components, empty reader inputs" do
   {render_result, render_string} = render()
 
   assert String.contains?(
@@ -729,7 +726,7 @@ end</code>></pre>
     input type: "submit", value: "Submit"
     end |&gt; render_to_string
   )
-end</code>></pre>
+end</code></pre>
 </div>
 <p>The empty form which contains the submit button only is created in the test and expected to be part of the rendered view. Similarly we can certainly pass in a proper model so that we have some reader value entry text fields and all that being rendered.</p>
 <p>Creating those HTML tags using Elixir language constructs is pretty slick, isn't it? I'll talk about this now.</p>
