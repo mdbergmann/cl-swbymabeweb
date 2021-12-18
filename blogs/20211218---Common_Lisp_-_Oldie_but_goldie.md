@@ -1,5 +1,3 @@
-### Intro
-
 This article should be a brief introduction to Common Lisp. Brief, because Common Lisp is a rather large and complex system. It has many features. I will try to concentrate on the basics and some exceptional features that stand out for me. I started wriging it for myself in order to understand certain concept better, like symbols. But it might be useful for others as well.  
 
 
@@ -91,7 +89,7 @@ Functions are nothing special. Every language knows them. A simple function defi
 (my-fun)
 ```
 
-```
+```nohighlight
 +RESULTS:
 : NIL
 ```
@@ -113,7 +111,7 @@ Mandatory arguments are simply added to the list construct following the functio
 (my-fun "Hello" "World")
 ```
 
-```
+```nohighlight
 +RESULTS:
 | Hello | World |
 ```
@@ -133,7 +131,7 @@ Optional arguments are defined using the `&optional` keyword:
  (my-fun "foo" "bar" "my-buzz"))
 ```
 
-```
+```nohighlight
 +RESULTS:
 | foo | NIL | buzz    | NIL |
 | foo | bar | buzz    | NIL |
@@ -158,7 +156,7 @@ The first optional `opt1` does not have a default value, so if undefined it'll b
  (my-fun :key1 "foo" :key2 "buzz"))
 ```
 
-```
+```nohighlight
 +RESULTS:
 | NIL | Foo  | NIL |
 | Bar | Foo  | NIL |
@@ -182,7 +180,7 @@ The first optional `opt1` does not have a default value, so if undefined it'll b
  (my-fun "foo" "opt1" :rest1 "rest1" :key1 "buzz"))
 ```
 
-```
+```nohighlight
 +RESULTS:
 | foo | :REST1 | (rest1 :KEY1 buzz)        |
 | foo | opt1   | (:REST1 rest1 :KEY1 buzz) |
@@ -205,7 +203,7 @@ Lambdas are anonymus functions defined at runtime. Other than that they are simi
 ((lambda (x) x) "foo")  ;; returns "foo"
 ```
 
-```
+```nohighlight
 +RESULTS:
 : foo
 ```
@@ -218,7 +216,7 @@ In other cases, i.e. when a lambda is bound to a variable one need to invoke the
   (funcall my-fun "foo"))
 ```
 
-```
+```nohighlight
 +RESULTS:
 : foo
 ```
@@ -235,7 +233,7 @@ Lambdas are first-class objects in Lisp which means they can be created at runti
       (funcall (my-lambda) "bar"))
 ```
 
-```
+```nohighlight
 +RESULTS:
 | function | bar |
 ```
@@ -260,14 +258,14 @@ The arguments to macros are passed in a quoted form, meaning they are not evalua
   `(if ,expr ,@body))
 ```
 
-```
+```nohighlight
 +RESULTS:
 : MY-WHEN
 ```
 
 When using the macro it prints:
 
-```
+```nohighlight
 CL-USER> (my-when (= 1 0)
            (print "Foo"))
 NIL
@@ -279,7 +277,7 @@ CL-USER> (my-when (= 1 1)
 The macro expands the `expr` and `body` arguments. Macros always generate quoted Lisp code, that's why the result of a macro must use a quoted expression. Quoted expressions are not evaluated, they are just plain data (a list), so the macro expression can be replaced with the macro body whereever the macro is used.  
 We can expand (using `MACROEXPAND`) the macro to see what it would be replaced with. Let's have a look at this:
 
-```
+```nohighlight
 CL-USER> (macroexpand-1 '(my-when (= 1 1)
                           (print "Foo")))
 (IF (= 1 1) (PRINT "Foo"))
@@ -351,14 +349,14 @@ Let's have a look at the structure of symbols. We create a symbol from a string 
 (intern "foo")
 ```
 
-```
+```nohighlight
 +RESULTS:
 : |foo|
 ```
 
 This symbol `foo` was created in the current package (`*PACKAGE*`). We can have a look at `*PACKAGE*` (in Emacs by just evaluating `*PACKAGE*` and clicking on the result):
 
-```
+```nohighlight
 #<PACKAGE #x30004000001D>
 --------------------
 Name: "COMMON-LISP-USER"
@@ -374,7 +372,7 @@ Used by list:
 
 We'll see that there are 2 internal symbols. One of them is our newly created symbol `foo`. Let's drill further down to the internal symbols.
 
-```
+```nohighlight
 #<%PACKAGE-SYMBOLS-CONTAINER #x3020014B3FCD>
 --------------------
 All internal symbols of package "COMMON-LISP-USER"
@@ -398,7 +396,7 @@ foo                     --------
 
 So `foo` is listed as symbol. Let's look at `foo` in detail (in Emacs we can click on `foo`).
 
-```
+```nohighlight
 #<SYMBOL #x3020012F958E>
 --------------------
 Its name is: "foo"
@@ -416,7 +414,7 @@ We can get the name of the symbol by:
 (symbol-name (intern "foo"))
 ```
 
-```
+```nohighlight
 +RESULTS:
 : foo
 ```
@@ -434,7 +432,7 @@ Whenever we define a variable, or function we bind a symbol to a variable or fun
 
 When we look again in the current package `*PACKAGE*` we see an additional symbol:
 
-```
+```nohighlight
 #<%PACKAGE-SYMBOLS-CONTAINER #x3020014B3FCD>
 ...
 Symbols:                Flags:
@@ -445,7 +443,7 @@ foo                     --------
 
 And it is flagged with "b", meaning it is bound, see below.
 
-```
+```nohighlight
 #<SYMBOL #x30200145E2EE>
 --------------------
 Its name is: "*X*"
@@ -457,7 +455,7 @@ Property list: NIL
 
 The same can be done with functions. Defining a function with `DEFUN` will create a symbol in the current package whose function object is the function. Let's create a function: `(defun foo-fun ())` and look at the symbol:
 
-```
+```nohighlight
 #<%PACKAGE-SYMBOLS-CONTAINER #x3020015C0E8D>
 --------------------
 Symbols:                Flags:
@@ -484,7 +482,7 @@ Let's make an example with a function. Say, we are in a package `MY-P` and we de
 (defun my-fun () "fun")
 ```
 
-```
+```nohighlight
 +RESULTS:
 : MY-FUN
 ```
@@ -520,7 +518,7 @@ And there are no primitives as they are in Java.
  (type-of (make-condition 'error)))
 ```
 
-```
+```nohighlight
 +RESULTS:
 | (INTEGER 0 1152921504606846975) |
 | (SIMPLE-BASE-STRING 3)          |
@@ -551,7 +549,7 @@ There are different ways to create new types. One is to just create a new struct
           :plz 51234))
 ```
 
-```
+```nohighlight
 +RESULTS:
 : ADDRESS
 ```
@@ -580,7 +578,7 @@ This snipped creates a predicate function that ensures the number argument is wi
  (typep 51 '10-50-number))
 ```
 
-```
+```nohighlight
 +RESULTS:
 | NIL | T | T | NIL |
 ```
@@ -610,7 +608,7 @@ Types can be checked on runtime, or also (partially) on compile time (SBCL has s
 
 Do we call this as `(add-10-50-nums 10 11)` we will get a type error raised:
 
-```
+```nohighlight
 The value 10 is not of the expected type 10-50-NUMBER.
    [Condition of type TYPE-ERROR]
 ```
@@ -667,7 +665,7 @@ Conditions are objects of a type `condition`. The CLHS says: "an object which re
   (clean-up))
 ```
 
-```
+```nohighlight
 +RESULTS:
 : NIL
 ```
@@ -722,7 +720,7 @@ In the example `HIGHER` calls `LOWER`. `LOWER` immediately raises a condition wi
 The magic in `HIGHER` to actually 'invoke' the restart targets is achieved with `HANDLER-BIND`. It is possible to automatically invoke restarts by differenciating on the condition. The restart cases are invoked with `INVOKE-RESTART`. This allows to also pass the argument to the restart case handler that could create the basis for resuming the computation. If a condition handler is not bound the condition will bubble further up the call chain. So it's possible to bind condition handlers on different levels where on a higher level one possibly has more oversight to decide which restart to use.  
 Executing `HIGHER` will give the folling output:
 
-```
+```nohighlight
 CL-USER> (higher)
 condition: Condition #<MY-ERR1 #x302001398D9D>
 restart-case1 arg:foo1
@@ -734,7 +732,7 @@ restart-case3 arg:foo3
 
 This output is from calling `LOWER` function with condition types `MY-ERR1`, `MY-ERR2` and `MY-ERR3`. When we now call `LOWER` with `MY-ERR4` we will be dropped into the debugger, because there is no condition handler for `MY-ERR4`. But in this case that's exactly what we want. The debugger now offers the three restarts we have set up (plus some standard ones). So we see:
 
-```
+```nohighlight
 Condition #<MY-ERR4 #x302001445A7D>
    [Condition of type MY-ERR4]
     
@@ -796,7 +794,7 @@ Multi, or dynamic dispatch is not something that all languages have (some do) bu
  (print-my-object .5))
 ```
 
-```
+```nohighlight
 +RESULTS:
 | printing string: foo                             |
 | printing keyword: FOO                            |
@@ -822,7 +820,7 @@ However, there are two facilities which I'd like to mention. One I use sometimes
 We can now enable the tracing of it by saying `(trace foo)`.  
 When we now call `FOO` we'll see:
 
-```
+```nohighlight
 CL-USER> (foo "world")
 0> Calling (FOO "world") 
 <0 FOO returned "hello world"
@@ -838,7 +836,7 @@ Another thing which I'd like to mention is `BREAK`. `BREAK` enters the debugger 
 
 and call `FOO` the debugger will open and we can get a glimpse at the stack trace and can inspect the variables.
 
-```
+```nohighlight
 Break
    [Condition of type SIMPLE-CONDITION]
     
