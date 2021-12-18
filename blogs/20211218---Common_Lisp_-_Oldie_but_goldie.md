@@ -27,39 +27,39 @@ Because the standard didn't change since 1994 any code written since then should
 #### Content
 
 - <a href="#orgbd62e83" class="link">Basics</a>
-  - <a href="#org0669756" class="link">Lists</a>
-  - <a href="#orgfeceb96" class="link">Functions</a>
-      - <a href="#org7ce6981" class="link">Mandatory arguments</a>
-      - <a href="#org59e6b50" class="link">Optional arguments</a>
-      - <a href="#orgde5876c" class="link">Key arguments</a>
-      - <a href="#org26456fd" class="link">Rest arguments</a>
-      - <a href="#orga703ee0" class="link">Mixing arguments</a>
-  - <a href="#orgac51641" class="link">Lambdas</a>
-  - <a href="#org2266afa" class="link">Macros</a>
-  - <a href="#org0fb504c" class="link">Packages</a>
-  - <a href="#org6d16428" class="link">Symbols</a>
-      - <a href="#org08a2a66" class="link">Unbound symbols</a>
-      - <a href="#orgbe23e88" class="link">Bound symbols</a>
-      - <a href="#orgcff0d95" class="link">The Lisp reader</a>
+    - <a href="#org0669756" class="link">Lists</a>
+    - <a href="#orgfeceb96" class="link">Functions</a>
+        - <a href="#org7ce6981" class="link">Mandatory arguments</a>
+        - <a href="#org59e6b50" class="link">Optional arguments</a>
+        - <a href="#orgde5876c" class="link">Key arguments</a>
+        - <a href="#org26456fd" class="link">Rest arguments</a>
+        - <a href="#orga703ee0" class="link">Mixing arguments</a>
+    - <a href="#orgac51641" class="link">Lambdas</a>
+    - <a href="#org2266afa" class="link">Macros</a>
+    - <a href="#org0fb504c" class="link">Packages</a>
+    - <a href="#org6d16428" class="link">Symbols</a>
+        - <a href="#org08a2a66" class="link">Unbound symbols</a>
+        - <a href="#orgbe23e88" class="link">Bound symbols</a>
+        - <a href="#orgcff0d95" class="link">The Lisp reader</a>
 - <a href="#org0e6fc54" class="link">Types</a>
-  - <a href="#org5bec702" class="link">Everything has a type</a>
-  - <a href="#org19d1a44" class="link">Create new types</a>
-  - <a href="#org7f1b0b1" class="link">Check for types</a>
-      - <a href="#org8c56ab4" class="link">check-type</a>
-      - <a href="#orgaf49559" class="link">declaim</a>
+    - <a href="#org5bec702" class="link">Everything has a type</a>
+    - <a href="#org19d1a44" class="link">Create new types</a>
+    - <a href="#org7f1b0b1" class="link">Check for types</a>
+        - <a href="#org8c56ab4" class="link">check-type</a>
+        - <a href="#orgaf49559" class="link">declaim</a>
 - <a href="#org8f1ca12" class="link">Error handling</a>
-  - <a href="#org21a3108" class="link">Conditions</a>
-  - <a href="#orgecc7ced" class="link">unwind-protect</a>
-  - <a href="#org3abe3e7" class="link">Handle condition with stack unwind</a>
-  - <a href="#org50c740a" class="link">Restarts / Handle condition without stack unwind</a>
+    - <a href="#org21a3108" class="link">Conditions</a>
+    - <a href="#orgecc7ced" class="link">unwind-protect</a>
+    - <a href="#org3abe3e7" class="link">Handle condition with stack unwind</a>
+    - <a href="#org50c740a" class="link">Restarts / Handle condition without stack unwind</a>
 - <a href="#org0761f12" class="link">CLOS and object-oriented programming</a>
 - <a href="#orgab03075" class="link">Multi dispatch</a>
 - <a href="#orga5282f9" class="link">Debugging</a>
 - <a href="#orgb5c1978" class="link">Library management with Quicklisp</a>
 - <a href="#org36aa9a1" class="link">Runtimes/compilers (CCL, SBCL, ECL, Clasp, ABCL | LispWorks, Allegro)</a>
 - <a href="#org833736f" class="link">Image based</a>
-  - <a href="#org1b55d4e" class="link">image snapshot</a>
-  - <a href="#org6ad489a" class="link">load from image</a>
+    - <a href="#org1b55d4e" class="link">image snapshot</a>
+    - <a href="#org6ad489a" class="link">load from image</a>
 - <a href="#org5f6afae" class="link">Functional programming</a>
 - <a href="#org1ce34e8" class="link">Resources</a>
 
