@@ -1,4 +1,4 @@
-This article should be a brief introduction to Common Lisp. Brief, because Common Lisp is a rather large and complex system. It has many features. I will try to concentrate on the basics and some exceptional features that stand out for me. I started wriging it for myself in order to understand certain concept better, like symbols. But it might be useful for others as well.  
+This article should be a brief introduction to Common Lisp. Brief, because Common Lisp is a rather large and complex system. It has many features. I will try to concentrate on the basics and some exceptional features that stand out for me. I started writing it for myself in order to understand certain concept better, like symbols. But it might be useful for others as well.  
 
 
 <a id="orgbd1d8a8"></a>
@@ -6,14 +6,14 @@ This article should be a brief introduction to Common Lisp. Brief, because Commo
 #### How did I come to Common Lisp
 
 I have been working with various languages and runtimes since the start of my career 22 years ago. Beginning of 2019 I wanted to find something else to closely look into that is not JVM based (which I'm mostly been working with since close to 20 years starting with Java 1.1).  
-For some reason, which I can't recall, I haven't really beein introduced to Lisps, ever. I also can't recall why 2019 I thought that I should take a look at Lisps. So I took a look at Clojure first. Clojure is a great language but it was again on the JVM. I wanted something native, or at least some other runtime. After some excursions to Erlang, Elixir and LFE (Lisp Flavoured Erlang, which all three are extremely interesting as well) and Scheme I finally found Common Lisp and didn't regret it.  
+For some reason, which I can't recall, I haven't really been introduced to Lisps, ever. I also can't recall why 2019 I thought that I should take a look at Lisps. So I took a look at Clojure first. Clojure is a great language but it was again on the JVM. I wanted something native, or at least some other runtime. After some excursions to Erlang, Elixir and LFE (Lisp Flavoured Erlang, which all three are extremely interesting as well) and Scheme I finally found Common Lisp and didn't regret it.  
 
 
 <a id="org1626589"></a>
 
 #### Brief history
 
-First drafts of Common Lisp appeared 1984. While mostly a successor of Maclisp it tried to unify and standardize Maclisp and the various other successors of Maclisp. In 1994 Common Lisp was an ANSI standard.  
+First drafts of Common Lisp appeared 1981/82. While mostly a successor of Maclisp it tried to unify and standardize Maclisp and the various other successors of Maclisp. In 1994 Common Lisp was an ANSI standard.  
 
 
 <a id="org6d8e1e5"></a>
@@ -22,7 +22,7 @@ First drafts of Common Lisp appeared 1984. While mostly a successor of Maclisp i
 
 Since then the standard hasn't changed. That can of course be seen as a bad thing, when things don't change. But actually I believe it is a good thing. Common Lisp is even today surprisingly 'modern' and has many features of todays languages, partially even more features than 'modern' languages. And what it doesn't have can be added in form of libraries so that it feels as being part of the language.  
 Common Lisp is a quite large and complex package. After this long time there are of course some dusty corners. But all in all it is still very attractive and has an active community.  
-Because the standard didn't change since 1994 any code written since then should still be compile- and runable on newer compilers and runtime implementaions, where there are a few (see below).  
+Because the standard didn't change since 1994 any code written since then should still be compile and runable on newer compilers and runtime implementaions (where there are a few, see below) which were written in a portable way.  
 
 #### Content
 
@@ -75,7 +75,7 @@ Let me run through some of the basic features of Common Lisp. Those basic featur
 
 #### Lists
 
-Since the name 'Lisp' is an abbrevation for List Processing we should have a quick look at lists. Lists are the corner stone of the Lisp language because every Lisp construct/form is a list, also called s-expression. A list is bounded by parentheses `(` and `)`. So `'(1 2 3 4)` is a list of the numbers 1, 2, 3 and 4. This list represents data. Lists representing data are usually quoted. Quoted means that this list, or the list elements, are not evaluated. The `'` in front of the first parenthesis denotes a quoted list. But `(myfunction "abc")` is also a list representing code, which is evaluated. By convention the first list entry must either be a function name, or a special operator. `if` for example is a special operator. The other list elements are usually function, or operator arguments. Lists can be nested. In most cases Lisp programs are trees of lists.  
+Since the name 'Lisp' is an abbrevation for List Processing we should have a quick look at lists. Lists are the corner stone of the Lisp language because every Lisp construct/form is a list, also called s-expression. A list is bounded by parentheses `(` and `)`. So `'(1 2 3 4)` is a list of the numbers 1, 2, 3 and 4. This list represents data. Lists representing data are usually quoted. Quoted means that this list, or the list elements, are not evaluated. The `'` in front of the first parenthesis denotes a quoted list. But `(myfunction "abc")` is also a list representing code, which is evaluated. By convention the first list entry must either be a function name, a macro operator, a lambda expression or a special operator. `if` for example is a special operator. The other list elements are usually function, or operator arguments. Lists can be nested. In most cases Lisp programs are trees of lists.  
 
 
 <a id="orgfeceb96"></a>
@@ -103,7 +103,7 @@ Common Lisp provides a very sophisticated set of features to structure function 
 
 ##### Mantatory arguments
 
-Mandatory arguments are simply added to the list construct following the function name. This list construct that represents the arguments is commonly known as *lambda list*. In the folliwing example `arg1` and `arg2` are mandatory arguments.
+Mandatory arguments are simply added to the list construct following the function name. This list construct that represents the arguments is commonly known as *lambda list*. In the following example `arg1` and `arg2` are mandatory arguments.
 
 ```lisp
 (defun my-fun (arg1 arg2)
@@ -197,7 +197,7 @@ As you can see it is possible to mix `optional`, `key` and `rest` arguments. How
 
 #### Lambdas
 
-Lambdas are anonymus functions defined at runtime. Other than that they are similar to `defun`s, regular/named functions. They can be used in place of a function name like this:
+Lambdas are anonymus functions created at runtime. Other than that they are similar to `defun`s, regular/named functions. They can be used in place of a function name like this:
 
 ```lisp
 ((lambda (x) x) "foo")  ;; returns "foo"
@@ -248,7 +248,7 @@ This is of course not so practical and hard to read but this alone would be enou
 #### Macros
 
 Macros are an essential part in Common Lisp. One should not confuse Lisp macros with C macros which just do textual replacement. Common Lisp macros are extremely powerful.  
-In short, macros are constructs that generate and/or manipulate code. Lisp macros still stand out in contrast to other languages because Lisp macros just generate and manipulate ordinary Lisp code where as other languages use an AST (Abstract Syntax Tree) representation of the code and hence the macros must deal with the AST. In Lisp, Lisp is the AST. With this Lisp is homoiconic.  
+In short, macros are constructs that generate and/or manipulate code. Lisp macros still stand out in contrast to other languages because Lisp macros just generate and manipulate ordinary Lisp code whereas other languages use an AST (Abstract Syntax Tree) representation of the code and hence the macros must deal with the AST. In Lisp, Lisp is the AST. Lisp is homoiconic.  
 
 Macros are not easy to distinguish from functions. In programs one can not see the difference. Many functions could be replaced by macros. But functions can usually not replace macros. There is a fundamental difference between the two.  
 The arguments to macros are passed in a quoted form, meaning they are not evaluated (remember the lists as data above). Whereas parameters to functions are first evaluated and the result passed to the function. The output of macros is also quoted code. For example let's recreate the `when` macro:
@@ -274,8 +274,8 @@ CL-USER> (my-when (= 1 1)
 "Foo"
 ```
 
-The macro expands the `expr` and `body` arguments. Macros always generate quoted Lisp code, that's why the result of a macro must use a quoted expression. Quoted expressions are not evaluated, they are just plain data (a list), so the macro expression can be replaced with the macro body whereever the macro is used.  
-We can expand (using `MACROEXPAND`) the macro to see what it would be replaced with. Let's have a look at this:
+The macro expands the `expr` and `body` arguments. Macros always (should) generate quoted Lisp code, that's why the result of a macro should be a quoted expression. Quoted expressions are not evaluated, they are just plain data (a list), so the macro expression can be replaced with the macro body whereever the macro is used.  
+We can expand the macro (using `MACROEXPAND`) to see what it would be replaced with. Let's have a look at this:
 
 ```nohighlight
 CL-USER> (macroexpand-1 '(my-when (= 1 1)
@@ -309,7 +309,7 @@ Macros are expanded during the 'macro exansion' phase. This phase happens before
 
 #### Packages
 
-Packages are constructs to separate and structure data and code similar as in other languages. `DEFPACKAGE` declares a new package. `IN-PACKAGE` makes the named package the current package. Any function, macro or variable definitions are then first of all local to that package where they are defined in. Function, macro or variable definitions can be exported, which means that they are then visible for/from other packages. A typical example of a package with some definitions would be:
+Packages are constructs, or namespaces, to separate and structure data and code similar as in other languages. `DEFPACKAGE` declares a new package. `IN-PACKAGE` makes the named package the current package. Any function, macro or variable definitions are then first of all local to that package where they are defined in. Function, macro or variable definitions can be exported, which means that they are then visible for/from other packages. A typical example of a package with some definitions would be:
 
 ```lisp
 (defpackage :foo
@@ -423,7 +423,7 @@ We can get the name of the symbol by:
 
 ##### Bound symbols
 
-Whenever we define a variable, or function we bind a symbol to a variable or function. Let's do this:
+Whenever we define a variable (not lexical variables (`let`)), or function we bind a symbol to a variable or function. Let's do this:
 
 ```lisp
 ;; create a variable definition in the current package
@@ -487,7 +487,7 @@ Let's make an example with a function. Say, we are in a package `MY-P` and we de
 : MY-FUN
 ```
 
-The REPL responds with `MY-FUN`. This is the returned symbol from the function definition that was added to the package. When we now want to execute the function we write: `(my-fun)`. When the reader reads "my-fun", it uses `INTERN` to either create or retrieve the symbol (`INTERN` retrieves the symbol if it already exists). It is retrieved if previously the function was defined with `DEFUN` which also creates a symbol with an attached function object. The attached function object can then be executed.  
+The REPL responds with `MY-FUN`. This is the returned symbol from the function definition that was added to the package. When we now want to execute the function we write: `(my-fun)`. When the reader reads "my-fun", it uses `INTERN` to either create or retrieve the symbol (`INTERN` retrieves the symbol if it already exists). It is retrieved if previously the function was defined with `DEFUN` which implicitly, through the reader, creates the symbol and 'attaches' a function object to it. The attached function object can then be executed.  
 
 
 <a id="org0e6fc54"></a>
@@ -863,7 +863,7 @@ In Sly/Slime the Backtrace elements can be opened and further inspected. This is
 
 ### Library management with Quicklisp
 
-Library (dependency) management was quite late in Common Lisp. Apache Maven in the Java world existed since 2004 and was probably one of the first of its kind. <a href="https://www.quicklisp.org/beta/" class="link">Quicklisp</a> exists since 2010 (as far as I could research). Nowadays remote and local library version management is common and supports even GitHub (or Git) repositories directly as resource URLs. However Quicklisp is still different. While others let you choose arbitrary versions Quicklisp is distribution based. This can be remotely compared with the package management of Linux distributions. It has pros and cons. The pro side is that it's consistent. A library that has other dependencies are all resolved from the distribution. While in Java many speak of the jar-hell. This comes from the fact that you may end up with different dependent versions in your classpath (the first one found by the class-loader wins) when you specify a direct dependency of a library in your project, but some other direct dependency has one of your direct dependecies also as direct dependencies but a different version of it. This cannot happen in Quicklisp. But the downside is that it's not easily possible to use higher (or lower) versions of individual libraries. But there is a solution for this as well called <a href="https://github.com/fukamachi/qlot" class="link">Qlot</a>.  
+Library (dependency) management was quite late in Common Lisp. Apache Maven in the Java world existed since 2004 and was probably one of the first of its kind. <a href="https://www.quicklisp.org/beta/" class="link">Quicklisp</a> exists since 2010 (as far as I could research). Nowadays remote and local library version management is common and supports even GitHub (or Git) repositories directly as resource URLs. However Quicklisp is still different. While others let you choose arbitrary versions Quicklisp is distribution based. This can be remotely compared with the package management of Linux distributions. It has pros and cons. The pro side is that it's consistent. A library that has other dependencies are all resolved from the distribution. While in Java many speak of the jar-hell. This comes from the fact that you may end up with different dependent versions in your classpath (the first one found by the class-loader wins) when you specify a direct dependency of a library in your project, but some other direct dependency has one of your direct dependecies also as direct dependencies but a different version of it. This cannot happen in Quicklisp. Well, actually it can. There are two ways: a) <a href="https://github.com/fukamachi/qlot" class="link">Qlot</a>, which allows to lock certain versions for a project, or b) it's possible within Quicklisp to clone single projects into Quicklisps 'local-projects' folder. Projects cloned in there take precedence over what the distributions offers. So this allows to use updated (or downgraded) versions still without getting into the jar-hell.
 
 One other nice thing about Quicklisp is that you can load libraries directly in the REPL and just use them. So once Quicklisp is installed and made available when the REPL starts you can say: `(ql:quickload :cl-gserver)` and it will load the library into the image and it's ready to use. This is a big plus. It makes things extremely simple to just try out some code in the REPL.  
 
@@ -873,7 +873,7 @@ One other nice thing about Quicklisp is that you can load libraries directly in 
 ### Runtimes/compilers (CCL, SBCL, ECL, Clasp, ABCL | LispWorks, Allegro)
 
 Common Lisp is available in quite a few different implementations which all have different features. Historically there were many implementations. Many of them started at universities. Some were and are are open-source implementations, some were commercial implementation but have been open-sourced and some remain commercial. Some are still being maintained, some are not and will only work on older systems.  
-The current most popular one I would say is <a href="http://www.sbcl.org/" class="link">SBCL</a>. SBCL is a fork of <a href="https://cmucl.org/" class="link">CMUCL</a>. SBCL is fast and can do statical type checks (see above). I use SBCL myself for production. For development I use <a href="https://ccl.clozure.com/" class="link">CCL</a>. CCL is not as strict as SBCL, developing with is a bit smoother IMO but can also lead to weird effects sometimes. The compiler is said to be faster than SBCL, whcih I think it true. But the produced code is by far not as fast as SBCLs. CCL comes from a commercial product MCL (Macintosh Common Lisp). In fact I still have a version of MCL on my old PowerMac with MacOS 9 which still runs fine. But MCL is not limited to Apple. It works on Windows and Linux, too.  
+The current most popular one I would say is <a href="http://www.sbcl.org/" class="link">SBCL</a>. SBCL is a fork of <a href="https://cmucl.org/" class="link">CMUCL</a>. SBCL is fast and can do statical type checks (see above). I use SBCL myself for production. For development I use <a href="https://ccl.clozure.com/" class="link">CCL</a>. CCL is not as strict as SBCL, developing with is a bit smoother IMO but can also lead to weird effects sometimes. The compiler is said to be faster than SBCL, which I think it true. But the produced code is by far not as fast as SBCLs. CCL comes from a commercial product MCL (Macintosh Common Lisp). In fact I still have a version of MCL on my old PowerMac with MacOS 9 which still runs fine. But CCL is not limited to Apple. It works on Windows and Linux, too.  
 <a href="https://common-lisp.net/project/ecl/main.htm" class="link">ECL</a> for Embeddable Common Lisp probably has the largest supported hardware and OS base. There aren't many systems where ECL is not available. Due to the nature of ECL and what it is geared for, namely to be easily embedded in applications, it doesn't work with images (see 'Image based'). It is also quite slow. But it is actively maintained and certainly has it's use-cases.  
 <a href="https://github.com/clasp-developers/clasp" class="link">Clasp</a> is relatively new. I believe it uses some of ECL but is otherwise different and uses the LLVM backend with the goal to use any LLVM available libraries easily (like C++ libraries). Clasp, as I followed the project, is useable since a good while. But you have to compile it yourself (which isn't difficult). More work is being done on performance optimizations.  
 <a href="https://abcl.org/" class="link">ABCL</a> started out as scripting engine for a Java editor application. Today it has come a long way and is a full featured Common Lisp that runs on the JVM. It even implements JSR-223 (the Java scripting API) and has nice but not as good Java interop as Clojure. It is not super fast, but is very robust due to the battle-proven Java runtime system.  
