@@ -21,6 +21,8 @@ I did a <a href="/blog/Test-driven+Web+application+development+with+Common+Lisp"
 <a href="https://github.com/mdbergmann/cl-swbymabeweb" target="_blank" class="link">GitHub project</a>  
 <a href="http://retro-style.software-by-mabe.com/blog" target="_blank" class="link">Blog page</a>
 
+The previous version developed with <a href="https://wicket.apache.org" target="_blank" class="link">Apache Wicket</a> was using a database and had an administration area. The new 'retro' version is more simple and based on conventions.
+
 #### House automation data capture (Elixir)
 
 Custom web application done in Elixir that can capture my house reader states and post them to <a href="https://www.openhab.org/" target="_blank" class="link">openHAB</a>:
