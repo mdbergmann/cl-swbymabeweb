@@ -1,6 +1,6 @@
-My open-source and freeware software projects
+My private open-source and freeware software projects.
 
-During the last 20 years I've developed a range of larger and smaller tools and applications and libraries as freeware or open-source which I'd like to list here. Some of the things are still being developed or maintained, some not:
+During the last 20 years I've developed a range of larger and smaller tools and applications and libraries as freeware or open-source in my spare time which I'd like to list here. Some of the things are still being developed or maintained, some not:
 
 ### Applications
 
