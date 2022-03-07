@@ -28,7 +28,7 @@ Now, in order to have some convenience I'd want to have quicklisp work on this v
 
 When we go through the standard quicklisp installation procedure `(quicklisp-quickstart:install)` the installation attempt bails out at this error:
 
-```plain
+```nohighlight
 Read error between positions 173577 and 179054 in 
 /Users/manfred/quicklisp/asdf.lisp.
 > Error: Could not load ASDF "3.0" or newer
@@ -51,7 +51,7 @@ Then, while being at the REPL we compile the new ASDF version:
 
 We are thrown into the debugger because it seems that this version of CCL does not have an exported function `delete-directory`. But we have a restart available (2) that allows us to 'Create and use the internal symbol CCL::DELETE-DIRECTORY'. Choosing this restart we can overcome the missing function error. It is possible though that this will limit the functionality of quicklisp, or ASDF.
 
-```plain
+```nohighlight
 > Error: Reader error: No external symbol named "DELETE-DIRECTORY" 
 > in package #<Package "CCL"> .
 > While executing: CCL::%PARSE-TOKEN, in process listener(1).
@@ -109,7 +109,7 @@ Let's check the installation by loading a library:
 
 - load cl-gserver: `(ql:quickload :cl-gserver)`
 
-```plain
+```nohighlight
 To load "cl-gserver":
   Load 1 ASDF system:
     cl-gserver
