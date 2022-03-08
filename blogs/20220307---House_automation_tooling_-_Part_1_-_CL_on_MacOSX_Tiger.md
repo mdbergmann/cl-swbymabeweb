@@ -18,7 +18,7 @@ In this first part of the project I'd want to choose the Common Lisp implementat
 
 #### TDD and the 'double loop'
 
-Once this initial research and prove of concept (with CL on this hardware and the serial port) is done we'll continue with developing this tool *guided by tests* (TDD). Similarly as in this <a href="blog/Test-driven+Web+application+development+with+Common+Lisp" class="link" target="_blank">blog article</a> we'll also try to do an outer acceptance test loop.
+Once this initial research and prove of concept (with CL on this hardware and the serial port) is done we'll continue with developing this tool *guided by tests* (TDD). Similarly as in this <a href="/blog/Test-driven+Web+application+development+with+Common+Lisp" class="link" target="_blank">blog article</a> we'll also try to do an outer acceptance test loop.
 
 #### Finding the Common Lisp implementation
 
