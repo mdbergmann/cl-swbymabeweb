@@ -12,6 +12,8 @@ The tooling will be done in <a href="https://common-lisp.net" class="link" targe
 
 For the hardware I'd want to utilize an old PowerPC iBook I still have lying here. So, Common Lisp should run on this old version of Mac OSX 10.4 (Tiger), including a library that can use the serial port. The data will eventually be sent via HTTP to a REST interface of openHAB. For that we probably use <a href="https://edicl.github.io/drakma/" class="link" target="_blank">drakma</a>.
 
+Does the tool need a GUI? I thought so, maybe to show the current sensor data, and to have buttons for sending commmands. However, it turned out that a GUI is not that easy. I did look into TK (via LTK Common Lisp bindings), but that didn't work out-of-the-box on the pre-installed TCL/TK 8.4 version. Since we use CCL we probably could use the Cocoa bindings it provides. So maybe I'll do that as a last step. For now we just use the REPL. That should be fully sufficient as a UI.
+
 In this first part of the project I'd want to choose the Common Lisp implementation and spend some time to get <a href="https://www.quicklisp.org/beta/" class="link" target="_blank">quicklisp</a> and <a href="https://gitlab.common-lisp.net/asdf/asdf" class="link" target="_blank">ASDF</a> working in order to download and work with additional libraries that we may need in a convenient way.
 
 #### TDD and the 'double loop'
