@@ -1,5 +1,5 @@
-In light of the current events in the world - I mean the war in Ukraine, this article in completely unimportant.  
-Please stop this and all wars in this world. Let's live together in peace. Let's be kind to one another.
+In light of the current events in the world - I mean the war in Ukraine, this article is totally not important.  
+Please stop this war and all wars in this world. Let's live together in peace. Let's be kind to one another.
 
 
 #### The project
