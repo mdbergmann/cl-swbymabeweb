@@ -13,7 +13,8 @@ In this post I'd want to check feasability and prepare the serial communication.
 
 ##### Development peer
 
-OK, in order to 'simulate' the production device we use an Amiga 1200, which still has a serial port and a nice software (Term) which allows to act as a serial peer for development. However, we only do feasability work to figure out if and how the serial library works to plan a bit ahead what has to be done in the serial interface module of the automation tool. This should be the only sort of manual testing. From there we structure the code in a way to abstract the serial interface in order to fake or mock the serial communication which allows an easier and faster feedback development.
+OK, in order to 'simulate' the production device we use an Amiga 1200, which still has a serial port and a nice software (Term) which allows to act as a serial peer for development. The application 'Term' has an Amiga Rexx (ARexx) interface which allows to script behavior in Term. In the end this could be handy to create a half-automated test environment for system tests.  
+However, for now we only do feasability work to figure out if and how the serial library works to plan a bit ahead what has to be done in the serial interface module of the automation tool. This should be the only sort of manual testing. From there we structure the code in a way to abstract the serial interface in order to fake or mock the serial communication which allows an easier and faster feedback development.
 
 => picture of the adapter cable 9-pin to 24pin.
 
@@ -22,7 +23,7 @@ OK, in order to 'simulate' the production device we use an Amiga 1200, which sti
 
 ##### The Common Lisp serial interface library
 
-There are two CL libraries based on ffi that would work. I've experimented with both.
+There are two CL libraries based on FFI (Foreign Function Interface) that would work. I've experimented with both.
 
 1. <a href="https://github.com/snmsts/cserial-port" class="link" target="_blank">cserial-port</a>
 2. <a href="https://github.com/jetmonk/cl-libserialport" class="link" target="_blank">cl-libserialport</a>
