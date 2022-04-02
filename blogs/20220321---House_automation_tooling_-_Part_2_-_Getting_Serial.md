@@ -13,8 +13,8 @@ In this post I'd want to check feasability and prepare the serial communication.
 
 ##### Development peer
 
-OK, in order to 'simulate' the production device we use an Amiga 1200, which still has a serial port and a nice software (Term) which allows to act as a serial peer for development. The application 'Term' has an Amiga Rexx (ARexx) interface which allows to script behavior in Term. In the end this could be handy to create a half-automated test environment for system tests.  
-However, for now we only do feasability work to figure out if and how the serial library works to plan a bit ahead what has to be done in the serial interface module of the automation tool. This should be the only sort of manual testing. From there we structure the code in a way to abstract the serial interface in order to fake or mock the serial communication which allows an easier and faster feedback development.
+OK, in order to 'simulate' the boiler we use an Amiga 1200, which still has a serial port and a nice software called 'Term' which allows to act as a serial peer for development. The application 'Term' has an Amiga Rexx (ARexx) scripting interface which allows to script behavior in Term. In the end this could be handy to create a half-automated test environment for system tests.  
+However, for now we only do feasability work to figure out if and how the serial library works to plan a bit ahead what has to be done in the serial interface module of the automation tool. This should be the only (sort of) manual testing. From there we structure the code in a way to abstract the serial interface in order to fake or mock the serial communication which allows an easier and faster feedback development.
 
 => picture of the adapter cable 9-pin to 24pin.
 
@@ -28,11 +28,11 @@ There are two CL libraries based on FFI (Foreign Function Interface) that would 
 1. <a href="https://github.com/snmsts/cserial-port" class="link" target="_blank">cserial-port</a>
 2. <a href="https://github.com/jetmonk/cl-libserialport" class="link" target="_blank">cl-libserialport</a>
 
-In my opinion cl-libserialport offers a few more features (and we'll settle on it). I.e. it allows to specify an 'end' character for the read operation where the read will automatically return.  
-The disadvantage, cl-libserialport requires an additional C shared library (<a href="https://github.com/sigrokproject/libserialport" class="link" target="_blank">libserialport</a>) to exist in the system which has to be installed first. cserial-port works with existing POSIX/Windows library calls. cl-libserialport is actually a CL layer on top of libserialport.  
-On my development machine I can just install this library via <a href="https://brew.sh" class="link" target="_blank">Homebrew</a>. On the target machine (the iBook) I had to download and compile the library. But it is straight forward (`autogen.sh && make && make install`).
+In my opinion cl-libserialport offers a few more features and I'd settle on it. I.e. it allows to specify a termination character for the read operation where when received the read will automatically return.  
+The disadvantage, cl-libserialport requires an additional C shared library (<a href="https://github.com/sigrokproject/libserialport" class="link" target="_blank">libserialport</a>) to exist in the system which has to be installed first. cserial-port also uses FFI but works with existing POSIX/Windows library calls. cl-libserialport is actually a CL layer on top of libserialport.  
+On my development machine I can just install this library via <a href="https://brew.sh" class="link" target="_blank">Homebrew</a>. On the target machine (the iBook) I had to download and compile the library. But it is straight forward and not more than: `autogen.sh && make && make install`.
 
-cl-libserialport is not on quicklisp, so in order to still load it in the REPL via quicklisp we have to clone it to `~/quicklisp/local-projects`, then quicklisp will find it and load it from there.
+cl-libserialport is not on quicklisp, so in order to still load it in the REPL via quicklisp we have to clone it to `~/quicklisp/local-projects`, then quicklisp will find it and load it from there. Btw: this is a nice way to override versions from the quicklisp distribution.
 
 With all the additional work for cl-libserialport (which is actually not that much and a one-time effort) I hope it pays off by being easier to work with.
 
