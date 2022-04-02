@@ -14,17 +14,13 @@ In this post I'd want to check feasability and prepare the serial communication.
 ##### Development peer
 
 OK, in order to 'simulate' the boiler we use an Amiga 1200, which still has a serial port and a nice software called 'Term' which allows to act as a serial peer for development. The application 'Term' has an Amiga Rexx (ARexx) scripting interface which allows to script behavior in Term. In the end this could be handy to create a half-automated test environment for system tests.  
-However, for now we only do feasability work to figure out if and how the serial library works in order to plan a bit ahead what has to be done in the serial interface module of the automation tool. This should be the only (sort of) manual testing. From there we structure the code in a way to abstract the serial interface in order to fake or mock the serial communication which allows an easier and faster feedback development.
+However, for now we only do feasability work to figure out if and how the serial library works in order to plan a bit ahead what has to be done in the serial interface module of the automation tool. This should be the only (sort of) manual testing. From there we structure the code in a way to abstract the serial interface in order to fake or mock the serial communication which allows an easier and faster feedback loop for development.
 
-<figure>
-<img src="/static/gfx/blogs/a1200_cropped.jpg" alt="A1200" />
-</figure>
+<img src="/static/gfx/blogs/a1200_cropped.jpg" alt="A1200" width="720" />
 
-(Since the Amiga has a 25 pin Sub-D interface I had to build a 25<->9 pin converter. Of course I could have bought it but I like doing some soldering work from time to time.)
+(Since the Amiga has a 25 pin Sub-D interface but the Keyspan adapter has a 9 pin interface I had to build a 25<->9 pin converter. Of course I could have bought it but I like doing some soldering work from time to time.)
 
-<figure>
-<img src="/static/gfx/blogs/serial-adapter.jpg" alt="serial-adapter" />
-</figure>
+<img src="/static/gfx/blogs/serial-adapter.jpg" alt="serial-adapter" width="300" />
 
 
 ##### The Common Lisp serial interface library
@@ -45,7 +41,7 @@ With all the additional work for cl-libserialport (which is actually not that mu
 
 ##### Prototyping some code
 
-The boiler serial protocol will require to send commands to the boiler, and receive sensor data. One of the commands is a 'start-record' command which instructs the boiler to start sending data every x seconds. Since it is not possible to send and receive at the same time we have to somehow serialize the send and receival of data. One way to do this is to use a queue. We enqueue send and read commands and when dequeued the command is executed. Now, this cries for an actor. Fortunately there is a good actor library for Common Lisp called <a href="https://github.com/mdbergmann/cl-gserver" class="link" target="_blank">cl-gserver</a> which we can utilize for this and hack together some prove of concept.
+The boiler serial protocol will require to send commands to the boiler, and receive sensor data. One of the commands is a 'start-record' command which instructs the boiler to start sending data repeatedly every x seconds until it received a 'stop-record' command. Since it is not possible to send and receive on the serial device at the same time we have to somehow serialize the send and receival of data. One way to do this is to use a queue. We enqueue send and read commands and when dequeued the command is executed. Now, this cries for an actor. Fortunately there is a good actor library for Common Lisp called <a href="https://github.com/mdbergmann/cl-gserver" class="link" target="_blank">cl-gserver</a> which we can utilize for this and hack together some prove of concept.
 
 For this we have to implement to initialize the serial interface, set the right baud value and such. Then we want to write/send and read/receive data.
 
@@ -64,7 +60,7 @@ The initialization, opening the serial device can look like this:
          :flowcontrol :sp-flowcontrol-none)))
 ```
 
-The opened serial device will be stored in `serport`. The baud rate we need is 19200 and there should be no flow control and such. Just plain serial communication.
+The opened serial device will be stored in `*serport*`. The baud rate we need is 19200 and there should be no flow control and such. Just plain serial communication.
 
 Now write and read will look like this:
 
@@ -94,7 +90,7 @@ Now let's see how the actor can look like in a simple way that can work for this
          (when (> (length read-bytes) 0)
            (format t "read: ~a~%" read-bytes)
            (format t "read string: ~a~%" (babel:octets-to-string read-bytes))))
-       (act:tell actor msg)))
+       (tell actor msg)))
     (:write
      (write-serial (cdr msg))))
   (cons nil state))
@@ -105,7 +101,7 @@ Now let's see how the actor can look like in a simple way that can work for this
                             :receive (lambda (a b c) (receive a b c))))
 ```
 
-The last two lines create the actor system and a `*serial-act*` actor. Messages sent to the actor should be pairs of a key: `:init`, `:read` and `:write`, and something else. This something else is only used for `:write` to transport the string to be written.
+The last part creates the actor-system and a `*serial-act*` actor. Messages sent to the actor should be pairs of a key: `:init`, `:read` and `:write`, and something else. This something else is only used for `:write` to transport the string to be written and can be `nil` otherwise.
 
 To initialize the serial device we do: 
 
@@ -121,9 +117,7 @@ To write to the serial device we do:
 
 Having done that we see in the 'Term' application the string "Hello World". So this works.
 
-<figure>
-<img src="/static/gfx/blogs/term-hello.jpg" alt="term-hello" />
-</figure>
+<img src="/static/gfx/blogs/term-hello.jpg" alt="term-hello" width="720" />
 
 The read has a speciality: sending `'(:read . nil)` will not only read from the device but also enqueue again the same command, because we want to test receiving data continuously but mixing in write, or other commands in between. This should reflect the reality pretty well.
 
@@ -155,3 +149,5 @@ read: #(111 111 125)
 read string: oo}
 ; No values
 ```
+
+So this seems to work. I need to think about the next step now. Since I'd like to develop outside-in with a double test loop the next thing to do is figure out a use-case and create a test for it that basically sets the bounds of what should be developed in smaller increments.
