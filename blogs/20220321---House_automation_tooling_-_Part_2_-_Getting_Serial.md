@@ -16,9 +16,15 @@ In this post I'd want to check feasability and prepare the serial communication.
 OK, in order to 'simulate' the boiler we use an Amiga 1200, which still has a serial port and a nice software called 'Term' which allows to act as a serial peer for development. The application 'Term' has an Amiga Rexx (ARexx) scripting interface which allows to script behavior in Term. In the end this could be handy to create a half-automated test environment for system tests.  
 However, for now we only do feasability work to figure out if and how the serial library works in order to plan a bit ahead what has to be done in the serial interface module of the automation tool. This should be the only (sort of) manual testing. From there we structure the code in a way to abstract the serial interface in order to fake or mock the serial communication which allows an easier and faster feedback development.
 
-=> picture of the adapter cable 9-pin to 24pin.
+<figure>
+<img src="/static/gfx/blogs/a1200_cropped.jpg" alt="A1200" />
+</figure>
 
-=> picture of the Amiga
+(Since the Amiga has a 25 pin Sub-D interface I had to build a 25<->9 pin converter. Of course I could have bought it but I like doing some soldering work from time to time.)
+
+<figure>
+<img src="/static/gfx/blogs/serial-adapter.jpg" alt="serial-adapter" />
+</figure>
 
 
 ##### The Common Lisp serial interface library
@@ -39,20 +45,113 @@ With all the additional work for cl-libserialport (which is actually not that mu
 
 ##### Prototyping some code
 
+The boiler serial protocol will require to send commands to the boiler, and receive sensor data. One of the commands is a 'start-record' command which instructs the boiler to start sending data every x seconds. Since it is not possible to send and receive at the same time we have to somehow serialize the send and receival of data. One way to do this is to use a queue. We enqueue send and read commands and when dequeued the command is executed. Now, this cries for an actor. Fortunately there is a good actor library for Common Lisp called <a href="https://github.com/mdbergmann/cl-gserver" class="link" target="_blank">cl-gserver</a> which we can utilize for this and hack together some prove of concept.
 
+For this we have to implement to initialize the serial interface, set the right baud value and such. Then we want to write/send and read/receive data.
 
+The initialization, opening the serial device can look like this:
 
+```lisp
+(defparameter *serial* "/dev/cu.usbserial-143340")
+(defparameter *serport* nil)
 
-
-
-```nohighlight
-Read error between positions 173577 and 179054 in 
-/Users/manfred/quicklisp/asdf.lisp.
-> Error: Could not load ASDF "3.0" or newer
-> While executing: ENSURE-ASDF-LOADED, in process listener(1).
-> Type :POP to abort, :R for a list of available restarts.
-> Type :? for other options.
-
+(defun open-serial (&optional (speed 19200))
+  (setf *serport*
+        (libserialport:open-serial-port
+         *serial*
+         :baud speed :bits 8 :stopbits 1 :parity :sp-parity-none
+         :rts :sp-rts-off
+         :flowcontrol :sp-flowcontrol-none)))
 ```
 
-<a href="https://common-lisp.net" class="link" target="_blank">Common Lisp</a>
+The opened serial device will be stored in `serport`. The baud rate we need is 19200 and there should be no flow control and such. Just plain serial communication.
+
+Now write and read will look like this:
+
+```lisp
+(defun read-serial ()
+  (libserialport:serial-read-octets-until
+   *serport*
+   #\}
+   :timeout 2000))
+
+(defun write-serial (data)
+  (libserialport:serial-write-data *serport* data))
+```
+
+The read function utilizes the termination character because I know already that the boiler data uses start and end characters `{` and `}`. The timeout is used to terminate the read command in case there is no data available to read. When we queue the commands and there is a write after a read we have a delay for the write not longer than 2 seconds. This might be acceptable in production because sending new commands doesn't need to be immediate.
+
+Now let's see how the actor can look like in a simple way that can work for this example:
+
+```lisp
+(defun receive (actor msg state)
+  (case (car msg)
+    (:init
+     (open-serial))
+    (:read
+     (progn
+       (let ((read-bytes (read-serial)))
+         (when (> (length read-bytes) 0)
+           (format t "read: ~a~%" read-bytes)
+           (format t "read string: ~a~%" (babel:octets-to-string read-bytes))))
+       (act:tell actor msg)))
+    (:write
+     (write-serial (cdr msg))))
+  (cons nil state))
+
+(defvar *asys* (asys:make-actor-system))
+(defparameter *serial-act* (ac:actor-of
+                            *asys*
+                            :receive (lambda (a b c) (receive a b c))))
+```
+
+The last two lines create the actor system and a `*serial-act*` actor. Messages sent to the actor should be pairs of a key: `:init`, `:read` and `:write`, and something else. This something else is only used for `:write` to transport the string to be written.
+
+To initialize the serial device we do: 
+
+```lisp
+(tell *serial-act* '(:init . nil))
+```
+
+To write to the serial device we do:
+
+```lisp
+(tell *serial-act* '(:write . "Hello World"))
+```
+
+Having done that we see in the 'Term' application the string "Hello World". So this works.
+
+<figure>
+<img src="/static/gfx/blogs/term-hello.jpg" alt="term-hello" />
+</figure>
+
+The read has a speciality: sending `'(:read . nil)` will not only read from the device but also enqueue again the same command, because we want to test receiving data continuously but mixing in write, or other commands in between. This should reflect the reality pretty well.
+
+When I type something in the 'Term' program the REPL will print the read data:
+
+```nohighlight
+SERIAL> (tell *serial-act* '(:write . "Hello World"))
+T
+SERIAL> (tell *serial-act* '(:read . nil))
+T
+SERIAL> 
+read: #(13)
+read string: 
+read: #(104 101 108)
+read string: hel
+read: #(108 111 32 102 114 111 109 32 116 101 114 109)
+read string: lo from term
+read: #(105 110 97 108)
+read string: inal
+read: #(125)
+read string: }
+; No values
+SERIAL> (tell *serial-act* '(:write . "Hello World2"))
+T
+SERIAL> 
+read: #(102)
+read string: f
+read: #(111 111 125)
+read string: oo}
+; No values
+```
