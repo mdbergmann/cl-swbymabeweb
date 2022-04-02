@@ -7,14 +7,14 @@ Last post I prepared <a href="https://ccl.clozure.com" class="link" target="_bla
 
 ##### The adapter
 
-In this post I'd want to check feasability and prepare the serial communication. Now, this iBook as well as more modern computers don't have a Sub-D serial port adapter anymore. However, the device (the boiler) this software should communicate with has a 9 pin Sub-D connector. So we need a USB to serial adapter. There are a number of them available. But we also need drivers for this version of MacOS. This one, a Keyspan (<a href="https://www.tripplite.com/keyspan-high-speed-usb-to-serial-adapter~USA19HS" class="link" target="_blank">USA19HS</a>) works with  this version of MacOSX and drivers are available.
+In this post I'd want to check feasability and prepare the serial communication. Now, this iBook as well as more modern computers don't have a Sub-D serial port adapter anymore. However, the device (the boiler) this software should communicate with has a 9 pin Sub-D connector. So we need a USB to serial adapter. There are a number of them available. But we also need drivers for this version of Mac OS. This one, a Keyspan (<a href="https://www.tripplite.com/keyspan-high-speed-usb-to-serial-adapter~USA19HS" class="link" target="_blank">USA19HS</a>) works with this version of Mac OSX and drivers are available.
 
 => picture of the adapter
 
 ##### Development peer
 
 OK, in order to 'simulate' the boiler we use an Amiga 1200, which still has a serial port and a nice software called 'Term' which allows to act as a serial peer for development. The application 'Term' has an Amiga Rexx (ARexx) scripting interface which allows to script behavior in Term. In the end this could be handy to create a half-automated test environment for system tests.  
-However, for now we only do feasability work to figure out if and how the serial library works to plan a bit ahead what has to be done in the serial interface module of the automation tool. This should be the only (sort of) manual testing. From there we structure the code in a way to abstract the serial interface in order to fake or mock the serial communication which allows an easier and faster feedback development.
+However, for now we only do feasability work to figure out if and how the serial library works in order to plan a bit ahead what has to be done in the serial interface module of the automation tool. This should be the only (sort of) manual testing. From there we structure the code in a way to abstract the serial interface in order to fake or mock the serial communication which allows an easier and faster feedback development.
 
 => picture of the adapter cable 9-pin to 24pin.
 
