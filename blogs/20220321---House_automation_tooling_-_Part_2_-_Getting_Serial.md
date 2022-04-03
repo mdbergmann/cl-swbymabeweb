@@ -12,8 +12,6 @@ We'll do some CL coding and use the actor pattern for this prove of concept.
 
 This iBook as well as more modern computers don't have a Sub-D serial port adapter anymore. However, the device (the boiler) this software should communicate with has a 9 pin Sub-D connector. So we need a USB to serial adapter. There are a number of them available. But we also need drivers for this version of Mac OS. This one, a Keyspan (<a href="https://www.tripplite.com/keyspan-high-speed-usb-to-serial-adapter~USA19HS" class="link" target="_blank">USA19HS</a>) works with this version of Mac OSX and drivers are available.
 
-=> picture of the adapter
-
 ##### Development peer
 
 OK, in order to 'simulate' the boiler we use an Amiga 1200, which still has a serial port and a nice software called 'Term' which allows to act as a serial peer for development. The application 'Term' has an Amiga Rexx (ARexx) scripting interface which allows to script behavior in Term. In the end this could be handy to create a half-automated test environment for system tests.  
