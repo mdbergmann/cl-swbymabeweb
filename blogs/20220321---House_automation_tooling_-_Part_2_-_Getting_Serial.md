@@ -5,9 +5,11 @@ Stop the war and any violence against humans and animals and Gods creation.
 
 Last post I prepared <a href="https://ccl.clozure.com" class="link" target="_blank">Clozure CL</a> on an iBook with MacOS X 10.4 (Tiger) including getting <a href="https://www.quicklisp.org" class="link" target="_blank">quicklisp</a> ready. quicklisp is not absolutely necessary, but it helps. Otherwise all libraries that you want to use you have to download and load manually in the REPL.
 
+In this post I'd want to check feasability and prepare the serial communication. We'll use the actor pattern for this prove of concept.
+
 ##### The adapter
 
-In this post I'd want to check feasability and prepare the serial communication. Now, this iBook as well as more modern computers don't have a Sub-D serial port adapter anymore. However, the device (the boiler) this software should communicate with has a 9 pin Sub-D connector. So we need a USB to serial adapter. There are a number of them available. But we also need drivers for this version of Mac OS. This one, a Keyspan (<a href="https://www.tripplite.com/keyspan-high-speed-usb-to-serial-adapter~USA19HS" class="link" target="_blank">USA19HS</a>) works with this version of Mac OSX and drivers are available.
+This iBook as well as more modern computers don't have a Sub-D serial port adapter anymore. However, the device (the boiler) this software should communicate with has a 9 pin Sub-D connector. So we need a USB to serial adapter. There are a number of them available. But we also need drivers for this version of Mac OS. This one, a Keyspan (<a href="https://www.tripplite.com/keyspan-high-speed-usb-to-serial-adapter~USA19HS" class="link" target="_blank">USA19HS</a>) works with this version of Mac OSX and drivers are available.
 
 => picture of the adapter
 
@@ -41,7 +43,7 @@ With all the additional work for cl-libserialport (which is actually not that mu
 
 ##### Prototyping some code
 
-The boiler serial protocol will require to send commands to the boiler, and receive sensor data. One of the commands is a 'start-record' command which instructs the boiler to start sending data repeatedly every x seconds until it received a 'stop-record' command. Since it is not possible to send and receive on the serial device at the same time we have to somehow serialize the send and receival of data. One way to do this is to use a queue. We enqueue send and read commands and when dequeued the command is executed. Now, this cries for an actor. Fortunately there is a good actor library for Common Lisp called <a href="https://github.com/mdbergmann/cl-gserver" class="link" target="_blank">cl-gserver</a> which we can utilize for this and hack together some prove of concept.
+The boiler serial protocol will require to send commands to the boiler, and receive sensor data. One of the commands is a 'start-record' command which instructs the boiler to start sending data repeatedly every x seconds until it received a 'stop-record' command. Since it is not possible to send and receive on the serial device at the same time we have to somehow serialize the send and receive of data. One way to do this is to use a queue. We enqueue send and read commands and when dequeued the command is executed. Now, this cries for an actor. Fortunately there is a good actor library for Common Lisp called <a href="https://github.com/mdbergmann/cl-gserver" class="link" target="_blank">cl-gserver</a> which we can utilize for this and hack together some prove of concept. (Though if I read correctly then libserialport internally uses semaphores to manage concurrent access to the device resource. Nontheless I'd like to use an actor.)
 
 For this we have to implement to initialize the serial interface, set the right baud value and such. Then we want to write/send and read/receive data.
 
