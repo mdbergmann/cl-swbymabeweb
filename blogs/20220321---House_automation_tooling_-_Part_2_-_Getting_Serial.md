@@ -5,7 +5,8 @@ Stop the war and any violence against humans and animals and Gods creation.
 
 Last post I prepared <a href="https://ccl.clozure.com" class="link" target="_blank">Clozure CL</a> on an iBook with MacOS X 10.4 (Tiger) including getting <a href="https://www.quicklisp.org" class="link" target="_blank">quicklisp</a> ready. quicklisp is not absolutely necessary, but it helps. Otherwise all libraries that you want to use you have to download and load manually in the REPL.
 
-In this post I'd want to check feasability and prepare the serial communication. We'll use the actor pattern for this prove of concept.
+In this post I'd want to check feasability and prepare the serial communication.  
+We'll use the actor pattern for this prove of concept.
 
 ##### The adapter
 
