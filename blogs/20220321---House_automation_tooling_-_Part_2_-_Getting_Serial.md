@@ -1,5 +1,5 @@
 The war in Ukraine is ongoing.  
-Stop the war and any violence against humans and animals and Gods creation.
+Stop the war and generally any violence against humans and animals and Gods creation.
 
 #### Getting Serial
 
