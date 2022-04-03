@@ -106,6 +106,8 @@ Now let's see how the actor can look like in a simple way that can work for this
 
 The last part creates the actor-system and a `*serial-act*` actor. Messages sent to the actor should be pairs of a key: `:init`, `:read` and `:write`, and something else. This something else is only used for `:write` to transport the string to be written and can be `nil` otherwise.
 
+For the `:receive` key argument to the `actor-of` function we could just use `#'receive`, but then we couldn't make adjustments to the `receive` function and have it applied immediately when evaluated. The `#'receive`, which is actually `(function receive)`, seems to pass a function symbol that is static.
+
 To initialize the serial device we do: 
 
 ```lisp
