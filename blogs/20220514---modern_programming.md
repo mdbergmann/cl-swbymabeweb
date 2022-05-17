@@ -1,6 +1,6 @@
 #### Modern programming
 
-Modern Programming is programming that is guided by tests and executed in small/micro steps,  incremental and reversible by checking in (VC) each successful test. No production code is produced without a test.
+Modern Programming is programming that is guided by tests and executed in small/micro steps,  incremental and reversible by checking in (VC) each successful test. No production code is produced without a test. With small steps is not meant the small (once/twice a day) steps used for Continuous Integration but really steps that are in the range of a few minutes.
 
 This stems from decades and years of experience in the agile and craftsman ship movement and communities.  
 It makes optimal use of tests as a tool where the tests guide the creation and structuring of code while providing immediate feedback, raising the quality bar for maintainable code and highly reduces the defect rate. Concentrating on small steps reduces the immediate mental load. And as a side-effect the tests provide a high test coverage.  
@@ -22,7 +22,7 @@ The next variant was in a phase where code quality and tests were more important
 
 When production code is written without the immediate feedback of a test it is very likely that the code ends up being difficult to test. Code that is difficult to test is difficult to maintain. The tests have this advantage to give a feedback if code is too coupled, uses too many collaborators, uses different levels of abstraction, etc. But it requires some skill to listen to this feedback and use it for the better.
 
-##### Returning...
+##### Returning to the light...
 
 Another variant, that I did experience (and am still on my way to mastery on this) in the last 5 to 7 years, is that of the TDD world. I think Kent Beck isn't so lucky with naming his inventions. XP (eXtreme Programming) could be more popular if it had a different name (he said this himself some time ago). I think a better expression of what TDD is could be: "Development Guided by Tests" (thanks Allan Holub for coming up with this). The tight workflow of TDD is something Kent Beck invented. When done right (and that takes a bit of practice) it can unfold all those attributes that I mentioned in the first paragraphs.
 
@@ -30,7 +30,7 @@ The <a href="http://manifesto.softwarecraftsmanship.org" class="link" target="_b
 
 During the last few years some additions to classic TDD were invented. I.e. there is the "London school" of TDD which advocates outside-in development. There is also ATDD (Acceptance TDD) which is similar to the double test loop TDD (that I <a href="/blog/Test-driven+Web+application+development+with+Common+Lisp" class="link" target="_blank">blogged</a> about).
 
-Today all of those variants of programming are still in use. Even companies that adopted agility only adopted it for the planing and management, but not down to the creation of code.
+Today all of those variants of programming are still in use. Companies of all sizes do one or the other variant, or a mixture. Often it's up to the developer.
 
 Some references you might find interesting.
 
