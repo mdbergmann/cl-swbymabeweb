@@ -1,6 +1,6 @@
 Passionate about software development, programming and software design - that's me.
 
-I like writing code, clean code. Maintainability of code is key. Quality is key. And it's the right thing to do. For the businesses and our our own sake (developers).
+I like writing code, clean code. Maintainability of code is key. Quality is key. And it's the right thing to do. For the businesses and our own sake (developers), to improve ourselves and what we do.
 
 But what is 'clean-code'? Isn't this subjective?  
 No, it is not. Start with Robert C. Martin's book 'Clean-Code'. It describes principles that are today more and more commonly accepted.  
