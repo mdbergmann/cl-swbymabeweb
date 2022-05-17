@@ -1,6 +1,6 @@
 #### Modern programming
 
-Modern Programming is programming that is guided by tests and executed in small/micro steps,  incremental and reversible by checking in (VC) each successful test. No production code is produced without a test. With small steps is not meant the small (once/twice a day) steps used for Continuous Integration but really steps that are in the range of a few minutes.
+Modern Programming is programming that is guided by tests and executed in small/micro steps,  incremental and reversible by checking in (VC) each successful test. No production code is produced without a test. With small steps is not meant the small (once/twice a day) steps used for Continuous Integration but really steps that are in the range of a few minutes, with a of thinking between them and maybe pairing with a peer to bounce ideas.
 
 This stems from decades and years of experience in the agile and craftsman ship movement and communities.  
 It makes optimal use of tests as a tool where the tests guide the creation and structuring of code while providing immediate feedback, raising the quality bar for maintainable code and highly reduces the defect rate. Concentrating on small steps reduces the immediate mental load. And as a side-effect the tests provide a high test coverage.  
