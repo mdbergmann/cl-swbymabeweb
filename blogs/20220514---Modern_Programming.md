@@ -30,7 +30,8 @@ The <a href="http://manifesto.softwarecraftsmanship.org" class="link" target="_b
 
 During the last few years some additions to classic TDD were invented. I.e. there is the "London school" of TDD which advocates outside-in development. There is also ATDD (Acceptance TDD) which is similar to the double test loop TDD (that I <a href="/blog/Test-driven+Web+application+development+with+Common+Lisp" class="link" target="_blank">blogged</a> about).
 
-Today all of those variants of programming are still in use. Companies of all sizes do one or the other variant, or a mixture. Often it's up to the developer.
+Today all of those variants of programming are still in use. Companies of all sizes do one or the other variant, or a mixture. Often it's up to the developer.  
+Having said that, this mostly applies to (business) application development. For system development other optimized workflows may apply.
 
 Some references you might find interesting.
 
