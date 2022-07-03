@@ -10,4 +10,18 @@ Outside-in TDD also known as "London School" (because it was invented in London)
 
 #### Double loop TDD
 
-We use outside-in TDD with a double test loop, also known as Double Loop TDD. 
+Here we use outside-in TDD with a double test loop, also known as Double Loop TDD.
+
+<figure>
+<img src="/static/gfx/blogs/outer-inner.png" alt="Outer-Inner" />
+</figure>
+
+Double Loop TDD creates acceptance tests on the outer test loop. This usually happens on a use-case basis. The created acceptance test fails until the use-case was fully developed. Doing this has multiple advantages. The acceptance test can verify the integration of components, acting as integration test. It can also check against regression because the acceptance criteria are high-level and define how the system should work, or do.
+
+Double Loop TDD was first explained in detail by the book <a href="http://www.growing-object-oriented-software.com" target="_blank" class="link">Growing Object-Oriented Software, Guided by Tests</a>. This book got so well-known in the TDD practicing community that it is just known as "GOOS".
+
+#### Let's get started
+
+Let's excercise this.
+
+Our first use-case is that we send a certain command to the boiler (via serial) which will instruct the boiler to send sensor data on a regular basis, like every 30 seconds.
