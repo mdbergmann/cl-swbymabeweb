@@ -20,7 +20,7 @@ Double Loop TDD creates acceptance tests on the outer test loop. This usually ha
 
 Double Loop TDD was first explained in detail by the authors of the book <a href="http://www.growing-object-oriented-software.com" target="_blank" class="link">Growing Object-Oriented Software, Guided by Tests</a>. This book got so well-known in the TDD practicing community that it is just known as "GOOS".
 
-#### Let's excercise this.
+#### Let's excercise this
 
 Our understanding of the first use-case is that we send a certain command to the boiler which will instruct the boiler to send sensor data on a regular basis, like every 30 seconds. The exact details of how this command is sent, or even how this command looks like is not yet relevant. So far we just need a high-level understanding of how the boiler interface works. An expectation of sending this command is that after a few seconds an HTTP REST request goes out to the openHAB system. As a first start we just assume that there is a module that actually does send the REST request. So we'll just mock that one. Later we might wanna remove all mocking from the acceptance test and setup a full web server that simulates the openHAB web server. It is likely that the acceptance test also goes over multiple iterations until it represents what we want and doesn't use any inner module structures.
 
