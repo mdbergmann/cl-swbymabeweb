@@ -60,7 +60,7 @@ if (livingNeighbours == 3) return true
 Now, with the given constrains we can't do that. Instead we have looked at the input data and tried to categorize it. The categorization actually is:
 
 ```scala
-case class NeighbourCategory((min: Int, max: Int))
+case class NeighbourCategory((minNeighbours: Int, maxNeighbours: Int))
 object NeighbourCategory {
   // i.e. < 2 neighbours is under population.
   val UnderPopulation = NeighbourCategory((0, 1))
