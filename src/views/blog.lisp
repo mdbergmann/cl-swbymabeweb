@@ -34,7 +34,23 @@
              :initarg :atom-url
              :reader model-get-atom-url)))
 
-(defmacro blog-post-content (blog-post)
+(defun render (view-model)
+  (log:debug "Rendering blog view")
+  (let ((blog-post (model-get-blog-post view-model)))
+    (log:debug "post name: " (slot-value blog-post 'name))
+
+    (with-page *page-title*
+      (str (content (if blog-post
+                        (blog-post-article blog-post)
+                        nil)
+                    (blog-recent-articles-nav view-model))))))
+
+(defmacro content (blog-post blog-navigation)
+  `(htm
+    (:div :class "article" (str ,blog-post))
+    (:div :class "recent_articles" (str ,blog-navigation))))
+
+(defmacro blog-post-article (blog-post)
   (let ((post (gensym))
         (name (gensym))
         (date (gensym))
@@ -44,29 +60,21 @@
             (,date (slot-value ,post 'date))
             (,text (slot-value ,post 'text)))
        (htm
-        (:div
-         (:div :class "content-light" (str ,name))
-         (:hr :class "blog-title")
-         (:div :class "content-tiny" (str ,date))
-         (:div "&nbsp;")
-         (:div :class "content blog-left-panel" (str ,text)))))))
+        (:h4 (str ,name))
+        (:date (str ,date))
+        (:div "&nbsp;")
+        (:div (str ,text))))))
 
-(defmacro blog-post-navigation (view-model)
+(defmacro blog-recent-articles-nav (view-model)
   (let ((elem (gensym)))
     `(htm
-      (:div :class "content"
-            (:div :style "text-align: center;"
-                  (:a :href (model-get-atom-url ,view-model)
-                      :class "blog-nav-link"
-                      (str "atom/rss feed")))
-            (:p "&nbsp;")
-            (:ul :align "right"
-                 (dolist (,elem (model-get-all-posts ,view-model))
-                   (blog-nav-entry ,elem)))))))
-
-(defun name-to-link (blog-name)
-  (format nil "/blog/~a"
-          (str:replace-all " " "+" blog-name)))
+      (:div :style "text-align: center;"
+            (:a :href (model-get-atom-url ,view-model)
+                (str "[atom/rss feed]")))
+      (:p "&nbsp;")
+      (:ul
+       (dolist (,elem (model-get-all-posts ,view-model))
+         (blog-nav-entry ,elem))))))
 
 (defmacro blog-nav-entry (blog-post)
   (let ((post (gensym))
@@ -78,34 +86,13 @@
             (,nav-date (slot-value ,post 'nav-date))
             (,link (name-to-link ,name)))
        (htm
-        (:li :class "blog-nav-item"
-             (:a :href ,link
-                 :class "blog-nav-link"
-                 (str ,name))
-             (:br)
-             (:span :class "content-tiny" (str ,nav-date)))))))
+        (:li
+         (:a :href ,link
+             :class "blog-nav-link"
+             (str (format nil "[~a]" ,name)))
+         (:br)
+         (:date (str ,nav-date)))))))
 
-(defmacro blog-header ()
-  `(htm
-    (with-content-table
-      (content-headline #!"blog_headline"))))
-
-(defmacro content (blog-post blog-navigation)
-  `(htm
-    (:div :id "content"
-          (str (blog-header))
-          (with-content-table
-            (:tr
-             (:td :class "blog-left-panel"(str ,blog-post))
-             (:td :class "blog-nav-panel" (str ,blog-navigation)))))))
-
-(defun render (view-model)
-  (log:debug "Rendering blog view")
-  (let ((blog-post (model-get-blog-post view-model)))
-    (log:debug "post name: " (slot-value blog-post 'name))
-
-    (with-page *page-title*
-      (str (content (if blog-post
-                        (blog-post-content blog-post)
-                        nil)
-                    (blog-post-navigation view-model))))))
+(defun name-to-link (blog-name)
+  (format nil "/blog/~a"
+          (str:replace-all " " "+" blog-name)))

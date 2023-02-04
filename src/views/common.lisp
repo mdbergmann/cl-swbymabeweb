@@ -37,72 +37,30 @@
     (:tr
      (:td :colspan 2 "&nbsp;"))))
 
-(defmacro nav-entry-separator ()
+(defmacro header-navigation ()
   `(htm
-    (:td :width "25" "|")))
+    (:a :href "/blog" (str (format nil "[~a]" #!"blog-top-nav")))
+    (str "|")
+    (:a :href "/projects" (str (format nil "[~a]" #!"projects-top-nav")))
+    (str "|")
+    (:a :href "/about" (str (format nil "[~a]" #!"about-top-nav")))
+    (str "|")
+    (:a :href "/imprint" (str (format nil "[~a]" #!"imprint-top-nav")))))
 
-(defmacro nav-entry (width link text)
+(defmacro page-header (header-navigation)
   `(htm
-    (:td :width ,width
-         (:a :href ,link (str ,text)))))
-
-(defmacro navigation ()
-  `(htm
-    (:div :id "navigation"
-          (:table :class "main-nav"
-                  (:tbody
-                   (:tr :class "navi_boldwhite"
-                        (nav-entry "70" "/blog" #!"blog-top-nav")
-                        (nav-entry-separator)
-                        (nav-entry "85" "/projects" #!"projects-top-nav")
-                        (nav-entry-separator)
-                        (nav-entry "70" "/about" #!"about-top-nav")
-                        (nav-entry-separator)
-                        (nav-entry "80" "/imprint" #!"imprint-top-nav")))))))
-
-(defmacro page-header (navigation)
-  (let* ((max-width 1024)
-         (logo-width 220)
-         (logo-col-width 228)
-         (nav-col-width (- max-width logo-col-width))
-         (top-height 55)
-         (logo-height 30)
-         (bottom-height 70))
-    `(htm
-      (:table :class "list-table"
-              (:tbody
-               (:tr
-                (:td :height ,top-height :width ,logo-col-width "&nbsp;")
-                (:td :width ,nav-col-width "&nbsp;"))
-               (:tr
-                (:td
-                 (:a :href "/"
-                     (:img :src "/static/gfx/logo.gif"
-                           :alt "back to home"
-                           :border "0"
-                           :height ,logo-height :width ,logo-width)))
-                (:td :valign "bottom"
-                     ,navigation))
-               (:tr
-                (:td :height ,bottom-height "&nbsp;")
-                (:td "&nbsp;")))))))
+    (:div :class "header_logo" (str "Manfred Bergmann"))
+    (:div :class "header_nav" ,header-navigation)
+    (:div :class "header_line" (:hr))))
 
 (defmacro page-footer ()
   `(htm
-    (with-content-table
-      (:tr
-       (:td :colspan 2 "&nbsp;"))
-      (:tr
-       (:td :colspan 2 (:hr)))
-      (:tr
-       (:td :class "content-light content-small"
-            (str #!"all_copyright"))
-       (:td :class "content-light content-small"
-            (:div :align "right"
-                  (str (format-timestring nil (now)
-                                          :format +asctime-format+)))))
-      (:tr
-       (:td :colspan 2 "&nbsp;")))))
+    (:div :class "footer_line" (:hr))
+    (:div :class "footer_left" (str #!"all_copyright"))
+    (:div :class "footer_right" (str
+                                 (format-timestring
+                                  nil (now)
+                                  :format +asctime-format+)))))
 
 (defmacro with-page (title &rest body)
   `(with-html-output-to-string
@@ -111,12 +69,13 @@
       (:head
        (:title (str ,title))
        (:link :rel "stylesheet" :href "/static/css/formate.css")
-       (:link :rel "stylesheet" :href "/static/js/styles/default.css")
+       (:link :rel "stylesheet" :href "/static/js/styles/my-owl.css")
        (:script :src "/static/js/highlight.pack.js")
        (:script (str "hljs.initHighlightingOnLoad()"))
        (:meta :http-equiv "Content-Type"
               :content "text/html; charset=utf-8"))
       (:body
-       (page-header (navigation))
-       ,@body
-       (page-footer)))))
+       (:div :class "wrapper"
+             (page-header (header-navigation))
+             ,@body
+             (page-footer))))))

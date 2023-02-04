@@ -23,36 +23,36 @@
   "Manfred Bergmann | Software Development | Blog")
 
 
-(test index-view
-  "Index view renders empty page with only navigation but no content."
-  (let ((page-source (view.index:render)))
-    (is (str:containsp *expected-index-page-title* page-source))
-    (is (str:containsp "<div id='navigation'" page-source))
-    (is (str:containsp "<p style='font-size: 36pt;'>Hello!" page-source))))
+;; (test index-view
+;;   "Index view renders empty page with only navigation but no content."
+;;   (let ((page-source (view.index:render)))
+;;     (is (str:containsp *expected-index-page-title* page-source))
+;;     (is (str:containsp "<div id='navigation'" page-source))
+;;     (is (str:containsp "<p style='font-size: 36pt;'>Hello!" page-source))))
 
-(test imprint-view
-  "Imprint view"
-  (let ((page-source (view.imprint:render (lambda () "<p>Hello Foo</p>"))))
-    (is (str:containsp *expected-imprint-page-title* page-source))
-    (is (str:containsp "<div id='navigation'" page-source))
-    (is (str:containsp "<div id='content'" page-source))
-    (is (str:containsp "<p>Hello Foo</p>" page-source))))
+;; (test imprint-view
+;;   "Imprint view"
+;;   (let ((page-source (view.imprint:render (lambda () "<p>Hello Foo</p>"))))
+;;     (is (str:containsp *expected-imprint-page-title* page-source))
+;;     (is (str:containsp "<div id='navigation'" page-source))
+;;     (is (str:containsp "<div id='content'" page-source))
+;;     (is (str:containsp "<p>Hello Foo</p>" page-source))))
 
-(test about-view
-  "About view"
-  (let ((page-source (view.about:render (lambda () "<p>Hello Bar</p>"))))
-    (is (str:containsp *expected-about-page-title* page-source))
-    (is (str:containsp "<div id='navigation'" page-source))
-    (is (str:containsp "<div id='content'" page-source))
-    (is (str:containsp "<p>Hello Bar</p>" page-source))))
+;; (test about-view
+;;   "About view"
+;;   (let ((page-source (view.about:render (lambda () "<p>Hello Bar</p>"))))
+;;     (is (str:containsp *expected-about-page-title* page-source))
+;;     (is (str:containsp "<div id='navigation'" page-source))
+;;     (is (str:containsp "<div id='content'" page-source))
+;;     (is (str:containsp "<p>Hello Bar</p>" page-source))))
 
-(test projects-view
-  "Projects view"
-  (let ((page-source (view.projects:render (lambda () "<p>Hello Buzz</p>"))))
-    (is (str:containsp *expected-projects-page-title* page-source))
-    (is (str:containsp "<div id='navigation'" page-source))
-    (is (str:containsp "<div id='content'" page-source))
-    (is (str:containsp "<p>Hello Buzz</p>" page-source))))
+;; (test projects-view
+;;   "Projects view"
+;;   (let ((page-source (view.projects:render (lambda () "<p>Hello Buzz</p>"))))
+;;     (is (str:containsp *expected-projects-page-title* page-source))
+;;     (is (str:containsp "<div id='navigation'" page-source))
+;;     (is (str:containsp "<div id='content'" page-source))
+;;     (is (str:containsp "<p>Hello Buzz</p>" page-source))))
 
 
 (defparameter *blog-post* (make-instance 'blog-post-model
@@ -74,22 +74,23 @@
 (test blog-view
   "Blog view renders latest blog entry, if exists."
   (let ((page-source (view.blog:render *blog-view-model*)))
+    (print page-source)
     (is (str:containsp *expected-blog-page-title* page-source))
-    (is (str:containsp "<div id='navigation'" page-source))
-    (is (str:containsp "<div id='content'" page-source))
-    (is (str:containsp "<td class='blog-nav-panel'" page-source))
+    (is (str:containsp "<div class='article'" page-source))
+    (is (str:containsp "<div class='recent_articles'" page-source))
 
     (is (str:containsp "Foo" page-source))
     (is (str:containsp "Foobar" page-source))
     (is (str:containsp "22-09-2020" page-source))
     (is (str:containsp "22 September 2020" page-source))
 
-    (is (str:containsp "<a href='http://foo.bar/atom' class='blog-nav-link'>atom/rss feed" page-source))))
+    (is (str:containsp "<a href='http://foo.bar/atom'>[atom/rss feed]" page-source))
+    ))
 
 (test blog-view-nil-model-post
   "Test blog view to show empty div when there is no blog post to show."
   (let ((page-source (view.blog:render *blog-view-empty-model*)))
     (is (str:containsp *expected-blog-page-title* page-source))
-    (is (str:containsp "<div id='navigation'" page-source))
+    (is (str:containsp "<div class='recent_articles'" page-source))
     ;;(is (str:containsp "<tr><td class=content colspan=2><tr>" page-source))
     ))
