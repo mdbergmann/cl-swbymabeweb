@@ -1,5 +1,5 @@
 (defpackage :cl-swbymabeweb.blog-repo
-  (:use :cl :cl-gserver.agent)
+  (:use :cl :sento.agent)
   (:nicknames :blog-repo)
   (:export #:blog-entry
            #:blog-entry-p

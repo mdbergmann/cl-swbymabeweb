@@ -1,5 +1,5 @@
 (defsystem "cl-swbymabeweb"
-  :version "0.2.0"
+  :version "0.3.0"
   :author "Manfred Bergmann"
   :license ""
   :depends-on ("hunchentoot"
@@ -18,7 +18,7 @@
                "3bmd-ext-code-blocks"
                "xml-emitter"
                "cl-who"
-               "cl-gserver")
+               "sento")
   :components ((:module "src"
                 :components
                 ((:file "config")
