@@ -12,31 +12,6 @@
 ;; this is our mode
 (setf (html-mode) :sgml)
 
-(defmacro with-content-table (&body body)
-  `(htm
-    (:table :class "list-table"
-            (:tbody
-             ,@body))))
-
-(defmacro content-headline (title)
-  `(htm
-    (:tr
-     (:td :colspan 2 :class "headline" (str ,title)))
-    (:tr
-     (:td :colspan 2 :class "subline" "&nbsp;"))))
-
-(defmacro content-subline (title)
-  `(htm
-    (:tr :bgcolor "#646464"
-         (:td :colspan 2 :class "subline" (str ,title)))))
-
-(defmacro with-content-line (&body body)
-  `(htm
-    (:tr
-     (:td :colspan 2 :class "content" ,@body))
-    (:tr
-     (:td :colspan 2 "&nbsp;"))))
-
 (defmacro header-navigation ()
   `(htm
     (:a :href "/blog" (fmt "[~a]" #!"blog-top-nav"))
