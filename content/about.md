@@ -4,7 +4,7 @@ I like writing code, clean code. Maintainability of code is key. Quality is key.
 
 But what is 'clean-code'? Isn't this subjective?  
 No, it is not. Start with Robert C. Martin's book 'Clean-Code'. It describes principles that are today more and more commonly accepted.  
-This quote from Michael Feathers also is quite on spot: “Clean code always looks like it was written by someone who cares.”
+This quote from Michael Feathers also is quite on spot: "Clean code always looks like it was written by someone who cares."
 
 I like good software-design and I strive to know more and do better. That means I follow and apply the principles of SOLID and various software patterns. That also includes various architectural patterns. I try to think of the bigger picture of the software, looking at it from a higher-level.
 
@@ -22,14 +22,15 @@ But, in addition I have also done large projects with Cocoa on macOS, iOS. Proje
 
 I also like Elixir (and the whole Erlang landscape). I've done a few small projects with it. It is a really attractive purely functional language with pure immutable data types, running on the battle proven Erlang VM.
 
-As of late (in early 2019) I found the world of Common Lisp very intriguing. This web page was re-implemented lately in Common Lisp coming from Apache Wicket.
+As of late (in early 2019) I found the world of Common Lisp very intriguing. This web page was re-implemented lately in Common Lisp coming from Apache Wicket.  
+Why Common Lisp you may ask. Isn't it old? Well, it is, but old things are not necessarily bad. Sometimes it's the contrary.
 
 Here are a few links where you might get more information about what I do:
 
-- <a class='link' target='_blank' href='https://www.linkedin.com/in/manfred-bergmann-8a034012/'>My LinkedIn Profile</a>
-- <a class='link' target='_blank' href='https://www.xing.com/profile/Manfred_Bergmann3/cv'>My Xing Profile</a>
-- <a class='link' target='_blank' href='https://github.com/mdbergmann'>GitHub</a>
-- <a class='link' target='_blank' href='https://twitter.com/mdbergmann'>Twitter</a>
-- <a class='link' target='_blank' href='https://www.youtube.com/channel/UC4Vt1YZhIVWj_rZSCyxG5DQ'>YouTube</a>
+- <a target='_blank' href='https://www.linkedin.com/in/manfred-bergmann-8a034012/'>[My LinkedIn Profile]</a>
+- <a target='_blank' href='https://www.xing.com/profile/Manfred_Bergmann3/cv'>[My Xing Profile]</a>
+- <a target='_blank' href='https://github.com/mdbergmann'>[GitHub]</a>
+- <a target='_blank' href='https://twitter.com/mdbergmann'>[Twitter]</a>
+- <a target='_blank' href='https://www.youtube.com/channel/UC4Vt1YZhIVWj_rZSCyxG5DQ'>[YouTube]</a>
 
 In 2003 I received the degree in computer science at the Georg Simon Ohm university in Nuremberg, Germany.

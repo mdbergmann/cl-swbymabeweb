@@ -44,13 +44,15 @@
     (is (str:containsp "<div class='sub_content'" page-source))
     (is (str:containsp "<p>Hello Foo</p>" page-source))))
 
-;; (test about-view
-;;   "About view"
-;;   (let ((page-source (view.about:render (lambda () "<p>Hello Bar</p>"))))
-;;     (is (str:containsp *expected-about-page-title* page-source))
-;;     (is (str:containsp "<div id='navigation'" page-source))
-;;     (is (str:containsp "<div id='content'" page-source))
-;;     (is (str:containsp "<p>Hello Bar</p>" page-source))))
+(test about-view
+  "About view"
+  (let ((page-source (view.about:render (lambda () "<p>Hello Bar</p>"))))
+    (is (str:containsp *expected-about-page-title* page-source))
+    (is (str:containsp "<div class='header_logo'" page-source))
+    (is (str:containsp "<div class='header_nav'" page-source))
+    (is (str:containsp "<div class='content'" page-source))
+    (is (str:containsp "<div class='sub_content'" page-source))
+    (is (str:containsp "<p>Hello Bar</p>" page-source))))
 
 ;; (test projects-view
 ;;   "Projects view"
