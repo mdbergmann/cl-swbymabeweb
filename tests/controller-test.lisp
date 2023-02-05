@@ -77,7 +77,7 @@
     (let ((projects-result (controller.projects:index)))
       (print projects-result)
       (is (eq :ok (car projects-result)))
-      (is (str:starts-with-p "<p>My software projects"
+      (is (str:starts-with-p "<p>My <strong>private</strong>, I repeat, 'private' open-source"
                              (cdr projects-result))))
     (is (= 1 (length (invocations 'view.projects:render))))))
 
