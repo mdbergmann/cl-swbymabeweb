@@ -38,7 +38,6 @@ It is possible to override this parameter for tests with a mock implementation."
          :reader blog-entry-name
          :documentation "the blog name, the filename minus the date.")
    (date :initform nil
-         :type fixnum
          :initarg :date
          :reader blog-entry-date
          :documentation "universal timestamp")
