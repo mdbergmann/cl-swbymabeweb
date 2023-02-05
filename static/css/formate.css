@@ -28,6 +28,7 @@ code {
 pre code {
     font-family: monospace;
     font-style: normal;
+    font-size: 11pt;
     font-size: var(--default-font-size);
 }
 hr {

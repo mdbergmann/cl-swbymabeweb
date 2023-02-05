@@ -84,11 +84,10 @@
                 (htm
                  "
 .sub_content {
-    width: 100%;
     display: grid;
     gap: 10px;
     grid-template-areas: '1st 2nd';
-    grid-template-columns: fit-content(68%) 1fr;
+    grid-template-columns: 70% 30%;
     grid-template-rows: auto;
 }
 .article {
