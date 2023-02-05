@@ -74,8 +74,10 @@ li {
 }
 .footer_left {
     grid-area: ftl;
+    margin-bottom: 20px;
 }
 .footer_right {
     grid-area: ftr;
     text-align: right;
+    margin-bottom: 20px;
 }
