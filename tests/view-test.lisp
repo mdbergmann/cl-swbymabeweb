@@ -54,13 +54,15 @@
     (is (str:containsp "<div class='sub_content'" page-source))
     (is (str:containsp "<p>Hello Bar</p>" page-source))))
 
-;; (test projects-view
-;;   "Projects view"
-;;   (let ((page-source (view.projects:render (lambda () "<p>Hello Buzz</p>"))))
-;;     (is (str:containsp *expected-projects-page-title* page-source))
-;;     (is (str:containsp "<div id='navigation'" page-source))
-;;     (is (str:containsp "<div id='content'" page-source))
-;;     (is (str:containsp "<p>Hello Buzz</p>" page-source))))
+(test projects-view
+  "Projects view"
+  (let ((page-source (view.projects:render (lambda () "<p>Hello Buzz</p>"))))
+    (is (str:containsp *expected-projects-page-title* page-source))
+    (is (str:containsp "<div class='header_logo'" page-source))
+    (is (str:containsp "<div class='header_nav'" page-source))
+    (is (str:containsp "<div class='content'" page-source))
+    (is (str:containsp "<div class='sub_content'" page-source))
+    (is (str:containsp "<p>Hello Buzz</p>" page-source))))
 
 
 (defparameter *blog-post* (make-instance 'blog-post-model

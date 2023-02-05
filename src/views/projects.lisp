@@ -18,5 +18,13 @@
 
 (defun render (content-fun)
   (log:debug "Rendering projects view.")
-  (with-page *page-title*
-    (content (funcall content-fun))))
+  (with-page (*page-title*
+              "
+.sub_content {
+    width: 100%;
+}
+")
+             (:div :class "sub_content"
+                   (:h3 (str #!"projects_headline"))
+                   (:h4 (str #!"projects_subline"))
+                   (:div (str (funcall content-fun))))))
