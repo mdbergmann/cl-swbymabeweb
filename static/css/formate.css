@@ -45,7 +45,7 @@ li {
     gap: 10px;
     grid-template-areas: "hd hdn hdn"
                          "hdl hdl hdl"
-                         "ct ct rec"
+                         "ct ct ct"
                          "ft ft ft"
                          "ftl ftl ftr";
     grid-template-columns: repeat(3, 1fr);
@@ -66,20 +66,8 @@ li {
     grid-area: hdl;
     margin-bottom: 40px;
 }
-.article {
+.content {
     grid-area: ct;
-}
-.article date {
-    font-size: 11pt;
-}
-.recent_articles {
-    grid-area: rec;
-    text-align: left;
-    font-size: 11pt;
-}
-.recent_articles date {
-    font-size: 9pt;
-    color: var(--darker-color);
 }
 .footer_line {
     grid-area: ft;

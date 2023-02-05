@@ -41,14 +41,40 @@
   (let ((blog-post (model-get-blog-post view-model)))
     (log:debug "post name: " (slot-value blog-post 'name))
 
-    (with-page *page-title*
-      (htm 
-       (:div :class "article" (if blog-post
-                                  (htm
-                                   (blog-post-article blog-post))
-                                  nil))
-       (:div :class "recent_articles" (htm
-                                       (blog-recent-articles-nav view-model)))))))
+    (with-page (*page-title*
+                (htm
+                 "
+.sub_content {
+    width: 100%;
+    display: grid;
+    gap: 10px;
+    grid-template-areas: '1st 2nd';
+    grid-template-columns: fit-content(68%) 1fr;
+    grid-template-rows: auto;
+}
+.article {
+    grid-area: 1st;
+}
+.article date {
+    font-size: 11pt;
+}
+.recent_articles {
+    grid-area: 2nd;
+    text-align: left;
+    font-size: 11pt;
+}
+.recent_articles date {
+    font-size: 9pt;
+    color: var(--darker-color);
+}
+"))
+       (:div :class "sub_content"
+             (:div :class "article" (if blog-post
+                                        (htm
+                                         (blog-post-article blog-post))
+                                        nil))
+             (:div :class "recent_articles" (htm
+                                             (blog-recent-articles-nav view-model)))))))
 
 (defmacro blog-post-article (blog-post)
   (with-gensyms (post name date text)

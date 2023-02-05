@@ -62,7 +62,7 @@
                                   nil (now)
                                   :format +asctime-format+)))))
 
-(defmacro with-page (title &rest body)
+(defmacro with-page ((title header-style) &rest body)
   `(with-html-output-to-string
        (*standard-output* nil :prologue t :indent t)
      (:html
@@ -73,9 +73,11 @@
        (:script :src "/static/js/highlight.pack.js")
        (:script (str "hljs.initHighlightingOnLoad()"))
        (:meta :http-equiv "Content-Type"
-              :content "text/html; charset=utf-8"))
+              :content "text/html; charset=utf-8")
+       (:style (str ,header-style)))
       (:body
        (:div :class "wrapper"
              (page-header (header-navigation))
-             ,@body
+             (:div :class "content"
+                   ,@body)
              (page-footer))))))
