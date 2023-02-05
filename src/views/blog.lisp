@@ -3,7 +3,9 @@
   (:nicknames :view.blog)
   (:export #:render
            #:blog-post-model
-           #:blog-view-model))
+           #:blog-view-model)
+  (:import-from #:alexandria
+                #:with-gensyms))
 
 (in-package :cl-swbymabeweb.view.blog)
 
@@ -40,21 +42,16 @@
     (log:debug "post name: " (slot-value blog-post 'name))
 
     (with-page *page-title*
-      (str (content (if blog-post
-                        (blog-post-article blog-post)
-                        nil)
-                    (blog-recent-articles-nav view-model))))))
-
-(defmacro content (blog-post blog-navigation)
-  `(htm
-    (:div :class "article" (str ,blog-post))
-    (:div :class "recent_articles" (str ,blog-navigation))))
+      (htm 
+       (:div :class "article" (if blog-post
+                                  (htm
+                                   (blog-post-article blog-post))
+                                  nil))
+       (:div :class "recent_articles" (htm
+                                       (blog-recent-articles-nav view-model)))))))
 
 (defmacro blog-post-article (blog-post)
-  (let ((post (gensym))
-        (name (gensym))
-        (date (gensym))
-        (text (gensym)))
+  (with-gensyms (post name date text)
     `(let* ((,post ,blog-post)
             (,name (slot-value ,post 'name))
             (,date (slot-value ,post 'date))
@@ -66,30 +63,25 @@
         (:div (str ,text))))))
 
 (defmacro blog-recent-articles-nav (view-model)
-  (let ((elem (gensym)))
+  (with-gensyms (elem)
     `(htm
       (:div :style "text-align: center;"
-            (:a :href (model-get-atom-url ,view-model)
-                (str "[atom/rss feed]")))
-      (:p "&nbsp;")
-      (:ul
-       (dolist (,elem (model-get-all-posts ,view-model))
-         (blog-nav-entry ,elem))))))
+             (:a :href (model-get-atom-url ,view-model)
+                 (str "[atom/rss feed]")))
+       (:p "&nbsp;")
+       (:ul
+        (dolist (,elem (model-get-all-posts ,view-model))
+          (htm (blog-nav-entry ,elem)))))))
 
 (defmacro blog-nav-entry (blog-post)
-  (let ((post (gensym))
-        (name (gensym))
-        (nav-date (gensym))
-        (link (gensym)))
+  (with-gensyms (post name nav-date link)
     `(let* ((,post ,blog-post)
             (,name (slot-value ,post 'name))
             (,nav-date (slot-value ,post 'nav-date))
             (,link (name-to-link ,name)))
        (htm
         (:li
-         (:a :href ,link
-             :class "blog-nav-link"
-             (str (format nil "[~a]" ,name)))
+         (:a :href ,link (fmt "[~a]" ,name))
          (:br)
          (:date (str ,nav-date)))))))
 

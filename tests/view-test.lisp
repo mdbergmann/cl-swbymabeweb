@@ -23,12 +23,14 @@
   "Manfred Bergmann | Software Development | Blog")
 
 
-;; (test index-view
-;;   "Index view renders empty page with only navigation but no content."
-;;   (let ((page-source (view.index:render)))
-;;     (is (str:containsp *expected-index-page-title* page-source))
-;;     (is (str:containsp "<div id='navigation'" page-source))
-;;     (is (str:containsp "<p style='font-size: 36pt;'>Hello!" page-source))))
+(test index-view
+  "Index view renders empty page with only navigation but no content."
+  (let ((page-source (view.index:render)))
+    (print page-source)
+    (is (str:containsp *expected-index-page-title* page-source))
+    (is (str:containsp "<div class='header_logo'" page-source))
+    (is (str:containsp "<div class='header_nav'" page-source))
+    (is (str:containsp "<p style='font-size: 36pt;'>Hello!" page-source))))
 
 ;; (test imprint-view
 ;;   "Imprint view"
@@ -92,5 +94,4 @@
   (let ((page-source (view.blog:render *blog-view-empty-model*)))
     (is (str:containsp *expected-blog-page-title* page-source))
     (is (str:containsp "<div class='recent_articles'" page-source))
-    ;;(is (str:containsp "<tr><td class=content colspan=2><tr>" page-source))
     ))

@@ -39,13 +39,13 @@
 
 (defmacro header-navigation ()
   `(htm
-    (:a :href "/blog" (str (format nil "[~a]" #!"blog-top-nav")))
+    (:a :href "/blog" (fmt "[~a]" #!"blog-top-nav"))
     (str "|")
-    (:a :href "/projects" (str (format nil "[~a]" #!"projects-top-nav")))
+    (:a :href "/projects" (fmt "[~a]" #!"projects-top-nav"))
     (str "|")
-    (:a :href "/about" (str (format nil "[~a]" #!"about-top-nav")))
+    (:a :href "/about" (fmt "[~a]" #!"about-top-nav"))
     (str "|")
-    (:a :href "/imprint" (str (format nil "[~a]" #!"imprint-top-nav")))))
+    (:a :href "/imprint" (fmt "[~a]" #!"imprint-top-nav"))))
 
 (defmacro page-header (header-navigation)
   `(htm

@@ -2,7 +2,8 @@
   :version "0.3.0"
   :author "Manfred Bergmann"
   :license ""
-  :depends-on ("hunchentoot"
+  :depends-on ("alexandria"
+               "hunchentoot"
                "snooze"
                "envy"
                "cl-ppcre"
@@ -52,8 +53,7 @@
   :depends-on ("cl-swbymabeweb"
                "fiveam"
                "cl-mock"
-               "dexador"
-               "str")
+               "dexador")
   :components ((:module "tests"
                 :components
                 ((:file "all-tests")
