@@ -26,10 +26,9 @@ code {
     font-size: 11pt;
 }
 pre code {
-    font-family: monospace;
+    font-family: "Courier", monospace;
     font-style: normal;
     font-size: 11pt;
-    font-size: var(--default-font-size);
 }
 hr {
     height: 1px;
