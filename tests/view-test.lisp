@@ -30,15 +30,19 @@
     (is (str:containsp *expected-index-page-title* page-source))
     (is (str:containsp "<div class='header_logo'" page-source))
     (is (str:containsp "<div class='header_nav'" page-source))
+    (is (str:containsp "<div class='content'" page-source))
+    (is (str:containsp "<div class='sub_content'" page-source))
     (is (str:containsp "<p style='font-size: 36pt;'>Hello!" page-source))))
 
-;; (test imprint-view
-;;   "Imprint view"
-;;   (let ((page-source (view.imprint:render (lambda () "<p>Hello Foo</p>"))))
-;;     (is (str:containsp *expected-imprint-page-title* page-source))
-;;     (is (str:containsp "<div id='navigation'" page-source))
-;;     (is (str:containsp "<div id='content'" page-source))
-;;     (is (str:containsp "<p>Hello Foo</p>" page-source))))
+(test imprint-view
+  "Imprint view"
+  (let ((page-source (view.imprint:render (lambda () "<p>Hello Foo</p>"))))
+    (is (str:containsp *expected-imprint-page-title* page-source))
+    (is (str:containsp "<div class='header_logo'" page-source))
+    (is (str:containsp "<div class='header_nav'" page-source))
+    (is (str:containsp "<div class='content'" page-source))
+    (is (str:containsp "<div class='sub_content'" page-source))
+    (is (str:containsp "<p>Hello Foo</p>" page-source))))
 
 ;; (test about-view
 ;;   "About view"

@@ -8,16 +8,15 @@
 
 (defparameter *page-title* "Manfred Bergmann | Software Development | Imprint")
 
-(defmacro content (content-fun-call)
-  `(htm
-    (:div :id "content"
-          (with-content-table
-            (content-headline #!"imprint_headline")
-            (content-subline #!"imprint_subline")
-            (with-content-line
-              (str ,content-fun-call))))))
-
 (defun render (content-fun)
   (log:debug "Rendering imprint view.")
-  (with-page *page-title*
-    (content (funcall content-fun))))
+  (with-page (*page-title*
+              "
+.sub_content {
+    width: 100%;
+}
+")
+             (:div :class "sub_content"
+                   (:h3 (str #!"imprint_headline"))
+                   (:h4 (str #!"imprint_subline"))
+                   (:div (str (funcall content-fun))))))
