@@ -45,8 +45,8 @@
        (:title (str ,title))
        (:link :rel "stylesheet" :href "/static/css/formate.css")
        (:link :rel "stylesheet" :href "/static/js/styles/my-owl.css")
-       (:script :src "/static/js/highlight.pack.js")
-       (:script (str "hljs.initHighlightingOnLoad()"))
+       (:script :src "/static/js/highlight.min.js")
+       (:script (str "hljs.highlightAll();"))
        (:meta :http-equiv "Content-Type"
               :content "text/html; charset=utf-8")
        (:style (str ,header-style)))

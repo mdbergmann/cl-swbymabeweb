@@ -1,5 +1,5 @@
 <p>The post will be about Dependency Injection (DI) in Objective-C. DI or the pattern behind it IoC (Inversion of Control) is well known in the Java world. There are quite a few frameworks available like Spring, EJB, Guice, etc.<br /> On Mac I didn't find something like it. So I've implemented a proof of concept.<br /> <br /> The goal was to inject a service class instance into another object, let&rsquo;s say a consumer of that service. Also it should be possible that the service object can be mocked and a different instance of the service be injected for unit testing.<br /> <br /> Let&rsquo;s see, what we need first is some kind of registration facility where we can register classes by name. When an instance of that class is asked for a new instance will be created and it will be returned. Alternatively an instance of a class can be set for a name, then this instance will be returned instead. With this we can set mock objects for unit testing while in production the real class is used.<br /> <br /> This is the &bdquo;DependencyRegistration&ldquo; facility&rsquo;s interface:</p>
-<pre class="brush: oc;">@interface DependencyRegistration : NSObject {
+<pre><code>@interface DependencyRegistration : NSObject {
     NSMutableDictionary *classRegistrations;
     NSMutableDictionary *objectInstances;
 }
@@ -15,9 +15,9 @@
 
 - (id)objectForRegName:(NSString *)aRegName;
 @end
-</pre>
+</code></pre>
 <p><br /> Here are some relevant parts of the implementation:</p>
-<pre class="brush: oc;">- (void)addRegistrationForClass:(Class)aClass withRegName:(NSString *)aRegName {
+<pre><code>- (void)addRegistrationForClass:(Class)aClass withRegName:(NSString *)aRegName {
     [classRegistrations setObject:aClass forKey:aRegName];
 }
 
@@ -33,16 +33,16 @@
     }
     return anObject;
 }
-</pre>
+</code></pre>
 <p><br /> This facility is implemented as singleton.<br /> As you can see a class or an instance of a class can be associated with a registration name. the</p>
-<pre class="brush: oc;">-objectForRegName:</pre>
+<pre><code>-objectForRegName:</code></pre>
 <p>method either creates an object from a registered class or uses a class instance if one has been set.<br /> <br /> Now how is this going to be of use? Let&rsquo;s continue. The next thing we need is a service protocol and a service class that implements this protocol:</p>
-<pre class="brush: oc;">@protocol MyServiceLocal
+<pre><code>@protocol MyServiceLocal
 - (NSString *)sayHello;
 @end
-</pre>
+</code></pre>
 <p><br /> The protocol should be placed outside of the service class implementation, in another header file. Something like &bdquo;Services.h&ldquo;.</p>
-<pre class="brush: oc;">#import 
+<pre><code>#import 
 @interface MyService : NSObject  {
 }
 - (NSString *)sayHello;
@@ -59,9 +59,9 @@
     return @"Hello";
 }
 @end
-</pre>
+</code></pre>
 <p><br /> I&rsquo;ve mixed interface and implementation here which normally is separated in .h and .m files.<br /> Good. We have our service.<br /> Now we create a consumer of that service that get&rsquo;s the service injected.</p>
-<pre class="brush: oc;">#import 
+<pre><code>#import 
 @interface MyConsumer : NSObject {
     id myServiceInstance;
 }
@@ -87,17 +87,17 @@
     return hello;
 }
 @end
-</pre>
+</code></pre>
 <p><br /> This is the consumer.<br /> The interesting part is the INJECT(MyServiceRegName). Now where does this come from? The INJECT is just a #define. The MyServiceRegName is also a #define which specifies a common name for a service registration. We can add this to the DependencyRegistration class like this:</p>
-<pre class="brush: oc;">#define INJECT(REGNAME)     [[DependencyRegistration registrator] objectForRegName:REGNAME]
+<pre><code>#define INJECT(REGNAME)     [[DependencyRegistration registrator] objectForRegName:REGNAME]
 #define MyServiceRegName     @"MyService"
-</pre>
+</code></pre>
 <p><br /> In fact all service registration names could be collected in this class but they could also be someplace else.<br /> The INJECT define does nothing else than get an instance of the DependencyRegistration singleton and call the -objectForRegName: method which will either return an instance from a created Class or an already set object instance.<br /> <br /> The injection does occur here in an initialisation method.<br /> It could actually also do via a setter or init like:</p>
-<pre class="brush: oc;">[consumer setMyService:INJECT(MyServiceRegName)];
+<pre><code>[consumer setMyService:INJECT(MyServiceRegName)];
 [[Consumer alloc] initWithService:INJECT(MyServiceRegName)];
-</pre>
+</code></pre>
 <p><br /> The way this is implemented either every consumer get&rsquo;s a new instance of the service or all get the same instance depending on whether an instance has been set in the DependencyRegistration object or not.<br /> <br /> Now let&rsquo;s create a unit test to see if it&rsquo;s working:</p>
-<pre class="brush: oc;">#import &lt;SenTestingKit/SenTestingKit.h&gt;
+<pre><code>#import &lt;SenTestingKit/SenTestingKit.h&gt;
 #import 
 @interface MyConsumerTest : SenTestCase {
     DependencyRegistration *registrator;
@@ -117,5 +117,5 @@
     STAssertEquals(hello, @"Hello", @"");
 }
 @end
-</pre>
+</code></pre>
 <p><br /> You will see that it works when you execute this test. Here just a class name is registered which means that a new class instance is created and injected to the consumer.<br /> <br /> There is plenty of space for improvements of this.<br /> In terms of Java what we have here is either an application scope object (when a service instance has been added via -addObject::) or a request scope object (when no service instance has been added and one is created each time) is passed the the caller.<br /> <br /> Well, after all the DependencyRegistration class is not much more than an Abstract Factory for multiple class types.<br /> <br /> <br /> Cheers</p>

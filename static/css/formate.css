@@ -1,7 +1,8 @@
 :root {
     --main-color: rgb(232, 128, 0);
-    --bright-color: rgb(255, 188, 38);
+    --bright-color: rgb(255, 200, 18);
     --darker-color: rgb(202, 108, 0);
+    --code-color: rgb(255, 200, 168);
     --default-font-size: 12pt;
 }
 body {
@@ -13,6 +14,18 @@ body {
     margin: auto;
     margin-top: 20px;
 }
+h3 {
+    font-size: 13pt;
+}
+h4 {
+    font-size: 12pt;
+}
+h5 {
+    font-size: 11pt;
+}
+strong, b {
+    font-size: 11pt;
+}
 a {
     text-decoration: none;
     color: var(--main-color);
@@ -22,12 +35,11 @@ a:hover, a:focus {
 }
 code {
     font-family: "Courier New", monospace;
-    font-style: italic;
+    color: var(--code-color);
     font-size: 11pt;
 }
 pre code {
-    font-family: "Courier", monospace;
-    font-style: normal;
+    font-family: "Courier New", monospace;
     font-size: 11pt;
 }
 hr {

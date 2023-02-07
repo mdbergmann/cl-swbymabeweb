@@ -44,7 +44,7 @@
     <a class="link" href="https://github.com/mdbergmann/elixir_house_stat_util" target="_blank">Github</a>
     .
 </p>
-<h3 id="toc_1">Project setup</h3>
+<h4 id="toc_1">Project setup</h4>
 <p>
     You use the usual 
     <code>mix</code>
@@ -100,7 +100,7 @@ end</code></pre>
         : since we do Test-Driven Development (TDD) of course we need a mocking framework. A library for unit tests is not necessary. This is part of the core Elixir.
     </li>
 </ul>
-<h3 id="toc_2">The web server</h3>
+<h4 id="toc_2">The web server</h4>
 <p>
     <a class="link" href="https://ninenines.eu" target="_blank">Cowboy</a>
      is probably the most well known and used web server in the Erlang world. But we don't have to deal with the details that much.
@@ -166,7 +166,7 @@ end</code></pre>
     <code>Supervisor.start_link(children, opts)</code>
      will then start the children actors/processes.
 </p>
-<h3 id="toc_3">Request routing and how to define routes</h3>
+<h4 id="toc_3">Request routing and how to define routes</h4>
 <p>
     The 
     <code>HouseStatUtil.Router</code>
@@ -325,7 +325,7 @@ end</code></pre>
 </p>
 <p>Nonetheless we'll try to make it as good as possible.</p>
 <p>Next step are the view controllers.</p>
-<h3 id="toc_6">How to define controllers and views and the model</h3>
+<h4 id="toc_6">How to define controllers and views and the model</h4>
 <h4 id="toc_7">The view controller</h4>
 <p>
     As you have seen above, each route uses its own view controller. I thought that a view controller can handle 
@@ -730,7 +730,7 @@ end</code></pre>
 </div>
 <p>The empty form which contains the submit button only is created in the test and expected to be part of the rendered view. Similarly we can certainly pass in a proper model so that we have some reader value entry text fields and all that being rendered.</p>
 <p>Creating those HTML tags using Elixir language constructs is pretty slick, isn't it? I'll talk about this now.</p>
-<h3 id="toc_14">How do to the HTML rendering</h3>
+<h4 id="toc_14">How do to the HTML rendering</h4>
 <p>
     Let me start with this. I know Phoenix uses 
     <a class="link" href="https://hexdocs.pm/eex/EEx.html" target="_blank">EEx</a>
@@ -751,7 +751,7 @@ end</code></pre>
     <a class="link" href="../blog?title=Creating+a+HTML+domain+language+with+Elixir+using+macros" target="_blank">here</a>
     .
 </p>
-<h3 id="toc_17">Localisation</h3>
+<h4 id="toc_17">Localisation</h4>
 <p>
     So the controller, view and HTML generation is quite different to how Phoenix does it. The localisation is again similar. Both just use the 
     <a class="link" href="https://hexdocs.pm/gettext/Gettext.html" target="_blank">gettext</a>
@@ -789,7 +789,7 @@ end</code></pre>
     <br/>
      There is a lot more info on that on that gettext web page. Check it out.
 </p>
-<h3 id="toc_18">Outlook and recap</h3>
+<h4 id="toc_18">Outlook and recap</h4>
 <p>
     Doing a simple web application framework from scratch is quite easy. If you want to do more by hand and want to have more control over how things work then that seems to be a viable way. However, the larger the web application gets the more you have to carve out concepts which could after all compete with Phoenix. And then, it might be worth using Phoenix right away. In a professional context I would use Phoenix anyway. Because this project has gone though the major headaches already and is battle proven.
     <br/>
