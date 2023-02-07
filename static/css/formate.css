@@ -5,7 +5,7 @@
     --default-font-size: 12pt;
 }
 body {
-    background-color: black;
+    background-color: #222222;
     color: var(--main-color);
     font-family: "Courier New", monospace;
     font-size: var(--default-font-size);
