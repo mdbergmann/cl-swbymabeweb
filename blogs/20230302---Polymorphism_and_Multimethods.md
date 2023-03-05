@@ -46,18 +46,9 @@ I choose Common Lisp as representative to show multimethods (because I like Lisp
 
 #### Single dispatch
 
-=> create types first
+In Common Lisp multimethods are implemented as _generic functions_. Common Lisp in general has a very powerful object system.
 
-In Common Lisp multimethods are implemented as _generic functions_. Common Lisp in general has a very powerful object system.  
-Similarly as the `trait` in Scala we first create a generic function definition:
-
-```lisp
-(defgeneric say-hello (person))
-```
-
-But before we move on with implementing the concrete methods we have to define the types/classes on which the methods do the dispatching.
-
-So let's create three person types:
+As a first step we create the classes used later in the dispatch:
 
 ```lisp
 (defclass person () ())  ;; base
@@ -66,7 +57,13 @@ So let's create three person types:
 (defclass student (person) ())
 ```
 
-Now we can add the methods:
+Now, similarly as the `trait` in Scala we first create a generic function definition:
+
+```lisp
+(defgeneric say-hello (person))
+```
+
+Now we can add the concrete methods:
 
 ```lisp
 (defmethod say-hello ((person teacher))
@@ -96,7 +93,7 @@ The runtime system will search for methods it can dispatch on based on a generic
 
 The above is a 'single dispatch' because the dispatching is based on a single parameter, the person class.
 
-Multi dispatch can dispatch on multiple parameters. Let's extend the example a bit:
+Multi dispatch can dispatch on multiple parameters. Let's extend the example a bit to show this:
 
 ```lisp
 (defgeneric say-hello (person time-of-day))
@@ -127,7 +124,6 @@ CL-USER> (say-hello (make-instance 'pupil) :noon)
 Good appetite, I'm a pupil.
 ```
 
-So looks like that the dispatching works, by taking both parameters into consideration.
+So looks like that the dispatching works, by taking both parameters into consideration. Of course this works also with more than two parameters.
 
-The _generic functions_ in Common Lisp have a lot more features than those simple examples. However this should be sufficient to demonstrate multimethods with single and multi dispatch.
-
+The _generic functions_ in Common Lisp have a lot more features than those simple examples. For example with method specializers `:before`, `:after` or `:around` it is possible to implement aspect oriented programming. However, this is not the topic of this post.
