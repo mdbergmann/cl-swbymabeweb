@@ -34,7 +34,7 @@ class Student extends IPerson {
 }
 ```
 
-This implements three different persons which say 'hello' in a different way. The beauty with this is that when you have an object of type `IPerson` you don't need to know which concrete implementation it is. It usually is sufficient to know that it supports saying hello by calling `sayHello`. This abstraction is great because it allows a decoupling of the interface and the concrete implementations which may even be defined in different areas or modules of the application sources.
+This implements three different persons which say 'hello' in a different way. The beauty with this is that when you have an object that is of type `IPerson` you don't need to know which concrete implementation it is. It usually is sufficient to know that it supports saying hello by calling `sayHello`. This abstraction is great because it allows a decoupling of the interface and the concrete implementations which may even be defined in different areas or modules of the application sources.
 
 OO languages like Scala, Java, C#, etc. combine data and behaviour in classes. An additional step in separation and decoupling one could separate data and behaviour also in OO languages, though that is often not the norm, and once the language allows to add data (state) into classes it needs a lot of discipline to refrain from it.
 
@@ -87,7 +87,7 @@ CL-USER> (say-hello (make-instance 'student))
 Hello, I'm a student.
 ```
 
-The runtime system will search for methods it can dispatch on based on a generic function definion. The method implementations can be in different source files or packages/namespaces which makes this extremely flexible. This lookup does come with a performance penalty, but implementations can often apply some kind of caching to mitigate this.
+The runtime system will search for methods it can dispatch on based on a generic function definition. The method implementations can be in different source files or packages/namespaces which makes this extremely flexible. This lookup does come with a performance penalty, but implementations can often apply some kind of caching to mitigate this.
 
 #### Multi dispatch
 
