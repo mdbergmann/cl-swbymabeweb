@@ -2,11 +2,11 @@
 
 What is Polymorphism and what is it useful for?
 
-In OOP (Object-Oriented Programming) polymorphism is well-known. It allows to separate an interface from multiple implementation that can have different behaviour.
+In OOP (Object-Oriented Programming) polymorphism is well-known. It allows to separate an interface from multiple implementations that can have different behaviour.
 
 Polymorphism comes from the greek `polús` (many) and `morphe` (form). Multiple forms, makes sense.
 
-Unless a variable, defined as interface, is statically wired (using `new` in Java) the concrete object referenced by the variable is not known at compile time. So, which polimorphic method of the interface is called is determined at runtime. This is called _dynamic dispatch_.
+Unless a variable, defined to an interface, is statically wired (using `new` in Java) the concrete object referenced by the variable is not known at compile time. So, which polimorphic method of the interface is called is determined at runtime. This is called _dynamic dispatch_.
 
 Let's make a simple example in Scala:
 
@@ -57,7 +57,7 @@ As a first step we create the classes used later in the dispatch:
 (defclass student (person) ())
 ```
 
-Now, similarly as the `trait` in Scala we first create a generic function definition:
+Similarly as the `trait` in Scala we first create a generic function definition:
 
 ```lisp
 (defgeneric say-hello (person))
@@ -87,7 +87,7 @@ CL-USER> (say-hello (make-instance 'student))
 Hello, I'm a student.
 ```
 
-The runtime system will search for methods it can dispatch on based on a generic function definition. The method implementations can be in different source files or packages/namespaces which makes this extremely flexible. This lookup does come with a performance penalty, but implementations can often apply some kind of caching to mitigate this.
+The runtime system will search for methods it can dispatch on based on a generic function definition. The method implementations can be in different source files or packages/namespaces which makes this extremely flexible. This lookup does come with a performance penalty though, but implementations can often apply some kind of caching to mitigate this.
 
 #### Multi dispatch
 
@@ -111,7 +111,7 @@ Multi dispatch can dispatch on multiple parameters. Let's extend the example a b
   (format t "Good evening, I'm a student."))
 ```
 
-Now we have a second parameter `time-of-day` which doesn't represent a time, but whether it's morning, noon or evening. Since `time-of-day` is not a class we have to use the `eql` specializer for the dispatching, but it could also be another class.
+Now we have a second parameter `time-of-day` which doesn't represent a time, but whether it is morning, noon or evening (or some other time of the day). Since `time-of-day` is not a class we have to use the `eql` specializer for the dispatching, but it could also be another class.
 
 ```plain
 CL-USER> (say-hello (make-instance 'teacher) :evening)
@@ -130,4 +130,4 @@ The _generic functions_ in Common Lisp have a lot more features than those simpl
 
 ### Conclusion
 
-Multimethods and separating data from behaviour allows more decoupling and a more data-driven programming paradigm. When the data is immutable we are closer in the realm of functional programming. Functional programming and data-driven programming have pros and cons which should be named and weighted when starting a new project.
+Multimethods and separating data from behaviour allows more decoupled code and a more data-driven programming paradigm. When the data is immutable we are closer in the realm of functional programming. Functional programming and data-driven programming have pros and cons which should be named and weighted when starting a new project.
