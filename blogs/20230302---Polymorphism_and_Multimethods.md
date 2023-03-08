@@ -87,7 +87,7 @@ CL-USER> (say-hello (make-instance 'student))
 Hello, I'm a student.
 ```
 
-The runtime system will search for methods it can dispatch on based on a generic function definition. The method implementations can be in different source files or packages/namespaces which makes this extremely flexible. This lookup does come with a performance penalty though, but implementations can often apply some kind of caching to mitigate this.
+The runtime system will search for methods it can dispatch on based on a generic function definition. The method implementations can be in different source files or packages/namespaces which makes this extremely flexible. This lookup does come with a performance penalty though, but implementations often apply some kind of caching to mitigate this.
 
 #### Multi dispatch
 
