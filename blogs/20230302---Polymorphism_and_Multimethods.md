@@ -36,7 +36,7 @@ class Student extends IPerson {
 
 This implements three different persons which say 'hello' in a different way. The beauty with this is that when you have an object that is of type `IPerson` you don't need to know which concrete implementation it is. It usually is sufficient to know that it supports saying hello by calling `sayHello`. This abstraction is great because it allows a decoupling of the interface and the concrete implementations which may even be defined in different areas or modules of the application sources.
 
-OO languages like Scala, Java, C#, etc. combine data and behaviour in classes. An additional step in separation and decoupling is to separate data and behaviour. While that is possible in OO languages it is often not the norm, and once the language allows to add data (state) into classes it needs a lot of discipline to refrain from it.
+OO languages like Scala, Java, C#, etc. combine data and behaviour in classes. An additional step in separation and decoupling is to separate data and behaviour. While that is possible in OO languages it is often not the norm, and once the language allows to mix data (state) and behaviour into classes it needs a lot of discipline to refrain from it.
 
 Other languages separate data from behaviour naturally, which enables more decoupled design because data and behaviour can develop orthogonally. Many of those languages implement polymorphism with a concept called _multimethods_.
 
