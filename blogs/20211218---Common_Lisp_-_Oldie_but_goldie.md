@@ -22,7 +22,7 @@ First drafts of Common Lisp appeared 1981/82. While mostly a successor of Maclis
 
 Since then the standard hasn't changed. That can of course be seen as a bad thing, when things don't change. But actually I believe it is a good thing. Common Lisp is even today surprisingly 'modern' and has many features of todays languages, partially even more features than 'modern' languages. And what it doesn't have can be added in form of libraries so that it feels as being part of the language.  
 Common Lisp is a quite large and complex package. After this long time there are of course some dusty corners. But all in all it is still very attractive and has an active community.  
-Because the standard didn't change since 1994 any code written since then should still be compile and runable on newer compilers and runtime implementaions (where there are a few, see below) which were written in a portable way.  
+Because the standard didn't change since 1994 any code written since then should still be compile and runable on newer compilers and runtime implementations (where there are a few, see below) which were written in a portable way.  
 
 #### Content
 
@@ -75,7 +75,7 @@ Let me run through some of the basic features of Common Lisp. Those basic featur
 
 #### Lists
 
-Since the name 'Lisp' is an abbrevation for List Processing we should have a quick look at lists. Lists are the corner stone of the Lisp language because every Lisp construct/form is a list, also called s-expression. A list is bounded by parentheses `(` and `)`. So `'(1 2 3 4)` is a list of the numbers 1, 2, 3 and 4. This list represents data. Lists representing data are usually quoted. Quoted means that this list, or the list elements, are not evaluated. The `'` in front of the first parenthesis denotes a quoted list. But `(myfunction "abc")` is also a list representing code, which is evaluated. By convention the first list entry must either be a function name, a macro operator, a lambda expression or a special operator. `if` for example is a special operator. The other list elements are usually function, or operator arguments. Lists can be nested. In most cases Lisp programs are trees of lists.  
+Since the name 'Lisp' is an abbreviation for List Processing we should have a quick look at lists. Lists are the corner stone of the Lisp language because every Lisp construct/form is a list, also called s-expression. A list is bounded by parentheses `(` and `)`. So `'(1 2 3 4)` is a list of the numbers 1, 2, 3 and 4. This list represents data. Lists representing data are usually quoted. Quoted means that this list, or the list elements, are not evaluated. The `'` in front of the first parenthesis denotes a quoted list. But `(myfunction "abc")` is also a list representing code, which is evaluated. By convention the first list entry must either be a function name, a macro operator, a lambda expression or a special operator. `if` for example is a special operator. The other list elements are usually function, or operator arguments. Lists can be nested. In most cases Lisp programs are trees of lists.  
 
 
 <a id="orgfeceb96"></a>
@@ -101,7 +101,7 @@ Common Lisp provides a very sophisticated set of features to structure function 
 
 <a id="org7ce6981"></a>
 
-##### Mantatory arguments
+##### Mandatory arguments
 
 Mandatory arguments are simply added to the list construct following the function name. This list construct that represents the arguments is commonly known as *lambda list*. In the following example `arg1` and `arg2` are mandatory arguments.
 
@@ -170,7 +170,7 @@ The first optional `opt1` does not have a default value, so if undefined it'll b
 
 ##### Rest arguments
 
-`rest` arguments are arguments that have not already been captured by mandatory, optional, or key. So they form a rest. This rest is available in the body as a list. In the example below defined by `rest` keyword. `rest` arguments are sometimes usefull to pass them on to `APPLY` function.
+`rest` arguments are arguments that have not already been captured by mandatory, optional, or key. So they form a rest. This rest is available in the body as a list. In the example below defined by `rest` keyword. `rest` arguments are sometimes useful to pass them on to `APPLY` function.
 
 ```lisp
 (defun my-fun (arg1 &optional opt1 &rest rest)
@@ -190,14 +190,14 @@ The first optional `opt1` does not have a default value, so if undefined it'll b
 
 ##### Mixing arguments
 
-As you can see it is possible to mix `optional`, `key` and `rest` arguments. However, some care must be taken with mixing `optional` and `key` because the key of the `key` argument could be taken as an `optional` argument. Similarly with `rest` and `key` arguments as can be seen in the examples above. In most use-cases you'd either have `optional` or `key` together with madatory arguments.  
+As you can see it is possible to mix `optional`, `key` and `rest` arguments. However, some care must be taken with mixing `optional` and `key` because the key of the `key` argument could be taken as an `optional` argument. Similarly with `rest` and `key` arguments as can be seen in the examples above. In most use-cases you'd either have `optional` or `key` together with mandatory arguments.  
 
 
 <a id="orgac51641"></a>
 
 #### Lambdas
 
-Lambdas are anonymus functions created at runtime. Other than that they are similar to `defun`s, regular/named functions. They can be used in place of a function name like this:
+Lambdas are anonymous functions created at runtime. Other than that they are similar to `defun`s, regular/named functions. They can be used in place of a function name like this:
 
 ```lisp
 ((lambda (x) x) "foo")  ;; returns "foo"
@@ -274,7 +274,7 @@ CL-USER> (my-when (= 1 1)
 "Foo"
 ```
 
-The macro expands the `expr` and `body` arguments. Macros always (should) generate quoted Lisp code, that's why the result of a macro should be a quoted expression. Quoted expressions are not evaluated, they are just plain data (a list), so the macro expression can be replaced with the macro body whereever the macro is used.  
+The macro expands the `expr` and `body` arguments. Macros always (should) generate quoted Lisp code, that's why the result of a macro should be a quoted expression. Quoted expressions are not evaluated, they are just plain data (a list), so the macro expression can be replaced with the macro body wherever the macro is used.  
 We can expand the macro (using `MACROEXPAND`) to see what it would be replaced with. Let's have a look at this:
 
 ```nohighlight
@@ -302,7 +302,7 @@ The `@` will remove the outer list structure.
 
 **when are macros expanded?**  
 
-Macros are expanded during the 'macro exansion' phase. This phase happens before compilation. So the Lisp compiler already only sees the macro expanded code.  
+Macros are expanded during the 'macro expansion' phase. This phase happens before compilation. So the Lisp compiler already only sees the macro expanded code.  
 
 
 <a id="org0fb504c"></a>
@@ -326,7 +326,7 @@ Packages are constructs, or namespaces, to separate and structure data and code 
 (defun my-internal-fun () (print "Internal"))
 ```
 
-A package is kind of a lookup table where function names, variable names, etc., represented as symbols (later more on symbols) refer to an object which represents the function, variable, etc. The function `MY-FUN` would be refered to using a package qualified name `foo:my-fun`. The exported 'symbols' are the public interface of the package. Using a double colon one can also refer to internal symbols, like: `foo::my-internal-fun` but that should be done with care as it means accessing implementation details.  
+A package is kind of a lookup table where function names, variable names, etc., represented as symbols (later more on symbols) refer to an object which represents the function, variable, etc. The function `MY-FUN` would be referred to using a package qualified name `foo:my-fun`. The exported 'symbols' are the public interface of the package. Using a double colon one can also refer to internal symbols, like: `foo::my-internal-fun` but that should be done with care as it means accessing implementation details.  
 It is also possible to import specific package symbols (functions, variables, etc.) by using the `IMPORT` or `IMPORT-FROM` functions. Any package added as parameter of `:use` will be inherited by the defined package and so all exported symbols of the packages mentioned at `:use` will be known and can be used without using the package qualified name.  
 
 
@@ -718,7 +718,7 @@ Restarts is a unique feature of Common Lisp that I have not seen elsewhere (thou
 
 In the example `HIGHER` calls `LOWER`. `LOWER` immediately raises a condition with `ERROR`. You'd normally of course have some other code here that would raise the conditions instead. To setup restarts one uses `RESTART-CASE` everywhere where there is potentially a way to get out of a situation without loosing the context. The `RESTART-CASE` actually looks very similar to a `HANDLER-CASE`. The restart cases can take arguments that can be passed in from a calling module. In our case here the restarts cases just dump a string to stdout.  
 The magic in `HIGHER` to actually 'invoke' the restart targets is achieved with `HANDLER-BIND`. It is possible to automatically invoke restarts by differenciating on the condition. The restart cases are invoked with `INVOKE-RESTART`. This allows to also pass the argument to the restart case handler that could create the basis for resuming the computation. If a condition handler is not bound the condition will bubble further up the call chain. So it's possible to bind condition handlers on different levels where on a higher level one possibly has more oversight to decide which restart to use.  
-Executing `HIGHER` will give the folling output:
+Executing `HIGHER` will give the following output:
 
 ```nohighlight
 CL-USER> (higher)
@@ -863,7 +863,7 @@ In Sly/Slime the Backtrace elements can be opened and further inspected. This is
 
 ### Library management with Quicklisp
 
-Library (dependency) management was quite late in Common Lisp. Apache Maven in the Java world existed since 2004 and was probably one of the first of its kind. <a href="https://www.quicklisp.org/beta/" class="link">Quicklisp</a> exists since 2010 (as far as I could research). Nowadays remote and local library version management is common and supports even GitHub (or Git) repositories directly as resource URLs. However Quicklisp is still different. While others let you choose arbitrary versions Quicklisp is distribution based. This can be remotely compared with the package management of Linux distributions. It has pros and cons. The pro side is that it's consistent. A library that has other dependencies are all resolved from the distribution. While in Java many speak of the jar-hell. This comes from the fact that you may end up with different dependent versions in your classpath (the first one found by the class-loader wins) when you specify a direct dependency of a library in your project, but some other direct dependency has one of your direct dependecies also as direct dependencies but a different version of it. This cannot happen in Quicklisp. Well, actually it can. There are two ways: a) <a href="https://github.com/fukamachi/qlot" class="link">Qlot</a>, which allows to lock certain versions for a project, or b) it's possible within Quicklisp to clone single projects into Quicklisps 'local-projects' folder. Projects cloned in there take precedence over what the distributions offers. So this allows to use updated (or downgraded) versions still without getting into the jar-hell.
+Library (dependency) management was quite late in Common Lisp. Apache Maven in the Java world existed since 2004 and was probably one of the first of its kind. <a href="https://www.quicklisp.org/beta/" class="link">Quicklisp</a> exists since 2010 (as far as I could research). Nowadays remote and local library version management is common and supports even GitHub (or Git) repositories directly as resource URLs. However Quicklisp is still different. While others let you choose arbitrary versions Quicklisp is distribution based. This can be remotely compared with the package management of Linux distributions. It has pros and cons. The pro side is that it's consistent. A library that has other dependencies are all resolved from the distribution. While in Java many speak of the jar-hell. This comes from the fact that you may end up with different dependent versions in your classpath (the first one found by the class-loader wins) when you specify a direct dependency of a library in your project, but some other direct dependency has one of your direct dependencies also as direct dependencies but a different version of it. This cannot happen in Quicklisp. Well, actually it can. There are two ways: a) <a href="https://github.com/fukamachi/qlot" class="link">Qlot</a>, which allows to lock certain versions for a project, or b) it's possible within Quicklisp to clone single projects into Quicklisps 'local-projects' folder. Projects cloned in there take precedence over what the distributions offers. So this allows to use updated (or downgraded) versions still without getting into the jar-hell.
 
 One other nice thing about Quicklisp is that you can load libraries directly in the REPL and just use them. So once Quicklisp is installed and made available when the REPL starts you can say: `(ql:quickload :cl-gserver)` and it will load the library into the image and it's ready to use. This is a big plus. It makes things extremely simple to just try out some code in the REPL.  
 
@@ -885,7 +885,7 @@ Then there are the commercial products <a href="https://franz.com/products/alleg
 
 ### Image based
 
-Common Lisp is (usually) an image based system. The only other image based system that I know is SmallTalk. I haven't seen that in younger languages and runtimes. What is it? When you start a Common Lisp system, usually the REPL, then everything you do, like creating variables and functions, etc. is creating or manipulating state in the runtime memory. So far this is not different to other runtimes. What you do during your REPL session is just manipulating data in some memory area. The difference is that Common Lisp allows to create a snapshot (an image) of that runtime memory with all its state and can store it to disk. Then it's possible to run the REPL and load that image and all state is recovered, you could even reconnect to servers and reopen files and so on. The REPL allows to load multiple applications, because all is just variables and functions structured in packages. So you can make ready images to have a head start when starting to work. Usually all Common Lisps that support images actually start with an image when running the REPL. It's just an empty, or default, image.  
+Common Lisp is (usually) an image based system. The only other image based system that I know is Smalltalk. I haven't seen that in younger languages and runtimes. What is it? When you start a Common Lisp system, usually the REPL, then everything you do, like creating variables and functions, etc. is creating or manipulating state in the runtime memory. So far this is not different to other runtimes. What you do during your REPL session is just manipulating data in some memory area. The difference is that Common Lisp allows to create a snapshot (an image) of that runtime memory with all its state and can store it to disk. Then it's possible to run the REPL and load that image and all state is recovered, you could even reconnect to servers and reopen files and so on. The REPL allows to load multiple applications, because all is just variables and functions structured in packages. So you can make ready images to have a head start when starting to work. Usually all Common Lisps that support images actually start with an image when running the REPL. It's just an empty, or default, image.  
 
 
 <a id="org1b55d4e"></a>
