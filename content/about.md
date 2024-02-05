@@ -5,7 +5,7 @@ My experience in software development ranges from simple bash scripts over assem
 Since ~2017 I've gathered a lot of experience with applications in the cloud hosted by AWS infrastructure. Being key designer and architect of a rather large JVM based application running in the cloud with cluster and failover features.
 
 I work extensively with the Java Virtual Machine. Writing Java code since 2000, and Scala code since 2010. I've also been using Kotlin, Clojure and other languages running on the JVM.  
-Web technologies like Apache Wicket I use for more than 12 years and gained expert knowledge.
+Web technologies like Apache Wicket I use for more than 14 years and gained expert knowledge.
 
 For many years my interest was focused on macOS and Cocoa. So I've developed larger projects on macOS and apps on iOS as well as native apps for Android. Some time ago there was also .Net with C# and ASP.Net, C++, C, Python in the mix.
 
