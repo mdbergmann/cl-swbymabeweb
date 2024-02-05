@@ -1,6 +1,6 @@
 Update (5.2.2024):
 
-The project aropund house automation has further taken shape and manifested in <a href="https://github.com/mdbergmann/chipi" class="link" target="_blank">[Chipi]</a>.
+The project around house automation has further taken shape and manifested in <a href="https://github.com/mdbergmann/chipi" class="link" target="_blank">[Chipi]</a>.
 
 
 Things went not as planned. But that's what plans are for, right? To change them.
