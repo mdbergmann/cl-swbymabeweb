@@ -1,8 +1,13 @@
 My __private__, I repeat, 'private' open-source and freeware software projects. Of course have done many more things in my professional life.
 
-During the last 20 years I've developed a range of larger and smaller tools and applications and libraries as freeware or open-source in my spare time which I'd like to list here. Some of the things are still being developed or maintained (top), some not (below):
+During the last 25 years I've developed a range of larger and smaller tools and applications and libraries as freeware or open-source in my spare time which I'd like to list here. Some of the things are still being developed or maintained (top), some not (below):
 
 #### Libraries/Frameworks
+
+- Chipi - (House) Automation Bus (Common Lisp, hot)  
+<a href="https://github.com/mdbergmann/chipi" target="_blank">[GitHub project]</a>
+
+This project is based on Sento. Uses <a href="https://github.com/rabbibotton/clog" target="_blank">[CLOG UI]</a> frameworj with Bootstrap 5 for responsiveness.
 
 - Sento - Actor framework (Common Lisp, hot)  
 <a href="https://github.com/mdbergmann/cl-gserver" target="_blank">[GitHub project]</a>
