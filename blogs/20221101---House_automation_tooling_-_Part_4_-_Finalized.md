@@ -1,6 +1,6 @@
 Update (5.2.2024):
 
-The project around house automation has further taken shape and manifested in <a href="https://github.com/mdbergmann/chipi" class="link" target="_blank">[Chipi]</a>.
+The project around house automation has further taken shape and manifested in <a href="https://github.com/mdbergmann/chipi" class="link" target="_blank">\[Chipi\]</a>.
 
 
 Things went not as planned. But that's what plans are for, right? To change them.
@@ -12,7 +12,7 @@ I've added a few additions to the original spec, i.e. I found it important to ca
 
 So, I'd like to finalize this blog series by writing about some best practices that I used as well as some obstacles I had to solve.
 
-Again, the project can be seen here: <a href="https://github.com/mdbergmann/cl-etaconnector" class="link" target="_blank">[cl-eta]</a>
+Again, the project can be seen here: <a href="https://github.com/mdbergmann/cl-etaconnector" class="link" target="_blank">\[cl-eta\]</a>
 
 #### Noteworthy
 

@@ -5,69 +5,69 @@ During the last 25 years I've developed a range of larger and smaller tools and 
 #### Libraries/Frameworks
 
 - Chipi - (House) Automation Bus (Common Lisp, hot)  
-<a href="https://github.com/mdbergmann/chipi" target="_blank">[GitHub project]</a>
+<a href="https://github.com/mdbergmann/chipi" target="_blank">\[GitHub project\]</a>
 
-This project is based on Sento. Uses <a href="https://github.com/rabbibotton/clog" target="_blank">[CLOG UI]</a> frameworj with Bootstrap 5 for responsiveness.
+This project is based on Sento. Uses <a href="https://github.com/rabbibotton/clog" target="_blank">\[CLOG UI\]</a> frameworj with Bootstrap 5 for responsiveness.
 
 - Sento - Actor framework (Common Lisp, hot)  
-<a href="https://github.com/mdbergmann/cl-gserver" target="_blank">[GitHub project]</a>
+<a href="https://github.com/mdbergmann/cl-gserver" target="_blank">\[GitHub project\]</a>
 
 #### Applications
 
 - Eloquent - Bible study tool (macOS, Objective-C/Swift, Cocoa, maintained)  
-<a href="https://github.com/mdbergmann/Eloquent" target="_blank">[GitHub project]</a>
+<a href="https://github.com/mdbergmann/Eloquent" target="_blank">\[GitHub project\]</a>
 
 #### Web applications
 
 - Personal blog web page (Common Lisp, maintained)  
-I did a <a href="/blog/Test-driven+Web+application+development+with+Common+Lisp" target="_blank" >[blog entry]</a> capturing the development of this using TDD/ATDD: <a href="https://github.com/mdbergmann/cl-swbymabeweb" target="_blank">[GitHub project]</a>, <a href="/blog" target="_blank">[Blog page]</a>
+I did a <a href="/blog/Test-driven+Web+application+development+with+Common+Lisp" target="_blank" >\[blog entry\]</a> capturing the development of this using TDD/ATDD: <a href="https://github.com/mdbergmann/cl-swbymabeweb" target="_blank">\[GitHub project\]</a>, <a href="/blog" target="_blank">\[Blog page\]</a>
 
     The previous version developed with <a href="https://wicket.apache.org" target="_blank" >Apache Wicket</a> was using a database and had an administration area. The new 'retro' version is more simple and based on conventions.
 
 - House automation data capture (Elixir)  
-Custom web application done in Elixir that can capture my house reader states and post them to <a href="https://www.openhab.org/" target="_blank">[openHAB]</a>:
+Custom web application done in Elixir that can capture my house reader states and post them to <a href="https://www.openhab.org/" target="_blank">\[openHAB\]</a>:
 
-    I also did a <a href="/blog/MVC+Web+Application+with+Elixir" target="_blank">[blog entry]</a> capturing the development of this using TDD:  
-<a href="https://github.com/mdbergmann/elixir_house_stat_util" target="_blank">[GitHub project]</a>
+    I also did a <a href="/blog/MVC+Web+Application+with+Elixir" target="_blank">\[blog entry\]</a> capturing the development of this using TDD:  
+<a href="https://github.com/mdbergmann/elixir_house_stat_util" target="_blank">\[GitHub project\]</a>
 
 #### Tools
 
 - [\[LFE\]](https://github.com/lfe/lfe) (Lisp Flavoured Erlang) language server protocol (LSP) implementation  
-<a href="https://github.com/mdbergmann/lfe-ls" target="_blank">[GitHub project]</a>
+<a href="https://github.com/mdbergmann/lfe-ls" target="_blank">\[GitHub project\]</a>
 
 #### Other utilities, Emacs plugins, etc.
 
 - emacs-bloopunit - Emacs plugin for testing Scala code using Bloop (Emacs Lisp)  
-<a href="https://github.com/mdbergmann/emacs-bloopunit" target="_blank">[GitHub project]</a>
+<a href="https://github.com/mdbergmann/emacs-bloopunit" target="_blank">\[GitHub project\]</a>
 
 - emacs-ocamlunit - Emacs plugin for testing OCaml code (Emacs Lisp)  
-<a href="https://github.com/mdbergmann/emacs-ocamlunit" target="_blank">[GitHub project]</a>
+<a href="https://github.com/mdbergmann/emacs-ocamlunit" target="_blank">\[GitHub project\]</a>
 
 - emacs-lfeunit - Emacs plugin for testing LFE code (Emacs Lisp)  
-<a href="https://github.com/mdbergmann/emacs-lfeunit" target="_blank">[GitHub project]</a>
+<a href="https://github.com/mdbergmann/emacs-lfeunit" target="_blank">\[GitHub project\]</a>
 
 - emacs-tcr-mode - Emacs plugin for Test && Commit || Revert (Emacs Lisp)  
-<a href="https://github.com/mdbergmann/emacs-tcr-mode" target="_blank">[GitHub project]</a>
+<a href="https://github.com/mdbergmann/emacs-tcr-mode" target="_blank">\[GitHub project\]</a>
 
 - ObjCSword - Objective-C Sword wrapper library (Objective-C, Sword). Used in Eloquent.  
-<a href="https://github.com/mdbergmann/ObjCSword" target="_blank">[GitHub project]</a>
+<a href="https://github.com/mdbergmann/ObjCSword" target="_blank">\[GitHub project\]</a>
 
 #### Older, unmaintained projects
 
 - iKnow & Manage - data storage application (macOS, Objective-C, Cocoa, development ceased)  
-<a href="https://github.com/mdbergmann/iKnowAndManage" target="_blank">[GitHub project]</a>
+<a href="https://github.com/mdbergmann/iKnowAndManage" target="_blank">\[GitHub project\]</a>
 
 - FooLogger - Objective-C logging library (Objective-C)  
-<a href="https://github.com/mdbergmann/FooLogger" target="_blank">[GitHub project]</a>
+<a href="https://github.com/mdbergmann/FooLogger" target="_blank">\[GitHub project\]</a>
 
 - CocoPCRE - Objective-C regular expression wrapper library (Objective-C)  
-<a href="https://github.com/mdbergmann/CocoPCRE" target="_blank">[GitHub project]</a>
+<a href="https://github.com/mdbergmann/CocoPCRE" target="_blank">\[GitHub project\]</a>
 
 - fp-lib-m68k - m68k Assembler floating point library (Assembler)  
-<a href="https://github.com/mdbergmann/fp-lib-m68k" target="_blank">[GitHub project]</a>
+<a href="https://github.com/mdbergmann/fp-lib-m68k" target="_blank">\[GitHub project\]</a>
 
 - SwiftLog - Swift logging library (Swift)  
-<a href="https://github.com/mdbergmann/SwiftLog" target="_blank">[GitHub project]</a>
+<a href="https://github.com/mdbergmann/SwiftLog" target="_blank">\[GitHub project\]</a>
 
 - Sqlite Query - Sqlite database query tool (Mac OS X, Objective-C, Cocoa, development ceased)  
 Edit and maintain existing databases or create new ones using this tool.
@@ -108,4 +108,4 @@ For memory testing it uses algorithms like:
     Some of the tests are executed twice (memory cache enabled and disabled).
     The bit fading test can take much longer. It tests if the memory is refreshed and if the bits are stable.
 
-    Available on <a href="https://aminet.net/package/util/moni/sysdiag-0.1.4" target="_blank">[Aminet]</a>.
+    Available on <a href="https://aminet.net/package/util/moni/sysdiag-0.1.4" target="_blank">\[Aminet\]</a>.
