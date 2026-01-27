@@ -227,6 +227,7 @@ It is possible to override this parameter for tests with a mock implementation."
 (defun convert-md-to-html (file)
   (setf 3bmd-code-blocks:*code-blocks* t)
   (setf 3bmd-code-blocks:*renderer* :nohighlight)
+  (setf 3bmd-tables:*tables* t)
   
   (let ((stream (make-string-output-stream)))
     (md:parse-and-print-to-stream file stream)

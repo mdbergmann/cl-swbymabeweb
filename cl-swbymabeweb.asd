@@ -17,6 +17,7 @@
                "str"
                "3bmd"
                "3bmd-ext-code-blocks"
+               "3bmd-ext-tables"
                "xml-emitter"
                "cl-who"
                "sento")
