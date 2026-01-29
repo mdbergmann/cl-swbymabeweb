@@ -148,6 +148,10 @@ SCREEN CLOSE 1
 
 The `SLEEP` in the wait loop is important -- without it the program would busy-wait and hog the CPU. On the Amiga, being friendly to other tasks matters.
 
+Here is a screenshot of the demo running on a Vampire V4SA:
+
+<img src="/static/gfx/blogs/aga256.jpg" alt="AGA 256-Color Demo" width="720" />
+
 ### Conclusion
 
 AGA support in ACE v2.5 opens up 256-color and HAM8 screen modes for BASIC programmers on A1200, A4000, and CD32 hardware. Combined with runtime chipset detection, programs can gracefully handle different Amiga configurations while taking advantage of the more capable hardware when available.
