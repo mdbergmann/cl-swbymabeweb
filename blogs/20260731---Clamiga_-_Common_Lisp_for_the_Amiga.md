@@ -8,7 +8,7 @@ The name is simple: *Common Lisp for the Amiga* becomes CL-Amiga, and said out l
 
 ### A few words about Common Lisp
 
-Common Lisp is one of the older programming languages still in active use. Yes, there are that still use it in industry and many other domains. The ANSI standard is from 1994 and has not changed since -- and yet the language feels surprisingly modern. It has a full object system with multiple dispatch (CLOS), a condition system that goes beyond exceptions, macros that let you extend the language itself, and an incredibly interactive, image-based development style where you compile and redefine functions in a live running system (more of that incredible feature later). Many "new" language features of the last decades existed in Common Lisp long before.
+Common Lisp is one of the older programming languages still in active use. Yes, it is still used in industry and many other domains. The ANSI standard is from 1994 and has not changed since -- and yet the language feels surprisingly modern. It has a full object system with multiple dispatch (CLOS), a condition system that goes beyond exceptions, macros that let you extend the language itself, and an incredibly interactive, image-based development style where you compile and redefine functions in a live running system. Many "new" language features of the last decades existed in Common Lisp long before.
 
 I won't repeat all of that here. If you want a proper introduction, I wrote a primer a few years ago: <a href="/blog/Common+Lisp+-+Oldie+but+goldie" class="link">[Common Lisp - Oldie but goldie]</a>. There is also a post about <a href="/blog/Functional+Programming+in+(Common)+Lisp" class="link">[functional programming in Common Lisp]</a> if you find that interesting.
 
@@ -134,12 +134,15 @@ Clamiga ships Lisp bindings for Intuition, Graphics, and GadTools, loaded on dem
 (require "amiga/intuition")
 (require "amiga/graphics")
 
-(defpackage #:hello-amiga
-  (:use #:cl)
-  (:local-nicknames (#:it #:amiga.intuition)
-                    (#:gfx #:amiga.gfx)))
+(defpackage :hello-amiga
+  (:use :cl)
+  ;; using nicknames here, 
+  ;; alternative is import full amiga.intuition and amiga.gfx in :use declaration, 
+  ;; but that pulls in all symbols
+  (:local-nicknames (:it :amiga.intuition)
+                    (:gfx :amiga.gfx)))
                       
-(in-package #:hello-amiga)
+(in-package :hello-amiga)
 
 (defun main ()
   (it:with-window (win :title "Hello Amiga"
