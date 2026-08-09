@@ -86,8 +86,7 @@ The MorphOS build is a fully native PowerPC binary, compiled under MorphOS with 
 
 The one thing the MorphOS build omits is the JIT, which is m68k-only -- it runs the portable bytecode VM like the host build. But on a G4 or G5 that VM is *fast*. Fast enough that MorphOS is a specific target for the full **Quicklisp** experience: installing the client, downloading dists, and quickloading real libraries with their whole dependency graphs is entirely practical there, where on a 14 MHz 68020 it is not.
 
-<!-- screenshot may be replaced with a more recent one later -->
-<img src="/static/gfx/blogs/clamiga-mos.png" alt="Clamiga booting and running on MorphOS" width="720" />
+<img src="../static/gfx/blogs/clamiga-mos_1.png" alt="Clamiga booting and running on MorphOS" width="720" />
 
 ### Setting up Quicklisp
 
@@ -114,12 +113,12 @@ Libraries (selection) confirmed working via `quickload` plus their own `asdf:tes
 
  - <a href="https://github.com/kmx-io/alexandria" class="link" target="_blank">[alexandria]</a> the de-facto standard utility collection
  - <a href="https://github.com/lispci/fiveam" class="link" target="_blank">[fiveam]</a> my favorite unit testing framework
- - <a href="https://github.com/slburson/fset" class="link" target="_blank">[FSet]</a> a functional collection library
+ - <a href="https://github.com/mdbergmann/fset" class="link" target="_blank">[FSet]</a> a functional (immutable) collection library (note, Fset requires a specific implementation for Clamgia which is not yet upstream but in my fork only)
  - <a href="https://vindarel.github.io/cl-str/" class="link" target="_blank">[str]</a> a string utility library
  - <a href="https://github.com/edicl/drakma" class="link" target="_blank">[Drakma]</a> HTTP/HTTPS client
  - <a href="https://github.com/edicl/hunchentoot" class="link" target="_blank">[Hunchentoot]</a> web server
 
-(Drakma and Hunchentoot must be started without SSL, an binding to an Amiga SSL is missing at the moment)
+(Drakma and Hunchentoot must be started without SSL, a binding to an Amiga SSL is missing at the moment)
 
 ### Native Amiga GUI from Lisp
 
@@ -160,19 +159,165 @@ Clamiga ships Lisp bindings for Intuition, Graphics, and GadTools, loaded on dem
 
 There are also custom screens, RTG-safe offscreen bitmaps with blitter compositing, GadTools gadgets and menus, audio.device playback -- and when the abstractions are not enough, raw register-based library calls into any AmigaOS library through a hand-written 68k trampoline. So even where a binding is missing, nothing is out of reach.
 
+Intuition window in AmigaOS.
+
 <img src="../static/gfx/blogs/clamiga-aos3_demo.jpg" alt="Clamiga native GUI example" width="720" />
+
+Intuition window in MorphOS, same code.
+
+<img src="../static/gfx/blogs/clamiga-mos_demo.png" alt="Clamiga native GUI example" width="720" />
 
 ### Inspector
 
-### Debugger
+Common Lisp implementation usually come with an inspector that allows to inspect life values in the runtime through the repl.
+Clamiga has that, too. The example below: 
 
-### Development on the host
+- sets up a variable `defvar` and initializes it with an empty hash-table.
+- then set a key-value pair "foo"->"bar".
+- then we can inspect the hash-table `*ht*` by `(inspect *ht*)`.
+- this will show the entries of the hash-table
+- we can further inspect the hash-table entry by choosing the `0` entry, which consists of `car` and `cdr` values for key and value.
+- each of these can be further inspected.
+
+So basically it is possible to inspect a simple variables or whole trees.
+
+<img src="../static/gfx/blogs/clamiga-mos_inspect.png" alt="Clamiga native GUI example" width="720" />
+
+### Debugger, conditions and restarts
+
+A debugger is also an essential part in a Common Lisp implementation. Raising a condition of type `error` will (except it is explicitly disabled) open the debugger if it is not handled by `handler-case`, `handler-bind`, `unwind-protect` or ignored by `ignore-errors` forms.
+
+So from the repl you can just:
+
+```
+COMMON-LISP-USER> (error "Hello error!")
+
+Debugger entered: SIMPLE-ERROR: Hello error!
+
+Backtrace:
+  0: <anonymous> (line 1)
+
+Available restarts:
+  0: Return to top level
+Debugger commands:
+  <number>  — invoke restart by number
+  :bt [n]   — show backtrace (n frames, or "all")
+  :q        — return to top level
+  :help     — show this help
+  <expr>    — evaluate a Lisp expression
+
+Debug>
+```
+
+And you'll be dropped into the debugger. Now in this case there is not really a lot to do.
+The backtrace is practically empty and there are no restarts available.
+
+Let's try a more sophisticated example (used from the article <a href="/blog/Common+Lisp+-+Oldie+but+goldie" class="link">[Common Lisp - Oldie but goldie]</a>):
+
+We first define a few conditions (like exceptions in other languages).  
+
+```lisp
+COMMON-LISP-USER> (define-condition my-err1 () ())
+MY-ERR1
+COMMON-LISP-USER> (define-condition my-err2 () ())
+MY-ERR2
+COMMON-LISP-USER> (define-condition my-err3 () ())
+MY-ERR3
+COMMON-LISP-USER> (define-condition my-err4 () ())
+MY-ERR4
+```
+
+Then we define a function `lower` which sets up 3 restart cases.
+
+```lisp
+COMMON-LISP-USER> (defun lower (err-cond)
+                >   (restart-case
+                >       (error err-cond)
+                >     (restart-case1 (&optional arg)
+                >       (format t "restart-case1 arg:~a~%" arg))
+                >     (restart-case2 (&optional arg)
+                >       (format t "restart-case2 arg:~a~%" arg))
+                >     (restart-case3 (&optional arg)
+                >       (format t "restart-case3 arg:~a~%" arg))))
+LOWER
+```
+
+Then we define a function `higher` that essentially calls `lower` with the 4 conditions.
+However, `lower` is called wrapped inside `handler-bind` form which sets up an automatic catch and restart invokation for conditions `my-err1`, `my-err2` and `my-err3`. `my-err4` is is not handled by `handler-bind` and will drop into the debugger.
+
+```lisp
+COMMON-LISP-USER> (defun higher ()
+                >   (handler-bind
+                >       ((my-err1 (lambda (c)
+                >                   (format t "condition: ~a~%" c)
+                >                   (invoke-restart 'restart-case1 "foo1")))
+                >        (my-err2 (lambda (c)
+                >                   (format t "condition: ~a~%" c)
+                >                   (invoke-restart 'restart-case2 "foo2")))
+                >        (my-err3 (lambda (c)
+                >                   (format t "condition: ~a~%" c)
+                >                   (invoke-restart 'restart-case3 "foo3"))))
+                >     (lower 'my-err1)
+                >     (lower 'my-err2)
+                >     (lower 'my-err3)
+                >     (lower 'my-err4)))
+HIGHER
+COMMON-LISP-USER> (higher)
+condition: #<CONDITION MY-ERR1>
+restart-case1 arg:foo1
+condition: #<CONDITION MY-ERR2>
+restart-case2 arg:foo2
+condition: #<CONDITION MY-ERR3>
+restart-case3 arg:foo3
+
+Debugger entered: MY-ERR4
+
+Backtrace:
+  0: <anonymous> (line 2)
+  1: <anonymous> (line 15)
+  2: <anonymous> (line 1)
+
+Available restarts:
+  0: RESTART-CASE3
+  1: RESTART-CASE2
+  2: RESTART-CASE1
+  3: Return to top level
+Debugger commands:
+  <number>  — invoke restart by number
+  :bt [n]   — show backtrace (n frames, or "all")
+  :q        — return to top level
+  :help     — show this help
+  <expr>    — evaluate a Lisp expression
+```
+
+Now in the debugger we can manually choose and invoke the restart (defined in `lower`).
+
+```lisp
+Debug> 2
+restart-case1 arg:NIL
+NIL
+```
+
+What this makes visible is that unlike exceptions (in other languages) whoose call stack is collapsed, using `handler-bind` in Common Lisp it is not.  
+`lower` simulating 'something being done' on a lower level can setup error cases and how to recover from the error by available restarts and invoking that restart at that level of the call stack.  
+The `higher` function, simulating a higher-level call, can either, based on a certain condition, automatically choose a restarts or have a 'human in the loop' who can select a restart.
+
+While Clamiga supports all this, there are a few limitations. I.e. the backtrace only shows `<anonymous>` for functions defined at the repl. this will be fixed in future versions.
+
+### Disassembler
+
+### Native m68k Amiga jit disassembler
+
+
+
+### Development on the host (macOS/Linux)
 
 Because the same binary behavior exists on macOS and Linux, you get a comfortable development setup: Clamiga speaks the SLYNK protocol, so you can drive it from Emacs with SLY -- REPL, completion, jump-to-definition, the inspector, and the SLDB debugger. Write and test your code on the fast host, then run the same sources (or even the same FASLs, when targeting MorphOS) on the Amiga.
 
 ### Status
 
-Clamiga is still a young project, but in its current state it is stable for what it does. The core language runs real-world libraries with their full dependency graphs, and a broad test suite covers threading, CLOS, conditions, the numeric tower, FFI, the JIT, and the Amiga GUI. Full ANSI conformance is the goal but not reached yet -- the Paul Dietz ANSI test suite is the working spec, and the CONS, SYMBOLS, NUMBERS, and SEQUENCES sections pass.
+Clamiga is still a young project, but in its current state it is stable for what it does. The core language runs real-world libraries with their full dependency graphs, and a broad test suite covers threading, CLOS, conditions, the numeric tower, FFI, the JIT, and the Amiga GUI. Full ANSI conformance is the goal but not reached yet -- the Paul Dietz ANSI test suite is the working spec, and the CONS, SYMBOLS, NUMBERS, and SEQUENCES sections pass.  
+We can expect more AmigaOS API coverage, including AHI and MUI, maybe ReAction, as well as other pure Common Lisp features.
 
 ### Conclusion
 
