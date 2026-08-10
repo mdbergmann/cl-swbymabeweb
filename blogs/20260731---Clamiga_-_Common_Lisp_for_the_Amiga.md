@@ -4,11 +4,13 @@ After the ACE BASIC posts of the last month, this one is about a different proje
 
 The name is simple: *Common Lisp for the Amiga* becomes CL-Amiga, and said out loud that is "Clamiga". And since *amiga* is Spanish/Portuguese for a (female) friend (Amiga users should know), the name does double duty: the Lisp that runs on your Amiga, and the Lisp that is your *amiga* ;).
 
+(see project link at the bottom)
+
 <img src="../static/gfx/blogs/clamiga-aos3_1.jpg" alt="Clamiga running on AmigaOS 3" width="720" />
 
 ### A few words about Common Lisp
 
-Common Lisp is one of the older programming languages still in active use. Yes, it is still used in industry and many other domains. The ANSI standard is from 1994 and has not changed since -- and yet the language feels surprisingly modern. It has a full object system with multiple dispatch (CLOS), a condition system that goes beyond exceptions, macros that let you extend the language itself, and an incredibly interactive, image-based development style where you compile and redefine functions in a live running system. Many "new" language features of the last decades existed in Common Lisp long before.
+Common Lisp is one of the older programming languages still in active use. Yes, it is used in industry and many other domains. The ANSI standard is from 1994 and has not changed since -- and yet the language feels surprisingly modern (usually old Common Lisp programs that are ANSI compliant compile also on modern compilers). It has a full object system with multiple dispatch (CLOS), a condition system that goes beyond exceptions, macros that let you extend the language itself, and an incredibly interactive, image-based development style where you compile and redefine functions in a live running system. Many "new" language features of the last decades existed in Common Lisp long before.
 
 I won't repeat all of that here. If you want a proper introduction, I wrote a primer a few years ago: <a href="/blog/Common+Lisp+-+Oldie+but+goldie" class="link">[Common Lisp - Oldie but goldie]</a>. There is also a post about <a href="/blog/Functional+Programming+in+(Common)+Lisp" class="link">[functional programming in Common Lisp]</a> if you find that interesting.
 
@@ -16,17 +18,17 @@ I won't repeat all of that here. If you want a proper introduction, I wrote a pr
 
 There are excellent Common Lisp implementations out there -- SBCL, CCL, ECL, Clasp, CLISP (unmaintained in decades), or even commercial ones like LispWorks and Allegro.
 
-**Because none of them run on the Amiga.** The high-performance implementations (SBCL, CCL) are native-code compilers tied to modern architectures -- x86-64, ARM, PPC -- with no 68k backend and a memory footprint measured in tens of megabytes. Clasp is built on LLVM. CLISP, the closest in spirit -- a compact bytecode interpreter written in C -- has not had a maintained AmigaOS build in decades.
+**But none of them run on the Amiga.** The high-performance implementations (SBCL, CCL) are native-code compilers tied to modern architectures -- x86-64, ARM, PPC -- with no 68k backend and a memory footprint measured in tens of megabytes. Clasp is built on LLVM. CLISP, the closest in spirit -- a compact bytecode interpreter written in C -- is unmaintained for many years and has not had a AmigaOS build in decades.
 
 Clamiga is built to run on m68k Amigas. It has a self-contained bytecode VM in portable C with no external runtime dependencies -- no libffi, no LLVM, no C compiler needed at runtime. A full Common Lisp implementation, its language and runtime features, means that it won't break performance records compared to just C or assembler programs on the Amiga. So it's not meant to code games with it that need super-fast scrolling or so. The m68k-JIT tries to squeeze more performance out of it, but it has its limits.
 
-It has other features, i.e. the full numeric tower, from bits (bitvector) over fractions and complex numbers to big integers out of the box. It has a repl for interactive development, a debugger, and an inspector. Recilience using the condition system, restarts, and all that (see my Oldie but Goldie article above). You have sockets, threads, file system access, streams that are implemented natively to the AmigaOS APIs so that Common Lisp code stays compliant and often needs no porting to other systems. CLOS (Common Lisp Object System) is the most advanced object system I came across. And you could do functional programming also if you wanted to.
+It has other features, i.e. the full numeric tower, from bits (bitvector) over ratios and complex numbers to big integers out of the box. It has a repl for interactive development, a debugger, and an inspector. Recilience using the condition system, restarts, and all that (see my Oldie but Goldie article above). You have sockets, threads, file system access, streams that are implemented natively to the AmigaOS APIs so that Common Lisp code stays compliant and often needs no porting to other systems. CLOS (Common Lisp Object System) is the most advanced object system I came across. And you could do functional programming also if you wanted to.
 
-But let's look at more technical things.
+But let's look at a few more technical things.
 
 ### Some upfront glossary that is mentioned below
 
-- <a href="https://asdf.common-lisp.dev/" class="link" target="_blank">[ASDF]</a>: Another System Definition Facility, is the de facto standard build facility for Common Lisp. Most Common Lisp 'libraries' in ASDF charge called 'systems' are built with ASDF. Practically all Common Lisp implementations that are maintained today ship ASDF and so does Clamiga.
+- <a href="https://asdf.common-lisp.dev/" class="link" target="_blank">[ASDF]</a>: Another System Definition Facility, is the de facto standard build facility for Common Lisp. Most Common Lisp 'libraries' (in ASDF called 'systems') are built with ASDF. Practically all Common Lisp implementations that are maintained today ship ASDF with it and so does Clamiga.
 - FASL: FASt Load. FASL files are generated when compiling Lisp source code, i.e. via (compile-file "foo.lisp"). FASL files are faster to load than Lisp source code files because they are already compiled to a serialised format. All Common Lisp variants implement FASL, so does Clamiga. The Clamiga generated FASL files, when generated on either m68k or PPC, are interchangeable between those two architectures.
 - <a href="https://www.quicklisp.org/beta/" class="link" target="_blank">[Quicklisp]</a> is a library manager for Common Lisp containing over 1,500 libraries. Clamiga ships with compatibility shims so that (theoretically) many libraries available on Quicklisp can be used. Though many require more computing power and are probably out of reach for a m68020.
 
@@ -38,7 +40,7 @@ Clamiga is a single-pass compiler from S-expressions to bytecode, executed by a 
 - **Compacting GC.** A small heap fragments quickly. The mark-and-sweep collector can slide-compact the heap when fragmentation blocks an allocation, so a long-running session on 4 or 8 MB does not slowly die.
 - **Architecture-agnostic bytecode.** Because execution is bytecode, the same compiled Lisp runs unchanged on 68k and PowerPC. The compiled FASL files are byte-compatible between AmigaOS 3 and MorphOS.
 
-The nice side effect of the portable C core: the exact same system builds and runs on macOS and Linux. Development, debugging, and most testing happen on a fast host, and the result behaves identically on the Amiga.
+The nice side effect of the portable C core: the exact same system builds and runs on macOS and Linux. Development, debugging, and most testing happen on a fast host, and the result behaves (in most cases) identically on the Amiga.
 
 ### On the classic Amiga: living with 4 MB, well, less also works
 
@@ -84,7 +86,7 @@ The JIT is on by default; `--no-jit` keeps functions bytecode-only if you want t
 
 The MorphOS build is a fully native PowerPC binary, compiled under MorphOS with the SDK's GCC -- not a 68k binary running under emulation (though the m68k binary works, too). Threading, sockets, and the whole Amiga FFI/GUI/audio stack work like on classic AmigaOS; Amiga library calls are dispatched from PPC code to the library bases through MorphOS's ABox layer. PPC is 32-bit and big-endian like m68k, so FASL files compiled on one system load on the other.
 
-The one thing the MorphOS build omits is the JIT, which is m68k-only -- it runs the portable bytecode VM like the host build. But on a G4 or G5 that VM is *fast*. Fast enough that MorphOS is a specific target for the full **Quicklisp** experience: installing the client, downloading dists, and quickloading real libraries with their whole dependency graphs is entirely practical there, where on a 14 MHz 68020 it is not.
+The one thing the MorphOS build omits is the JIT, which is m68k-only -- it runs the portable bytecode VM like the macOS/Linux builds. But on a G4 or G5 that VM is *fast*. Fast enough that MorphOS is a specific target for the full **Quicklisp** experience: installing the client, downloading dists, and quickloading real libraries with their whole dependency graphs is entirely practical there, where on a 14 MHz 68020 it is not.
 
 <img src="../static/gfx/blogs/clamiga-mos_1.png" alt="Clamiga booting and running on MorphOS" width="720" />
 
@@ -108,6 +110,8 @@ And in any later session:
 ;; load Alexandria library
 (ql:quickload "alexandria")
 ```
+
+Set this (the boilerplate loads) in `~/.clamigarc` init-file so it will load automatically on every start of Clamiga.
 
 Libraries (selection) confirmed working via `quickload` plus their own `asdf:test-system` suites include:
 
@@ -135,9 +139,7 @@ Clamiga ships Lisp bindings for Intuition, Graphics, and GadTools, loaded on dem
 
 (defpackage :hello-amiga
   (:use :cl)
-  ;; using nicknames here, 
-  ;; alternative is import full amiga.intuition and amiga.gfx in :use declaration, 
-  ;; but that pulls in all symbols
+  ;; using nicknames here, to make the package explicit
   (:local-nicknames (:it :amiga.intuition)
                     (:gfx :amiga.gfx)))
                       
@@ -214,7 +216,7 @@ The backtrace is practically empty and there are no restarts available.
 
 Let's try a more sophisticated example (used from the article <a href="/blog/Common+Lisp+-+Oldie+but+goldie" class="link">[Common Lisp - Oldie but goldie]</a>):
 
-We first define a few conditions (like exceptions in other languages).  
+We first define a few conditions (like exceptions in other languages).
 
 ```lisp
 COMMON-LISP-USER> (define-condition my-err1 () ())
@@ -302,13 +304,89 @@ What this makes visible is that unlike exceptions (in other languages) whose cal
 `lower` simulating 'something being done' on a lower level can set up error cases and how to recover from the error by available restarts and invoking that restart at that level of the call stack.  
 The `higher` function, simulating a higher-level call, can either, based on a certain condition, automatically choose a restart or have a 'human in the loop' who can select a restart.
 
-While Clamiga supports all this, there are a few limitations. I.e. the backtrace only shows `<anonymous>` for functions defined at the repl. This will be fixed in future versions.
+While Clamiga supports all this, as time of writing there is a bug which shows only `<anonymous>` for a certain set of defined functions. This was already fixed in current Git HEAD.
 
 ### Disassembler
 
+A disassembler also usually is part of the built-in tooling. Invoked by `disabbemble`. Example:
+
+```lisp
+COMMON-LISP-USER> (defun f (a) (1+ a))
+F
+COMMON-LISP-USER> (disassemble 'f)
+Disassembly of F:
+  1 required, 0 optional, 0 key
+  2 locals, 0 upvalues
+  13 bytes, 1 constants
+
+  0000: FLOAD        0    ; 1+
+  0003: LOAD         0
+  0005: TAILCALL     1
+  0007: STORE        1
+  0009: POP
+  0010: LOAD         1
+  0012: RET
+
+Constants:
+  0: 1+
+```
+
+Since Clamiga uses a bytecode VM the assembly is bytecode assembly. SBCL or CCL do output native assembly.
+
+However, for m68k Clamiga implememnts a JIT and can emit m68k assembly.
+
 ### Native m68k Amiga jit disassembler
 
+Clamiga when run on Amiga m68k, the macro `jitexpand` can generate m68k assembly.
 
+The macro takes a `defun`, a `lambda`, or any expression — an expression is wrapped in a thunk that is never called, so free variables need not be bound:
+
+```lisp
+(jitexpand (defun add1 (x) (+ x 1)))   ; defines, then disassembles
+(jitexpand (lambda (x) (car x)))
+(jitexpand (+ x 1))
+```
+
+The first example is expanded as:
+
+```
+  ; JIT disassembly of ADD1:
+    0000: 4E 56 FF FC        link a6,#-4
+    0004: 2F 07              move.l d7,-(a7)
+    0006: 2F 06              move.l d6,-(a7)
+    0008: 2F 05              move.l d5,-(a7)
+    0010: 2A 2E 00 0C        move.l 12(a6),d5
+    0014: 7C 03              moveq #3,d6
+    0016: 22 06              move.l d6,d1
+    0018: 20 05              move.l d5,d0
+    0020: 08 00 00 00        btst #0,d0
+    0024: 67 00 00 18        beq.w 50
+    0028: 08 01 00 00        btst #0,d1
+    0032: 67 00 00 10        beq.w 50
+    0036: D0 81              add.l d1,d0
+    0038: 69 00 00 08        bvs.w 48
+    0042: 53 80              subq.l #1,d0
+    0044: 60 00 00 10        bra.w 62
+    0048: 90 81              sub.l d1,d0
+    0050: 2F 01              move.l d1,-(a7)
+    0052: 2F 00              move.l d0,-(a7)
+    0054: 4E B9 08 1E C7 00  jsr $081ec700
+    0060: 50 8F              addq.l #8,a7
+    0062: 2A 00              move.l d0,d5
+    0064: 2D 45 FF FC        move.l d5,-4(a6)
+    0068: 2A 2E FF FC        move.l -4(a6),d5
+    0072: 20 05              move.l d5,d0
+    0074: 2E 2E FF F8        move.l -8(a6),d7
+    0078: 2C 2E FF F4        move.l -12(a6),d6
+    0082: 2A 2E FF F0        move.l -16(a6),d5
+    0086: 4E 5E              unlk a6
+    0088: 4E 75              rts
+```
+
+Why is there so much code  for that simple `add1`?
+
+Common Lisp's `+` is generic: operands may be fixnums, bignums, floats, or ratios, and a fixnum sum that overflows must promote to a bignum.  
+When both operands are fixnums and there's no overflow — the overwhelmingly common case — execution runs straight through and never leaves the generated code: no jsr, no C stack frame, no type-dispatch switch. Counting precisely, a full call of ADD1 on the hot path executes 25 instructions (of which the `+` itself is about 10; the rest is frame setup, argument load, and the callee-save/restore of D5–D7, which the JIT uses as its stack-top register cache).
 
 ### Development on the host (macOS/Linux)
 
@@ -316,8 +394,16 @@ Because the same binary behaviour exists on macOS and Linux, you get a comfortab
 
 ### Status
 
-Clamiga is still a young project, but in its current state, it is stable for what it does. The core language runs real-world libraries with their full dependency graphs, and a broad test suite covers threading, CLOS, conditions, the numeric tower, FFI, the JIT, and the Amiga GUI. Full ANSI conformance is the goal but not reached yet -- the Paul Dietz ANSI test suite is the working spec, and the CONS, SYMBOLS, NUMBERS, and SEQUENCES sections pass.  
-We can expect more AmigaOS API coverage, including AHI and MUI, maybe ReAction, as well as other pure Common Lisp features.
+Clamiga is still a young project, but in its current state, it is stable for what it does. The core language runs real-world libraries with their full dependency graphs, and a broad test suite covers threading, CLOS, conditions, the numeric tower, FFI, the JIT, and the Amiga GUI. Full ANSI conformance is the goal but not reached yet -- the Paul Dietz ANSI test suite is the working spec, and the CONS, SYMBOLS, NUMBERS, and SEQUENCES sections pass.
+
+### Roadmap
+
+Many things. A more complete AmigaOS API interface. More MorphOS specifics where it makes sense.  
+ARexx port for easier integration with editors to get a similar super convenient workflow as with Emacs and the Slime/Sly plugin.  
+More ANSI compliance.  
+Better inspector, better debugger.  
+Performance improvements, maybe a PPC JIT.
+Many things are possible.
 
 ### Conclusion
 
