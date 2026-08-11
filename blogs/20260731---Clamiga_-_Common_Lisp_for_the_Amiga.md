@@ -12,7 +12,7 @@ The name is simple: *Common Lisp for the Amiga* becomes CL-Amiga, and said out l
 
 Common Lisp is one of the older programming languages still in active use. Yes, it is used in industry and many other domains. The ANSI standard is from 1994 and has not changed since -- and yet the language feels surprisingly modern (usually old Common Lisp programs that are ANSI compliant compile also on modern compilers). It has a full object system with multiple dispatch (CLOS), a condition system that goes beyond exceptions, macros that let you extend the language itself, and an incredibly interactive, image-based development style where you compile and redefine functions in a live running system. Many "new" language features of the last decades existed in Common Lisp long before.
 
-I won't repeat all of that here. If you want a proper introduction, I wrote a primer a few years ago: <a href="/blog/Common+Lisp+-+Oldie+but+goldie" class="link">[Common Lisp - Oldie but goldie]</a>. There is also a post about <a href="/blog/Functional+Programming+in+(Common)+Lisp" class="link">[functional programming in Common Lisp]</a> if you find that interesting.
+I won't repeat all of that here. If you want a proper introduction, I wrote a primer a few years ago: <a href="/blog/Common+Lisp+-+Oldie+but+goldie" class="link">Common Lisp - Oldie but goldie</a>. There is also a post about <a href="/blog/Functional+Programming+in+(Common)+Lisp" class="link">functional programming in Common Lisp</a> if you find that interesting.
 
 ### Why another Common Lisp implementation?
 
@@ -28,9 +28,9 @@ But let's look at a few more technical things.
 
 ### Some upfront glossary that is mentioned below
 
-- <a href="https://asdf.common-lisp.dev/" class="link" target="_blank">[ASDF]</a>: Another System Definition Facility, is the de facto standard build facility for Common Lisp. Most Common Lisp 'libraries' (in ASDF called 'systems') are built with ASDF. Practically all Common Lisp implementations that are maintained today ship ASDF with it and so does Clamiga.
+- <a href="https://asdf.common-lisp.dev/" class="link" target="_blank">ASDF</a>: Another System Definition Facility, is the de facto standard build facility for Common Lisp. Most Common Lisp 'libraries' (in ASDF called 'systems') are built with ASDF. Practically all Common Lisp implementations that are maintained today ship ASDF with it and so does Clamiga.
 - FASL: FASt Load. FASL files are generated when compiling Lisp source code, i.e. via (compile-file "foo.lisp"). FASL files are faster to load than Lisp source code files because they are already compiled to a serialised format. All Common Lisp variants implement FASL, so does Clamiga. The Clamiga generated FASL files, when generated on either m68k or PPC, are interchangeable between those two architectures.
-- <a href="https://www.quicklisp.org/beta/" class="link" target="_blank">[Quicklisp]</a> is a library manager for Common Lisp containing over 1,500 libraries. Clamiga ships with compatibility shims so that (theoretically) many libraries available on Quicklisp can be used. Though many require more computing power and are probably out of reach for a m68020.
+- <a href="https://www.quicklisp.org/beta/" class="link" target="_blank">Quicklisp</a> is a library manager for Common Lisp containing over 1,500 libraries. Clamiga ships with compatibility shims so that (theoretically) many libraries available on Quicklisp can be used. Though many require more computing power and are probably out of reach for a m68020.
 
 ### How it works
 
@@ -115,12 +115,12 @@ Set this (the boilerplate loads) in `~/.clamigarc` init-file so it will load aut
 
 Libraries (selection) confirmed working via `quickload` plus their own `asdf:test-system` suites include:
 
- - <a href="https://github.com/kmx-io/alexandria" class="link" target="_blank">[alexandria]</a> the de facto standard utility collection
- - <a href="https://github.com/lispci/fiveam" class="link" target="_blank">[fiveam]</a> my favourite unit testing framework
- - <a href="https://github.com/mdbergmann/fset" class="link" target="_blank">[FSet]</a> a functional (immutable) collection library (note, Fset requires a specific implementation for Clamdia which is not yet upstream but in my fork only)
- - <a href="https://vindarel.github.io/cl-str/" class="link" target="_blank">[str]</a> a string utility library
- - <a href="https://github.com/edicl/drakma" class="link" target="_blank">[Drakma]</a> HTTP/HTTPS client
- - <a href="https://github.com/edicl/hunchentoot" class="link" target="_blank">[Hunchentoot]</a> web server
+ - <a href="https://github.com/kmx-io/alexandria" class="link" target="_blank">alexandria</a> the de facto standard utility collection
+ - <a href="https://github.com/lispci/fiveam" class="link" target="_blank">fiveam</a> my favourite unit testing framework
+ - <a href="https://github.com/mdbergmann/fset" class="link" target="_blank">FSet</a> a functional (immutable) collection library (note, Fset requires a specific implementation for Clamdia which is not yet upstream but in my fork only)
+ - <a href="https://vindarel.github.io/cl-str/" class="link" target="_blank">str</a> a string utility library
+ - <a href="https://github.com/edicl/drakma" class="link" target="_blank">Drakma</a> HTTP/HTTPS client
+ - <a href="https://github.com/edicl/hunchentoot" class="link" target="_blank">Hunchentoot</a> web server
 
 (Drakma and Hunchentoot must be started without SSL, a binding to an Amiga SSL is missing at the moment)
 
@@ -214,7 +214,7 @@ Debug>
 And you'll be dropped into the debugger. Now in this case there is not really a lot to do.
 The backtrace is practically empty and there are no restarts available.
 
-Let's try a more sophisticated example (used from the article <a href="/blog/Common+Lisp+-+Oldie+but+goldie" class="link">[Common Lisp - Oldie but goldie]</a>):
+Let's try a more sophisticated example (used from the article <a href="/blog/Common+Lisp+-+Oldie+but+goldie" class="link">Common Lisp - Oldie but goldie</a>):
 
 We first define a few conditions (like exceptions in other languages).
 
@@ -408,4 +408,4 @@ Performance improvements, maybe a PPC JIT.
 
 Clamiga exists to bring a modern, library-capable Common Lisp to hardware every other implementation left behind. On a classic 68k Amiga, you get a full Common Lisp with a native JIT that fits in a few megabytes of RAM. On MorphOS, you get a native PPC build fast enough for the whole Quicklisp ecosystem. And on macOS or Linux, you get the same system with comfortable Emacs tooling for development.
 
-The project lives on <a href="https://github.com/mdbergmann/cl-amiga" target="_blank" class="link">[GitHub]</a>. Bug reports, feature requests, and curious REPL sessions are welcome.
+The project lives on <a href="https://github.com/mdbergmann/cl-amiga" target="_blank" class="link">GitHub</a>. Bug reports, feature requests, and curious REPL sessions are welcome.

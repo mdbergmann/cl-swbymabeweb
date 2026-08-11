@@ -1,6 +1,7 @@
 :root {
     --main-color: rgb(232, 128, 0);
     --bright-color: rgb(255, 200, 18);
+    --link-color: rgb(244, 160, 8);
     --darker-color: rgb(202, 108, 0);
     --code-color: rgb(255, 200, 168);
     --default-font-size: 12pt;
@@ -30,8 +31,17 @@ a {
     text-decoration: none;
     color: var(--main-color);
 }
+a.link {
+    color: var(--link-color);
+}
 a:hover, a:focus {
     color: var(--bright-color);
+}
+a.link::before {
+    content: "[";
+}
+a.link::after {
+    content: "]";
 }
 code {
     font-family: "Courier New", monospace;

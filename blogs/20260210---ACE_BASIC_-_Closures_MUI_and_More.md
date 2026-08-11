@@ -166,7 +166,7 @@ Every callback receives the cell's raw value as `ADDRESS carVal` and a type tag 
 
 `LMap` applies a callback to every element and returns a new list. `LFilter` returns a new list containing only elements for which the callback returns non-zero. `LReduce` folds the list into a single value using an accumulator. All three take a `BIND(@callback)` closure, which is where the `INVOKABLE` keyword matters.
 
-The submodule also provides `LForEach` for side-effecting iteration, and destructive variants `LNmap` and `LNfilter` that modify the list in place. The full API is documented in the <a href="https://github.com/mdbergmann/ACEBasic/tree/master/submods/list" target="_blank" class="link">\[List submodule README\]</a>.
+The submodule also provides `LForEach` for side-effecting iteration, and destructive variants `LNmap` and `LNfilter` that modify the list in place. The full API is documented in the <a href="https://github.com/mdbergmann/ACEBasic/tree/master/submods/list" target="_blank" class="link">List submodule README</a>.
 
 ### MUI Support
 
@@ -176,7 +176,7 @@ Version 2.7 adds a MUI submodule that wraps the raw MUI API into builder-style c
 
 #### The raw approach
 
-Programming MUI directly from ACE BASIC means working with tag arrays and `MUI_NewObjectA` calls. A minimal "Hello World" window takes around 150 lines of code: you allocate tag items, fill in tag IDs and values, create each MUI object by hand, set up notifications with `DoMethodA`, run the event loop, and dispose everything. The <a href="https://github.com/mdbergmann/ACEBasic/blob/master/examples/mui/SimpleMUI.b" target="_blank" class="link">\[SimpleMUI.b\]</a> example in the repository shows this approach in full.
+Programming MUI directly from ACE BASIC means working with tag arrays and `MUI_NewObjectA` calls. A minimal "Hello World" window takes around 150 lines of code: you allocate tag items, fill in tag IDs and values, create each MUI object by hand, set up notifications with `DoMethodA`, run the event loop, and dispose everything. The <a href="https://github.com/mdbergmann/ACEBasic/blob/master/examples/mui/SimpleMUI.b" target="_blank" class="link">SimpleMUI.b</a> example in the repository shows this approach in full.
 
 #### The submodule approach
 
@@ -294,7 +294,7 @@ One important gotcha: `DbufCleanup` must be called before `SCREEN CLOSE`. The se
 
 ### CubicIDE Integration
 
-<a href="http://www.oxyron.de/html/cubicide.html" target="_blank" class="link">\[CubicIDE\]</a> (also known as GoldEd Studio) is a popular programmer's editor on the Amiga. Version 2.8 ships with a CubicIDE plugin that adds:
+<a href="http://www.oxyron.de/html/cubicide.html" target="_blank" class="link">CubicIDE</a> (also known as GoldEd Studio) is a popular programmer's editor on the Amiga. Version 2.8 ships with a CubicIDE plugin that adds:
 
 - **Syntax highlighting** for ACE BASIC source files (.b, .bas)
 - **Quick help** -- the bottom bar of the CubicIDE window shows the syntax of the BASIC command under the cursor
@@ -319,4 +319,4 @@ A few smaller additions worth noting:
 
 Versions 2.7 and 2.8 take ACE BASIC in a decidedly more modern direction. Closures and function pointers bring functional programming patterns to a language that has been purely imperative for 30 years. The List submodule demonstrates what that enables. MUI support makes sophisticated GUI applications practical. Double buffering rounds out the graphics story. And CubicIDE integration makes the development workflow smoother on the Amiga itself.
 
-The project lives on <a href="https://github.com/mdbergmann/ACEBasic" target="_blank" class="link">\[GitHub\]</a>. Bug reports and feature requests are welcome.
+The project lives on <a href="https://github.com/mdbergmann/ACEBasic" target="_blank" class="link">GitHub</a>. Bug reports and feature requests are welcome.

@@ -31,7 +31,7 @@ Each gadget is created with a single line that specifies its ID, position, type,
 
 ### Example: A GadTools GUI
 
-Let's walk through a complete example that creates a window with a slider, a string gadget, and a button. This is based on <a href="https://github.com/mdbergmann/ACEBasic/blob/master/examples/gui/GTGadgets.b" target="_blank" class="link">\[examples/gui/GTGadgets.b\]</a> in the ACE distribution.
+Let's walk through a complete example that creates a window with a slider, a string gadget, and a button. This is based on <a href="https://github.com/mdbergmann/ACEBasic/blob/master/examples/gui/GTGadgets.b" target="_blank" class="link">examples/gui/GTGadgets.b</a> in the ACE distribution.
 
 #### Setting up constants
 
@@ -202,4 +202,4 @@ Development continues. Here is a preview of what's planned for version 2.7:
 
 ACE v2.6 makes GUI programming dramatically easier with built-in GadTools support, adds ASSERT for catching bugs early, and offers 68020 code generation for faster arithmetic on accelerated hardware. Combined with the AGA support from v2.5, ACE is becoming a capable tool for modern Amiga development.
 
-The project lives on <a href="https://github.com/mdbergmann/ACEBasic" target="_blank" class="link">\[GitHub\]</a>. Bug reports and feature requests are welcome.
+The project lives on <a href="https://github.com/mdbergmann/ACEBasic" target="_blank" class="link">GitHub</a>. Bug reports and feature requests are welcome.

@@ -4,7 +4,7 @@ ACE is a freely distributable AmigaBASIC compiler originally written by David Be
 
 The last official release was in 1998. After that, ACE went silent.
 
-Last year I was looking for a high-level language to program on the Amiga. I evaluated BlitzBasic and a few other BASIC dialects, but ACE stood out. It is simple, produces standalone executables, and gives you direct access to the Amiga operating system. I tried a few things, liked what I saw, and just recently decided to pick up development. The project now lives on <a href="https://github.com/mdbergmann/ACEBasic" target="_blank" class="link">\[GitHub\]</a> (please file tickets there if you find any bugs).
+Last year I was looking for a high-level language to program on the Amiga. I evaluated BlitzBasic and a few other BASIC dialects, but ACE stood out. It is simple, produces standalone executables, and gives you direct access to the Amiga operating system. I tried a few things, liked what I saw, and just recently decided to pick up development. The project now lives on <a href="https://github.com/mdbergmann/ACEBasic" target="_blank" class="link">GitHub</a> (please file tickets there if you find any bugs).
 
 ### What's new in v2.5
 
