@@ -1,6 +1,6 @@
 ### Clamiga -- Common Lisp for the Amiga
 
-After the ACE BASIC posts of the last months, this one is about a different project I have been working on for the last half year: **CL-Amiga**, or **Clamiga** for short. It is a Common Lisp implementation built for the Amiga family -- classic AmigaOS 3 on 68k and MorphOS as a fully native PPC build, AROS and AmigaOS 4 maybe to come -- but it also runs on macOS (I use it as my main Common Lisp impl here where most of the development happens here) and Linux.
+After the ACE BASIC posts of the last months, this one is about a different project I have been working on for the last half year: **CL-Amiga**, or **Clamiga** for short. It is a Common Lisp implementation built for the Amiga family -- classic AmigaOS 3 on 68k and MorphOS as a fully native PPC build, AROS and AmigaOS 4 maybe to come -- but it also runs on macOS (I use it as my main Common Lisp impl here where most of the development happens) and Linux.
 
 The name is simple: *Common Lisp for the Amiga* becomes CL-Amiga, and said out loud that is "Clamiga". And since *amiga* is Spanish/Portuguese for a (female) friend (Amiga users should know), the name does double duty: the Lisp that runs on your Amiga, and the Lisp that is your *amiga* ;).
 
