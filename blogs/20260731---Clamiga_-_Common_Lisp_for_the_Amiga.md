@@ -403,7 +403,6 @@ ARexx port for easier integration with editors to get a similar super convenient
 More ANSI compliance.  
 Better inspector, better debugger.  
 Performance improvements, maybe a PPC JIT.
-Many things are possible.
 
 ### Conclusion
 
