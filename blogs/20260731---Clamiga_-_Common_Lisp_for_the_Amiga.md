@@ -1,6 +1,6 @@
 ### Clamiga -- Common Lisp for the Amiga
 
-After the ACE BASIC posts of the last month, this one is about a different project I have been working on for the last half year: **CL-Amiga**, or **Clamiga** for short. It is a Common Lisp implementation built for the Amiga family -- classic AmigaOS 3 on 68k and MorphOS as a fully native PPC build, AROS and AmigaOS 4 maybe to come -- but it also runs on macOS (I use it as my main Common Lisp impl here) and Linux, where most of the development actually happens.
+After the ACE BASIC posts of the last month, this one is about a different project I have been working on for the last half year: **CL-Amiga**, or **Clamiga** for short. It is a Common Lisp implementation built for the Amiga family -- classic AmigaOS 3 on 68k and MorphOS as a fully native PPC build, AROS and AmigaOS 4 maybe to come -- but it also runs on macOS (I use it as my main Common Lisp impl here where most of the development happens here) and Linux.
 
 The name is simple: *Common Lisp for the Amiga* becomes CL-Amiga, and said out loud that is "Clamiga". And since *amiga* is Spanish/Portuguese for a (female) friend (Amiga users should know), the name does double duty: the Lisp that runs on your Amiga, and the Lisp that is your *amiga* ;).
 
@@ -18,7 +18,7 @@ I won't repeat all of that here. If you want a proper introduction, I wrote a pr
 
 There are excellent Common Lisp implementations out there -- SBCL, CCL, ECL, Clasp, CLISP (unmaintained in decades), or even commercial ones like LispWorks and Allegro.
 
-**But none of them run on the Amiga.** The high-performance implementations (SBCL, CCL) are native-code compilers tied to modern architectures -- x86-64, ARM, PPC -- with no 68k backend and a memory footprint measured in tens of megabytes. Clasp is built on LLVM. CLISP, the closest in spirit -- a compact bytecode interpreter written in C -- is unmaintained for many years and has not had a AmigaOS build in decades.
+**But none of them run on the Amiga.** The high-performance implementations (SBCL, CCL) are native-code compilers tied to modern architectures -- x86-64, ARM, PPC -- with no 68k backend and a memory footprint measured in tens of megabytes. Clasp is built on LLVM. CLISP, the closest in spirit -- a compact bytecode interpreter written in C -- is unmaintained for many years and has not had an AmigaOS build in decades.
 
 Clamiga is built to run on m68k Amigas. It has a self-contained bytecode VM in portable C with no external runtime dependencies -- no libffi, no LLVM, no C compiler needed at runtime. A full Common Lisp implementation, its language and runtime features, means that it won't break performance records compared to just C or assembler programs on the Amiga. So it's not meant to code games with it that need super-fast scrolling or so. The m68k-JIT tries to squeeze more performance out of it, but it has its limits.
 
