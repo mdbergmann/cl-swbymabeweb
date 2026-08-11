@@ -304,11 +304,11 @@ What this makes visible is that unlike exceptions (in other languages) whose cal
 `lower` simulating 'something being done' on a lower level can set up error cases and how to recover from the error by available restarts and invoking that restart at that level of the call stack.  
 The `higher` function, simulating a higher-level call, can either, based on a certain condition, automatically choose a restart or have a 'human in the loop' who can select a restart.
 
-While Clamiga supports all this, as time of writing there is a bug which shows only `<anonymous>` for a certain set of defined functions. This was already fixed in current Git HEAD.
+While Clamiga supports all this, as time of writing there is a bug which shows only `<anonymous>` for a certain set of defined functions in the backtrace. This was already fixed in current Git HEAD.
 
 ### Disassembler
 
-A disassembler also usually is part of the built-in tooling. Invoked by `disabbemble`. Example:
+A disassembler also usually is part of the built-in tooling. Invoked by `disassemble`. Example:
 
 ```lisp
 COMMON-LISP-USER> (defun f (a) (1+ a))
