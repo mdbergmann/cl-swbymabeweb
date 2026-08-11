@@ -28,7 +28,7 @@ But let's look at a few more technical things.
 
 ### Some upfront glossary that is mentioned below
 
-- <a href="https://asdf.common-lisp.dev/" class="link" target="_blank">ASDF</a>: Another System Definition Facility, is the de facto standard build facility for Common Lisp. Most Common Lisp 'libraries' (in ASDF called 'systems') are built with ASDF. Practically all Common Lisp implementations that are maintained today ship ASDF with it and so does Clamiga.
+- <a href="https://asdf.common-lisp.dev/" class="link" target="_blank">ASDF</a>: Another System Definition Facility, is the de facto standard build facility for Common Lisp. It kind of is like 'make' or Gradle in the Java world. It can manage dependencies graphs, versioning, etc. Most Common Lisp 'libraries' (in ASDF called 'systems') are built with ASDF. Practically all Common Lisp implementations that are maintained today ship ASDF with it and so does Clamiga.
 - FASL: FASt Load. FASL files are generated when compiling Lisp source code, i.e. via (compile-file "foo.lisp"). FASL files are faster to load than Lisp source code files because they are already compiled to a serialised format. All Common Lisp variants implement FASL, so does Clamiga. The Clamiga generated FASL files, when generated on either m68k or PPC, are interchangeable between those two architectures.
 - <a href="https://www.quicklisp.org/beta/" class="link" target="_blank">Quicklisp</a> is a library manager for Common Lisp containing over 1,500 libraries. Clamiga ships with compatibility shims so that (theoretically) many libraries available on Quicklisp can be used. Though many require more computing power and are probably out of reach for a m68020.
 
