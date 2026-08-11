@@ -6,7 +6,7 @@ The name is simple: *Common Lisp for the Amiga* becomes CL-Amiga, and said out l
 
 (see project link at the bottom)
 
-<img src="../static/gfx/blogs/clamiga-aos3_1.jpg" alt="Clamiga running on AmigaOS 3" width="720" />
+<img src="/static/gfx/blogs/clamiga-aos3_1.jpg" alt="Clamiga running on AmigaOS 3" width="720" />
 
 ### A few words about Common Lisp
 
@@ -88,7 +88,7 @@ The MorphOS build is a fully native PowerPC binary, compiled under MorphOS with 
 
 The one thing the MorphOS build omits is the JIT, which is m68k-only -- it runs the portable bytecode VM like the macOS/Linux builds. But on a G4 or G5 that VM is *fast*. Fast enough that MorphOS is a specific target for the full **Quicklisp** experience: installing the client, downloading dists, and quickloading real libraries with their whole dependency graphs is entirely practical there, where on a 14 MHz 68020 it is not.
 
-<img src="../static/gfx/blogs/clamiga-mos_1.png" alt="Clamiga booting and running on MorphOS" width="720" />
+<img src="/static/gfx/blogs/clamiga-mos_1.png" alt="Clamiga booting and running on MorphOS" width="720" />
 
 ### Setting up Quicklisp
 
@@ -163,11 +163,11 @@ There are also custom screens, RTG-safe offscreen bitmaps with blitter compositi
 
 Intuition window in AmigaOS.
 
-<img src="../static/gfx/blogs/clamiga-aos3_demo.jpg" alt="Clamiga native GUI example" width="720" />
+<img src="/static/gfx/blogs/clamiga-aos3_demo.jpg" alt="Clamiga native GUI example" width="720" />
 
 Intuition window in MorphOS, same code.
 
-<img src="../static/gfx/blogs/clamiga-mos_demo.png" alt="Clamiga native GUI example" width="720" />
+<img src="/static/gfx/blogs/clamiga-mos_demo.png" alt="Clamiga native GUI example" width="720" />
 
 ### Inspector
 
@@ -183,7 +183,7 @@ Clamiga has that, too. The example below:
 
 So basically it is possible to inspect a simple variable or whole trees.
 
-<img src="../static/gfx/blogs/clamiga-mos_inspect.png" alt="Clamiga native GUI example" width="720" />
+<img src="/static/gfx/blogs/clamiga-mos_inspect.png" alt="Clamiga native GUI example" width="720" />
 
 ### Debugger, conditions and restarts
 
