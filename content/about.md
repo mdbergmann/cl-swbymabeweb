@@ -1,8 +1,10 @@
 Passionate about software development, programming and software design - that's me.
 
-My experience in software development ranges from simple bash scripts over assembler routines and Linux device drivers to large cloud based business applications with web UIs. 
+My experience in software development ranges from simple bash scripts over assembler routines and Linux device drivers to large cloud based business applications. 
 
-Since ~2017 I've gathered a lot of experience with applications in the cloud hosted by AWS infrastructure. Being key designer and architect of a rather large JVM based application running in the cloud with cluster and failover features.
+Since ~2017 I've gathered a lot of experience with applications in the cloud hosted by AWS infrastructure. Being key designer and architect of a rather large JVM based application running in the cloud with cluster and failover features. Docker and Kubernetes are my daily tools for packaging and running these applications.
+
+Today I work intensively with AI. On the one hand as a tool in my daily development work, where agentic coding tools like Claude Code have become a natural part of how I build software. On the other hand as part of the software itself. I design and build agentic, AI supported workflows using orchestrator frameworks like Temporal, Conductor and similar, where AI agents and LLM steps are integrated into durable, long running business processes.
 
 I work extensively with the Java Virtual Machine. Writing Java code since 2000, and Scala code since 2010. I've also been using Kotlin, Clojure and other languages running on the JVM.  
 Web technologies like Apache Wicket I use for more than 14 years and gained expert knowledge.
@@ -30,10 +32,10 @@ But most of all does it bring back the principles of writing good software as th
 
 Here are a few links where you might get more information about what I do:
 
-- <a target='_blank' href='https://www.linkedin.com/in/manfred-bergmann-8a034012/'>[My LinkedIn Profile]</a>
-- <a target='_blank' href='https://www.xing.com/profile/Manfred_Bergmann3/cv'>[My Xing Profile]</a>
-- <a target='_blank' href='https://github.com/mdbergmann'>[GitHub]</a>
-- <a target='_blank' href='https://twitter.com/mdbergmann'>[Twitter]</a>
-- <a target='_blank' href='https://www.youtube.com/channel/UC4Vt1YZhIVWj_rZSCyxG5DQ'>[YouTube]</a>
+- <a class="link" target="_blank" href="https://www.linkedin.com/in/manfred-bergmann-8a034012/">My LinkedIn Profile</a>
+- <a class="link" target="_blank" href="https://www.xing.com/profile/Manfred_Bergmann3/cv">My Xing Profile</a>
+- <a class="link" target="_blank" href="https://github.com/mdbergmann">GitHub</a>
+- <a class="link" target="_blank" href="https://twitter.com/mdbergmann">Twitter</a>
+- <a class="link" target="_blank" href="https://www.youtube.com/channel/UC4Vt1YZhIVWj_rZSCyxG5DQ">YouTube</a>
 
 In 2003 I received the degree in computer science at the Georg Simon Ohm university in Nuremberg, Germany.
