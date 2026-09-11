@@ -98,7 +98,7 @@ SqliteQuery comes with the compiled SQLite database library builtin.
 It can also execute single or batch SQL statements. The result of SELECT statements is conveniently displayed in a tableview.  
 The SqliteQuery user-interface is separated in four parts.
 
-    1. setting the database path (defining a not existing path will create a new database - you will actualy be asked before creating it
+    1. setting the database path (defining a not existing path will create a new database - you will actually be asked before creating it
     2. input of SQL statements
     3. showing result of SELECT statements in a tableview
     4. showing a log output
@@ -114,10 +114,10 @@ It's also possible to start programs with superuser rights.
 <!-- <img src="/static/gfx/projects/Cocser-0.6.0_shot1.png" alt="Cocser img" /> -->
 
 - Sysdiag - RAM testing and system diagnose tool (Amiga, C)  
-Sysdiag can shows information about you memory and hardware of your Amiga.  
+Sysdiag can show information about your memory and hardware of your Amiga.  
 For memory testing it uses algorithms like:
 
-    - custum address test
+    - custom address test
     - own address test
     - walking ones test
     - moving inv (8bit) test

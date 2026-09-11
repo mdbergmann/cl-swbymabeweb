@@ -11,7 +11,7 @@ Web technologies like Apache Wicket I use for more than 14 years and gained expe
 
 For many years my interest was focused on macOS and Cocoa. So I've developed larger projects on macOS and apps on iOS as well as native apps for Android. Some time ago there was also .Net with C# and ASP.Net, C++, C, Python in the mix.
 
-Elixir (and the whole Erlang landscape) is interessting enough :) to develop a few smaller projects with it. It is a really attractive purely functional language with immutable data types, running on the battle proven Erlang VM. Indeed very interessting. I wish I could do more with it.
+Elixir (and the whole Erlang landscape) is interesting enough :) to develop a few smaller projects with it. It is a really attractive purely functional language with immutable data types, running on the battle proven Erlang VM. Indeed very interesting. I wish I could do more with it.
 
 Since early 2019 I found the world of Common Lisp, or the world of Lisps in general. I kind of got hooked with Lisps and Common Lisp in particular. The simplicity and the beauty and yet the power makes it a great experience to write applications with it.
 
@@ -38,4 +38,4 @@ Here are a few links where you might get more information about what I do:
 - <a class="link" target="_blank" href="https://twitter.com/mdbergmann">Twitter</a>
 - <a class="link" target="_blank" href="https://www.youtube.com/channel/UC4Vt1YZhIVWj_rZSCyxG5DQ">YouTube</a>
 
-In 2003 I received the degree in computer science at the Georg Simon Ohm university in Nuremberg, Germany.
+In 2003 I received the degree in computer science at the Georg Simon Ohm University in Nuremberg, Germany.
