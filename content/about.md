@@ -6,6 +6,8 @@ Since ~2017 I've gathered a lot of experience with applications in the cloud hos
 
 Today I work intensively with AI. On the one hand as a tool in my daily development work, where agentic coding tools like Claude Code have become a natural part of how I build software. On the other hand as part of the software itself. I design and build agentic, AI supported workflows using orchestrator frameworks like Temporal, Conductor and similar, where AI agents and LLM steps are integrated into durable, long running business processes.
 
+And now to the old world, the things I've been doing for a long time.
+
 I work extensively with the Java Virtual Machine. Writing Java code since 2000, and Scala code since 2010. I've also been using Kotlin, Clojure and other languages running on the JVM.  
 Web technologies like Apache Wicket I use for more than 14 years and gained expert knowledge.
 
