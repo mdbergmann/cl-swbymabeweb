@@ -23,6 +23,29 @@
 
 (defvar *server* nil)
 
+(defclass app-acceptor (hunchentoot:easy-acceptor) ()
+  (:documentation "Acceptor that rejects HEAD requests and hides the Server header."))
+
+(defmethod hunchentoot:acceptor-dispatch-request :around ((acceptor app-acceptor) request)
+  ;; an explicit NIL makes Hunchentoot omit the Server header
+  (setf (hunchentoot:header-out :server) nil)
+  (if (eq (hunchentoot:request-method request) :head)
+      (progn
+        (setf (hunchentoot:header-out :allow) "GET")
+        (setf (hunchentoot:return-code*) hunchentoot:+http-method-not-allowed+)
+        nil)
+      (call-next-method)))
+
+(defmethod hunchentoot:acceptor-status-message ((acceptor app-acceptor) http-status-code
+                                                &key &allow-other-keys)
+  ;; plain error page, without Hunchentoot's server/version footer
+  (when (<= 300 http-status-code)
+    (setf (hunchentoot:content-type*) "text/html; charset=utf-8")
+    (let ((status (format nil "~D ~A" http-status-code
+                          (hunchentoot:reason-phrase http-status-code))))
+      (format nil "<html><head><title>~A</title></head><body><h1>~A</h1></body></html>"
+              status status))))
+
 (defun start (&key debug (port 5000) (address "0.0.0.0") &allow-other-keys)
   (declare (ignore debug))
 
@@ -41,7 +64,7 @@
           hunchentoot:*dispatch-table*)
 
     (setf *server*
-          (make-instance 'hunchentoot:easy-acceptor
+          (make-instance 'app-acceptor
                          :port port
                          :address address
                          :access-log-destination
